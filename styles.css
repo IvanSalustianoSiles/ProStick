@@ -40,12 +40,12 @@ textarea {
     width: 1090px; 
     height: 477px;
     padding: 4px;
-    transition:  2s;
+    transition:  1s;
 }
 
 .resizeBox2 {
     width: 1090px;
     height: 253px;
     padding: 4px;
-    transition:  4s;
+    transition:  1s;
 }
