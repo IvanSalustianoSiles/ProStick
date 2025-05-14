@@ -135,13 +135,13 @@ segmentButton.addEventListener("click", () => {
             
         let DBSubSegment = onlySubSegments[l];
 
-        if (!newSubSegments.includes(DBSubSegment)) newSubSegments.splice(newSubSegments.length - 1, 0, `--'${DBSubSegment}'`);
+        if (!newSubSegments.includes(DBSubSegment)) newSubSegments.splice(0, 0, `--'${DBSubSegment}'`);
     }
     for (let m = 0; m < onlySegments.length; m++) {
             
         let DBSegment = onlySegments[m];
 
-        if (!newSegments.includes(DBSegment)) newSegments.splice(newSegments.length - 1, 0, `--'${DBSegment}'`);
+        if (!newSegments.includes(DBSegment)) newSegments.splice(0, 0, `--'${DBSegment}'`);
     }
 
     newSubSegments = newSubSegments.map(newSubSegment => !newSubSegment.includes("--") ? `'${newSubSegment}'` : newSubSegment);
