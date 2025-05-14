@@ -1,0 +1,51 @@
+body {
+    background-color: rgb(23, 23, 23);
+    color: white;
+    margin-left: 10px;
+}
+
+div {
+    margin-top: 5px;
+}
+
+button {
+    margin-top: 8px;
+}
+
+textarea {
+    border-radius: 10px;
+}
+
+#inpsegmash {
+    background-color: black;
+    color: rgb(0, 174, 255);
+    box-shadow: rgb(0, 174, 255) 0px 2px 4px 0px, rgba(60, 64, 67, 0.15) 0px 4px 6px 4px;
+}
+
+#inpsegsql {
+    background-color: black;
+    color: orange;
+    box-shadow: orange 0px 2px 4px 0px, rgba(60, 64, 67, 0.15) 0px 4px 6px 4px;
+}
+
+.initialinp {
+    display: flex;
+    width: 150.667px;
+    height: 30.667px;
+    padding: 2px;
+    transition:  1s;
+}
+
+.resizeBox {
+    width: 1090px; 
+    height: 477px;
+    padding: 4px;
+    transition:  2s;
+}
+
+.resizeBox2 {
+    width: 1090px;
+    height: 253px;
+    padding: 4px;
+    transition:  4s;
+}
