@@ -180,9 +180,13 @@ inpSegMash.addEventListener('input', () => {
                 inpSegMash.classList.add('resizeBox2');
     
                 inpSegMash.addEventListener("mouseleave", () => {
-    
-                    inpSegMash.classList.remove('resizeBox2');
-    
+                    
+                    setTimeout(() => {
+
+                        inpSegMash.classList.remove('resizeBox2');
+
+                    }, 10000);
+                    
                 });
             };
     
