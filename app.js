@@ -98,7 +98,6 @@ segmentButton.addEventListener("click", () => {
 
         let completeSegment = inputArray[i];
         
-        
         if (completeSegment.includes("(Deprecated)")) continue;
 
         let newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
@@ -136,13 +135,13 @@ segmentButton.addEventListener("click", () => {
             
         let DBSubSegment = onlySubSegments[l];
 
-        if (!newSubSegments.includes(DBSubSegment)) newSubSegments.push(`--${DBSubSegment}`);
+        if (!newSubSegments.includes(DBSubSegment)) newSubSegments.push(`--'${DBSubSegment}'`);
     }
     for (let m = 0; m < onlySegments.length; m++) {
             
         let DBSegment = onlySegments[m];
 
-        if (!newSegments.includes(DBSegment)) newSegments.push(`--${DBSegment}`);
+        if (!newSegments.includes(DBSegment)) newSegments.push(`--'${DBSegment}'`);
     }
 
     newSubSegments = newSubSegments.map(newSubSegment => !newSubSegment.includes("--") ? `'${newSubSegment}'` : newSubSegment);
