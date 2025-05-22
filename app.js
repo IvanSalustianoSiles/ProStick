@@ -93,17 +93,20 @@ segmentButton.addEventListener("click", () => {
 
     let newSegments = [];
     let newSubSegments = [];
+    let newSegment;
+    let newSubSegment;
 
     for (let i = 0; i < inputArray.length; i++) {
 
         let completeSegment = inputArray[i];
         
         if (completeSegment.includes("(Deprecated)")) continue;
+        
+        if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); newSubSegments.push("High Value Individual"); continue };
 
-        let newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
+        newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
 
         if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
-
 
         if (completeSegment.includes("(All SubSegments)")) {
 
@@ -125,7 +128,7 @@ segmentButton.addEventListener("click", () => {
             }
         } else {
 
-            let newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment))
+            newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment))
             !newSegments.includes(newSegment) && newSegments.push(newSegment);
             !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && newSubSegments.push(newSubSegment);
         }
