@@ -3,17 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Descubre SuperSammy, la solución perfecta para simplificar la gestión financiera entre amigos. Con una interfaz intuitiva, nuestra app permite dividir fácilmente gastos, registrar deudas y realizar pagos equitativos en situaciones sociales. Organiza y calcula automáticamente los montos, garantizando una distribución justa de las responsabilidades financieras. Desde compartir cuentas hasta dividir gastos grupales, esta aplicación ofrece una herramienta esencial para mantener las finanzas amigables y transparentes. Olvídate de los malentendidos y disfruta de una experiencia financiera colaborativa sin complicaciones.">
-  <meta name="keywords" content="División de gastos, Deudas compartidas, App de pagos entre amigos, Split de cuentas, Dividir gastos, Compartir cuentas, Organizador de deudas, Pago equitativo, Amigos y finanzas, Registro de gastos grupales, Dividir la cuenta, Compartir gastos, Deudas sociales, App de economía grupal, Balance de cuentas, División justa, Calculadora de deudas, Gastos compartidos, Pago proporcional, Finanzas entre amigos, Splitwise, Deudas simplificadas, Cuentas compartidas, App de equidad financiera, Pago colaborativo, Control de deudas, Compartir responsabilidades financieras, Organizador de gastos sociales, Gastos en grupo, Pagos proporcionales, App de cálculo de deudas, Finanzas colaborativas, Divide y vencerás, Cuaderno de cuentas, Deudas amistosas, Equilibrio financiero, Compartir facturas, App de gestión de gastos, Deuda justa, Control financiero entre amigos, Pago compartido, Amigos y dinero, Simplificar cuentas, Deudas en equipo, Compartir responsabilidades financieras, Calculadora de pagos grupales, Equidad financiera, División amigable, App de cuentas compartidas, Finanzas en grupo, App de cuentas pendientes, Registro de transacciones grupales, Solución de pagos entre amigos, División proporcional de deudas, Manejo colaborativo de gastos, Organizador financiero social, Plataforma de pagos amigable, Compartir responsabilidades monetarias, Calculadora de deudas compartidas, Control financiero en grupo, App de finanzas colaborativas, Pago justo entre amigos, Gestión equitativa de gastos, División transparente de cuentas, Deudas en común, Plataforma de pagos proporcionales, Finanzas compartidas, Registro de deudas amigable, Control de gastos sociales, App de reparto de gastos, Pagos colaborativos, Dividir cuentas fácilmente, Equidad en los pagos, Deudas compartidas entre amigos, Calculadora de gastos grupales, Solución de deudas sociales, Plataforma de pagos justos, App de finanzas amigables, Registro equitativo de transacciones, División clara de responsabilidades financieras, Pago compartido equitativamente, Organizador de cuentas en grupo, Deudas entre amistades, Plataforma de pago justo, App para dividir cuentas fácil, Registro de deudas transparente, Manejo eficiente de gastos sociales, Calculadora de pagos justos, Finanzas colaborativas entre amigos, División equitativa de facturas, App de pagos proporcionales, Control financiero compartido, Registro transparente de pagos, Plataforma de deudas compartidas, Solución de gastos en grupo, Dividir cuentas proporcionalmente, Equidad en las finanzas grupales, App de pagos transparentes, Organizador de gastos proporcionales, Registro de deudas colaborativas">
-  <title>ProStick</title>
-  <link rel="stylesheet" href="./styles.css">
-  <!-- <link rel="shortcut icon" href="./multimedia/carrusel-sammy1-fotor-20231130161427.png" type="image/x-icon"> -->
+  <meta name="description" content="MaSH To Everything">
+  <title>ProStick - MaSH To Everything</title>
+  <link rel="stylesheet">
+  <link rel="shortcut icon" href="./logo.png" type="image/x-icon">
 </head>
 <body>
   <main>
-    <section id="section-1">
-        <article id="article-1">
-            <h1>MaSH Text to SQL Code - Segments</h1>
+    <section id="main-section">
+        <h1>ProStick</h1>
+        <button id="dataButton">Data</button>
+        <button id="emailButton">Email</button>
+    </section>
+    <section id="dataMenu" class="disappear">
+        <button>Segments To SQL</button>
+        <button>Industries To SQL</button>
+        <button>Ind Classification To SQL</button>
+        <button>Segments To Marketo</button>
+        <button>Industries To Marketo</button>
+        <button>Marketing Audience To Marketo</button>
+    </section>
+    <section id="emailMenu" class="disappear">
+        <button>Segments To Marketo</button>
+        <button>Industries To Marketo</button>
+        <button>Marketing Audience To Marketo</button>
+    </section>
+    <section id="segment-SQL" class="disappear">
+          <article id="article-1">
+            <h1 id="title">ProStick</h1>
+            <h2>MaSH Text to SQL Code - Segments</h2>
             <form id="formSegment">
               <div>MaSH Code</div>
               <div>
@@ -27,7 +45,284 @@
         <article id="article-2">
         </article>
     </section>
+    <section id="industry-SQL" class="disappear"></section>
+    <section id="indClass-SQL" class="disappear"></section>
+    <section id="segments-marketo" class="disappear"></section>
+    <section id="industry-marketo" class="disappear"></section>
+    <section id="MA-marketo" class="disappear"></section>
   </main>
-<script src="/app.js" type="module"></script>
+  <script type="module">
+
+    const onlySegments = [
+        'Major Commercial',
+        'Major Public Sector',
+        'Small, Medium & Corporate Commercial',
+        'Small, Medium & Corporate Public Sector',
+        'Strategic Commercial',
+        'Strategic Public Sector',
+        'High Value Individual',
+        'UnSegmented'
+    ];
+
+    const onlySubSegments = [
+        "Major - Commercial Other",
+        "Major - Health",
+        "Major - Other",
+        "Major - Education",
+        "Major - Federal Government",
+        "Major - Government Other",
+        "Major - State & Local Governments",
+        "SM&C Commercial - Corporate",
+        "SM&C Commercial - SMB Default",
+        "SM&C Commercial - SMB",
+        "SM&C Education - Corporate",
+        "SM&C Education - SMB",
+        "SM&C Government - Corporate",
+        "SM&C Government - SMB",
+        "Strategic - Commercial Other",
+        "Strategic - Health",
+        "Strategic - Federal Government",
+        "Strategic - Public Sector",
+        "High Value Individual",
+        "UnSegmented"
+    ];
+
+    const segments = {
+        'Major Commercial': {
+            MCO: 'Major - Commercial Other',
+            MH: 'Major - Health',
+            MO: 'Major - Other'
+        },
+        'Major Public Sector': {
+            ME: 'Major - Education',
+            MFG: 'Major - Federal Government',
+            MGO: 'Major - Government Other',
+            MSLG: 'Major - State & Local Governments'
+        },
+        'Small, Medium & Corporate Commercial': {
+            SMCCORP:'SM&C Commercial - Corporate',
+            SMCCSMB:'SM&C Commercial - SMB',
+            SMCCSMBDF:'SM&C Commercial - SMB Default'
+        },
+        'Small, Medium & Corporate Public Sector': {
+            SMCEDUCORP:'SM&C Education - Corporate',
+            SMCEDUSMB:'SM&C Education - SMB',
+            SMCGOVCORP:'SM&C Government - Corporate',
+            SMCGOVSMB:'SM&C Government - SMB'
+        },
+        'Strategic Commercial': {
+            SCO: 'Strategic - Commercial Other',
+            SH: 'Strategic - Health'
+        },
+        'Strategic Public Sector': {
+            SFGOV:'Strategic - Federal Government',
+            SPBS:'Strategic - Public Sector'
+        },
+        'High Value Individual': {
+            HVI: 'High Value Individual'
+        },
+        'UnSegmented': {
+            UNSGT:'UnSegmented'
+        }
+    };
+
+    const inpSegMash = document.getElementById("inpsegmash");
+
+    const inpSegSQL = document.getElementById("inpsegsql");
+
+    const formSegment = document.getElementById("formSegment");
+
+    const segmentButton = document.getElementById("okSeg");
+
+    const dataButton = document.getElementById("dataButton");
+
+    const emailButton = document.getElementById("emailButton");
+
+    formSegment.onclick = (event) => {
+        event.preventDefault();
+    };
+
+    segmentButton.addEventListener("click", () => {
+
+        const mashSegments = inpSegMash.value;
+
+        let inputArray = mashSegments
+        .split("), ")
+        .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment)
+
+        inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
+
+        if (mashSegments.includes("High Value Individual")) inputArray.push("High Value Individual");
+
+        let newSegments = [];
+        let newSubSegments = [];
+        let newSegment;
+        let newSubSegment;
+
+        for (let i = 0; i < inputArray.length; i++) {
+
+            let completeSegment = inputArray[i];
+            
+            if (completeSegment.includes("(Deprecated)")) continue;
+            
+            if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); newSubSegments.push("High Value Individual"); continue };
+
+            newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
+
+            if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
+
+            if (completeSegment.includes("(All SubSegments)")) {
+
+                let countSegment = 0;
+
+                for (let j = 0; j < inputArray.length; j++) {
+                    
+                    let completeSegment2 = inputArray[j];
+
+                    let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
+
+                    if (newSegment2 == newSegment) countSegment++;
+
+                }
+
+                if (countSegment == 1) {
+                    !newSegments.includes(newSegment) && newSegments.push(newSegment);
+                    Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
+                }
+            } else {
+
+                newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment))
+                !newSegments.includes(newSegment) && newSegments.push(newSegment);
+                !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && newSubSegments.push(newSubSegment);
+            }
+        }
+
+        for (let l = 0; l < onlySubSegments.length; l++) {
+                
+            let DBSubSegment = onlySubSegments[l];
+
+            if (!newSubSegments.includes(DBSubSegment)) newSubSegments.splice(0, 0, `--'${DBSubSegment}'`);
+        }
+        for (let m = 0; m < onlySegments.length; m++) {
+                
+            let DBSegment = onlySegments[m];
+
+            if (!newSegments.includes(DBSegment)) newSegments.splice(0, 0, `--'${DBSegment}'`);
+        }
+
+        newSubSegments = newSubSegments.map(newSubSegment => !newSubSegment.includes("--") ? `'${newSubSegment}'` : newSubSegment);
+        newSegments = newSegments.map(newSegment => !newSegment.includes("--") ? `'${newSegment}'` : newSegment);
+
+        let segmentCode = `
+        /**Filters on specific list pulls - these filters vary based on request, so are in WHERE clause for easier editing**/\n
+        \t\t\t\t/**ORG CLASSIFCATION**/\n
+        \t\tAND  (\n
+        \t\t\t\tIsNull(IPV.[SegmentName],'UnSegmented')/*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSegment)*/ in (\n\t\t\t\t\t${newSegments.join(",\n\t\t\t\t\t")}\n
+        \t\t\t\t)\n
+        \t\t\t\tAND  IsNull(IPV.[SubSegmentName],'UnSegmented') in /*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSubSegment)*/ (\n\t\t\t\t\t\t\t${newSubSegments.join(", \n\t\t\t\t\t\t\t")}\n
+        \t\t\t\t )\n
+        \t\t)`;
+
+        inpSegSQL.value = segmentCode;
+        inpSegSQL.classList.add("resizeBox");
+    });
+
+    inpSegMash.addEventListener('input', () => {
+
+        inpSegMash.classList.add('resizeBox2');
+
+        setTimeout(() => {
+
+        inpSegMash.classList.remove('resizeBox2');
+
+        }, 10000);
+
+        setTimeout(() => {
+            
+            inpSegMash.addEventListener("mouseover", () => {
+        
+                if (inpSegMash.value != "") {
+                    
+                    inpSegMash.classList.add('resizeBox2');
+        
+                    inpSegMash.addEventListener("mouseleave", () => {
+                        
+                        setTimeout(() => {
+
+                            inpSegMash.classList.remove('resizeBox2');
+
+                        }, 10000);
+                        
+                    });
+                };
+        
+            });
+
+        }, 10000);
+
+    });
+
+  </script>
+  <style>
+    body {
+        background-color: rgb(23, 23, 23);
+        color: white;
+        margin-left: 10px;
+    }
+
+    div {
+        margin-top: 5px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    button {
+        margin-top: 8px;
+    }
+
+    textarea {
+        border-radius: 10px;
+    }
+
+    #inpsegmash {
+        background-color: black;
+        color: rgb(0, 174, 255);
+        box-shadow: rgb(0, 174, 255) 0px 2px 4px 0px, rgba(60, 64, 67, 0.15) 0px 4px 6px 4px;
+    }
+
+    #inpsegsql {
+        background-color: black;
+        color: orange;
+        box-shadow: orange 0px 2px 4px 0px, rgba(60, 64, 67, 0.15) 0px 4px 6px 4px;
+    }
+
+    .disappear {
+        display: none;
+    }
+
+    .initialinp {
+        display: flex;
+        width: 150.667px;
+        height: 30.667px;
+        padding: 2px;
+        transition:  1s;
+    }
+
+    .resizeBox {
+        width: 1090px; 
+        height: 477px;
+        padding: 4px;
+        transition:  1s;
+    }
+
+    .resizeBox2 {
+        width: 1090px;
+        height: 253px;
+        padding: 4px;
+        transition:  1s;
+    }
+  </style>
 </body>
 </html>
