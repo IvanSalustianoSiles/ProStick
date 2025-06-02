@@ -1377,6 +1377,8 @@
     }
     
     const inputLogic = async (filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3) => {
+        
+        input = input.trim();
 
         let list = {};
 
@@ -1517,8 +1519,8 @@
             case "indClass":
 
                 let MKInput = input;
-                let CGInput = input2;
-                let JBRInput = input3;
+                let CGInput = input2.trim();
+                let JBRInput = input3.trim();
                 let inputMKArray = MKInput == "" ? [] : MKInput.split(", ");
                 let inputCGArray = CGInput == "" ? [] : CGInput.split(", ");
                 let inputJBRArray = JBRInput == "" ? [] : JBRInput.split(", ");
