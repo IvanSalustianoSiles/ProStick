@@ -11,7 +11,7 @@
 <body>
   <main>
     <section id="main-section" class="main-sec">
-        <h1>ProStick - MaSH To Everything</h1>
+        <h1>ProStick - MaSH To Everything <img class="titleLogo" src="./logo.png" alt=""></h1>
         <button id="dataButton">Data</button>
         <button id="emailButton">Email</button>
     </section>
@@ -1845,6 +1845,7 @@
                 let convertButton = document.createElement("button");
                 let containerOutput = document.createElement("div");
                 let output = document.createElement("textarea");
+                let imgLogo = document.createElement("img");
         
                 // Att
                 title.innerText = "ProStick"
@@ -1864,8 +1865,12 @@
                 backMain.innerText = "Main Menu";
                 backFactMenu.classList.remove("disappear");
                 article2.className = "article2"
-        
+                imgLogo.className = "titleLogo";
+                imgLogo.src = "./logo.png";
+                imgLogo.alt = "";
+                
                 // App
+                title.append(imgLogo);
                 currentSection.append(article1, article2);
                 article1.append(title, subtitle, formInputs);
                 formInputs.append(formTitle1, containerInputMash, formTitle2, containerOutput);
@@ -1949,6 +1954,7 @@
                 let titleInput1 = document.createElement("div");
                 let titleInput2 = document.createElement("div");
                 let titleInput3 = document.createElement("div");
+                let imgLogo = document.createElement("img");
 
                 // Att
                 title.innerText = "ProStick";
@@ -1980,7 +1986,12 @@
                 titleInput1.innerText = "Marketing Audience";
                 titleInput2.innerText = "Customer Group";
                 titleInput3.innerText = "Job Roles";
+                imgLogo.className = "titleLogo";
+                imgLogo.src = "./logo.png";
+                imgLogo.alt = "";
+
                 // App
+                title.append(imgLogo);
                 currentSection.append(article1, article2);
                 article1.append(title, subtitle, formInputs);
                 formInputs.append(formTitle1, containerInputMash, formTitle2, containerOutput);
@@ -2065,6 +2076,7 @@
                 let output2 = document.createElement("textarea");
                 let outputTitle = document.createElement("div");
                 let outputTitle2 = document.createElement("div");
+                let imgLogo = document.createElement("img");
         
                 // Att
                 title.innerText = "ProStick"
@@ -2090,8 +2102,12 @@
                 article2.className = "article2"
                 outputTitle.innerText = filter == "segments" ? "Marketo Segments" : "Marketo Industries";
                 outputTitle2.innerText = filter == "segments" ? "Marketo SubSegments" : "Marketo Verticals";
+                imgLogo.className = "titleLogo";
+                imgLogo.src = "./logo.png";
+                imgLogo.alt = "";
         
                 // App
+                title.append(imgLogo);
                 currentSection.append(article1, article2);
                 article1.append(title, subtitle, formInputs);
                 formInputs.append(formTitle1, containerInputMash, containerOutput, containerOutput2);
@@ -2384,6 +2400,14 @@
         height: 253px;
         padding: 4px;
         transition:  1s;
+    }
+
+    .titleLogo {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border-radius: 4px;
+        margin-left: 10px;
     }
   </style>
 </body>
