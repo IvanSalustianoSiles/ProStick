@@ -1376,7 +1376,7 @@
         .join("");
     }
     
-    const inputLogic = async (filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3) => {
+    const inputLogic = async (filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform) => {
         
         input = input.trim();
 
@@ -1401,6 +1401,7 @@
                     let newSubSegments = [];
                     let newSegment;
                     let newSubSegment;
+                    let allSubs = {};
     
                     for (let i = 0; i < inputArray.length; i++) {
     
@@ -1417,28 +1418,35 @@
                         if (completeSegment.includes("(All SubSegments)")) {
     
                             let countSegment = 0;
-    
+                            
+                            allSubs[newSegment] = newSegment;
+
                             for (let j = 0; j < inputArray.length; j++) {
                                 
                                 let completeSegment2 = inputArray[j];
-    
+                                
                                 let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
-    
+                                
                                 if (newSegment2 == newSegment) countSegment++;
-    
+                                
                             }
+                            
+                            if (countSegment == 1 || platform == "marketo") {
     
-                            if (countSegment == 1 || factory == "email") {
-    
-                                !newSegments.includes(newSegment) && newSegments.push(newSegment);
-                                Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
+                                if (countSegment == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countSegment == 1 || platform == "marketo" && factory == "email") !newSegments.includes(newSegment) && newSegments.push(newSegment);
+
+                                if (countSegment == 1 && platform == "SQL") Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
                             }
-    
+
                         } else {
-    
-                            newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment))
-                            !newSegments.includes(newSegment) && newSegments.push(newSegment);
-                            !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && newSubSegments.push(newSubSegment);
+
+                            newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment));
+                            
+                            ((!newSegments.includes(newSegment) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSegments.includes(newSegment) && allSubs[newSegment]))
+                            && newSegments.push(newSegment);
+
+                            ((!newSubSegments.includes(newSubSegment) && newSubSegment != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && !allSubs[newSegment]) || (platform == "marketo" && factory == "data" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined))
+                            && newSubSegments.push(newSubSegment);
                         }
                     }
     
@@ -1456,6 +1464,7 @@
 
                 let newIndustryArray = [];
                 let newVerticalArray = [];
+                let allVer = {};
 
                 for (let i = 0; i < inputArrayIndustry.length; i++) {
 
@@ -1469,6 +1478,8 @@
 
                         let countIndustry = 0;
 
+                        allVer[newIndustry] = newIndustry;
+
                         for (let j = 0; j < inputArrayIndustry.length; j++) {
                                             
                             let completeIndustry2 = inputArrayIndustry[j];
@@ -1479,19 +1490,23 @@
 
                         }
 
-                        if (countIndustry == 1 || factory == "email") {
+                        if (countIndustry == 1 || platform == "marketo") {
+
+                            if (countIndustry == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countIndustry == 1 || platform == "marketo" && factory == "email") !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
                             
-                            !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
-                            
-                            Object.values(industryObject[newIndustry]).forEach(vertical => !newVerticalArray.includes(vertical) && newVerticalArray.push(vertical));
+                            if (countIndustry == 1 && platform == "SQL") Object.values(industryObject[newIndustry]).forEach(vertical => !newVerticalArray.includes(vertical) && newVerticalArray.push(vertical));
                         
                         }
                     
                     } else {
 
-                        let newVertical = onlyVertical.find(vertical => completeIndustry.includes(vertical))
-                        !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
-                        !newVerticalArray.includes(newVertical) && newVertical != undefined && newVerticalArray.push(newVertical);
+                        let newVertical = onlyVertical.find(vertical => completeIndustry.includes(vertical));
+                        
+                        ((!newIndustryArray.includes(newIndustry) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newIndustryArray.includes(newIndustry) && allVer[newIndustry]))
+                        && newIndustryArray.push(newIndustry);
+
+                        ((!newVerticalArray.includes(newVertical) && newVertical != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newVerticalArray.includes(newVertical) && newVertical != undefined && !allVer[newIndustry]) || (platform == "marketo" && factory == "data" && !newVerticalArray.includes(newVertical) && newVertical != undefined))
+                        && newVerticalArray.push(newVertical);
                     }
                 }
 
@@ -1810,7 +1825,7 @@
 
             let input3 = inputBox3 ? inputBox3.value : "";
 
-            let list = await inputLogic(filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3);
+            let list = await inputLogic(filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform);
             
             await outputLogic(filter, list, platform, outputBox, outputBox2);
         })
