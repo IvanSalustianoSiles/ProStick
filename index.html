@@ -10,48 +10,64 @@
 </head>
 <body>
   <main>
-    <section id="main-section" class="disappear">
+    <section id="main-section" class="main-sec">
         <h1>ProStick</h1>
         <button id="dataButton">Data</button>
         <button id="emailButton">Email</button>
     </section>
     <section id="dataMenu" class="disappear">
-        <button>Segments To SQL</button>
-        <button>Industries To SQL</button>
-        <button>Ind Classification To SQL</button>
-        <button>Segments To Marketo</button>
-        <button>Industries To Marketo</button>
-        <button>Marketing Audience To Marketo</button>
+        <button id="segments-SQL-data-button">Segments To SQL</button>
+        <button id="industry-SQL-data-button">Industries To SQL</button>
+        <button id="indClass-SQL-data-button">Ind Classification To SQL</button>
+        <button id="segments-marketo-data-button">Segments To Marketo</button>
+        <button id="industry-marketo-data-button">Industries To Marketo</button>
+        <button id="marketing-audience-marketo-data-button">Marketing Audience To Marketo</button>
+        <button id="job-role-marketo-data-button">Job Role To Marketo</button>
+        <button id="back-datamenu-mainmenu">Main Menu</button>
     </section>
     <section id="emailMenu" class="disappear">
-        <button>Segments To Marketo</button>
-        <button>Industries To Marketo</button>
-        <button>Marketing Audience To Marketo</button>
+        <button id="segments-marketo-email-button">Segments To Marketo</button>
+        <button id="industry-marketo-email-button">Industries To Marketo</button>
+        <button id="marketing-audience-marketo-email-button">Marketing Audience To Marketo</button>
+        <button id="job-role-marketo-email-button">Job Role To Marketo</button>
+        <button id="back-emailmenu-mainmenu">Main Menu</button>
     </section>
-    <section id="segment-SQL">
-          <article id="article-1">
-            <h1 id="title">ProStick</h1>
-            <h2>MaSH Text to SQL Code - Segments</h2>
-            <form id="formSegment">
-              <div>MaSH Code</div>
-              <div>
-                <div class="border"><textarea id="inpsegmash" class="initialinp" type="text"></textarea></div>
-                <button id="okSeg">Convert</button>
-              </div>
-                <div>SQL Code</div>
-                <div class="border"></div><textarea name="inpsegsql" id="inpsegsql" class="initialinp"></textarea></div>
-            </form>
-        </article>
-        <article id="article-2">
-        </article>
+    <section id="segments-SQL-section" class="disappear">
+        <button id="back-segmentsSQL-data" class="disappear"></button>
+        <button id="back-segmentsSQL-mainmenu"></button>
     </section>
-    <section id="industry-SQL" class="disappear"></section>
-    <section id="indClass-SQL" class="disappear"></section>
-    <section id="segments-marketo" class="disappear"></section>
-    <section id="industry-marketo" class="disappear"></section>
-    <section id="MA-marketo" class="disappear"></section>
+    <section id="industry-SQL-section" class="disappear">
+        <button id="back-industrySQL-data" class="disappear"></button>
+        <button id="back-industrySQL-mainmenu"></button>
+    </section>
+    <section id="indClass-SQL-section" class="disappear">
+        <button id="back-indClassSQL-data" class="disappear"></button>
+        <button id="back-indClassSQL-mainmenu"></button>
+    </section>
+    <section id="segments-marketo-section" class="disappear">
+        <button id="back-segmentsmarketo-data" class="disappear"></button>
+        <button id="back-segmentsmarketo-email" class="disappear"></button>
+        <button id="back-segmentsmarketo-mainmenu"></button>
+    </section>
+    <section id="industry-marketo-section" class="disappear">
+        <button id="back-industrymarketo-data" class="disappear"></button>
+        <button id="back-industrymarketo-email" class="disappear"></button>
+        <button id="back-industrymarketo-mainmenu"></button>
+    </section>
+    <section id="marketing-audience-marketo-section" class="disappear">
+        <button id="back-marketing-audiencemarketo-data" class="disappear"></button>
+        <button id="back-marketing-audiencemarketo-email" class="disappear"></button>
+        <button id="back-marketing-audiencemarketo-mainmenu"></button>
+    </section>
+    <section id="job-role-marketo-section" class="disappear">
+        <button id="back-job-rolemarketo-data" class="disappear"></button>
+        <button id="back-job-rolemarketo-email" class="disappear"></button>
+        <button id="back-job-rolemarketo-mainmenu"></button>
+    </section>
   </main>
   <script type="module">
+
+    // Objects
 
     const onlySegments = [
         'Major Commercial',
@@ -125,142 +141,2183 @@
             UNSGT:'UnSegmented'
         }
     };
+    
+    const industryObject = {
+    'At scale SW, data & platforms': {
+        ASSDP: 'At scale SW, data & platforms'
+    },
+    'Automotive': {
+        VS: 'Vehicle Supplier',
+        VOEM: 'Vehicle OEM',
+        UNK: 'Unknown',
+        MS: 'Mobility Services' 
+    },
+    'Banking': {
+        UB: 'Universal Banks',
+        BNK: 'Banking',
+        UNK: 'Unknown'
+    },
+    'Capital Markets': {
+        CMS: 'Capital Markets/Securities'
+    },
+    'Consumer Goods': {
+        FB: 'Food & Beverage',
+        WD: 'Wholesale Distribution',
+        CG: 'Consumer Goods'
+    },
+    'Defense': {
+        NS: 'National Security',
+        DEF: 'Defense',
+        UNK: 'Unknown'
 
-    const inpSegMash = document.getElementById("inpsegmash");
+    },
+    'Defense Industrial Base': {
+        DIB: 'Defense Industrial Base'
+    },
+    'Dig Native Startups & Unicorns': {
+        DNSU: 'Dig Native Startups & Unicorns'
+    },
+    'Discrete Manufacturing': {
+        SMC: 'Semiconductor',
+        IM: 'Industrial Machinery',
+        HTE: 'High Tech Electronics',
+        UNK: 'Unknown',
+        ARS: 'Aerospace'
+    },
+    'Gaming': {
+        GM: 'Gaming'
+    },
+    'Gov Ops & Infrastructure': {
+        ERI: 'Energy & Resrc Infrastructure',
+        CG: 'Central Government',
+        GO: 'Government Operations',
+        TI: 'Transportation Infrastructure',
+        GOII: 'Gov Ops & Infrastructure ISVs',
+        LRG: 'Local & Regional Government'
+    },
+    'Health Payor': {
+        HP: 'Health Payor'
+    },
+    'Health Pharma': {
+        BT: 'Biotech',
+        PH: 'Pharma'
+    },
+    'Health Provider': {
+        HP: 'Health Provider',
+        UNK: 'Unknown'
+    },
+    'Higher Education': {
+        HE: 'Higher Education',
+        UNK: 'Unknown'
+    },
+    'Hospitality': {
+        AC: 'Accommodation',
+        UNK: 'Unknown'
+    },
+    'Hosting': {
+        HOS: 'Hosting',
+        UNK: 'Unknown'
+    },
+    'Insurance': {
+        ID: 'Insurance Direct',
+        IO: 'Insurance Other'
+    },
+    'Intelligence': {
+        IA: 'Intelligence Agencies'
+    },
+    'IT Services & Business Advisory': {
+        ITS: 'IT Services',
+        MOS: 'Managed Outsourced Services',
+        ATS: 'Accounting & Tax Services',
+        MC: 'Management Consulting'
+    },
+    'Libraries & Museums': {
+        LM: 'Libraries & Museums'
+    },
+    'Media & Entertainment': {
+        BDC: 'Broadcasters',
+        ADV: 'Advertising',
+        MEEP: 'Media&Entertmnt Equip Providrs',
+        PUB: 'Publishing',
+        FSA: 'Film, Studio, Animation',
+        SLE: 'Sports & Live Experiences',
+        CS: 'Cable & Satellite',
+        UNK: 'Unknown'
+    },
+    'MedTech': {
+        MT: 'MedTech'
+    },
+    'Mining': {
+        MN: 'Mining'
+    },
+    'Nonprofit & IGO': {
+        RSCH: 'Research',
+        NPHHS: 'NonProfit Health & Human Srvc',
+        FBO: 'Faith Based Organizations',
+        EAW: 'Environmental & Animal Welfare',
+        UNK: 'Unknown',
+        GDA: 'Global Development & Aid',
+        IO: 'International Organizations',
+        CP: 'Charities & Philanthropic',
+        NPAC: 'NonProfit Aged Care',
+        MO: 'Membership Organizations'
+    },
+    'Oil & Gas': {
+        OG: 'Oil & Gas',
+        UNK: 'Unknown'
+    },
+    'Other - Unsegmented': {
+        OU: 'Other - Unsegmented',
+        UNK: 'Unknown'
+    },
+    'Other': {
+        UNK: 'Unknown'
+    },
+    'Other Professional Services': {
+        AE: 'Architecture & Engineering',
+        UNK: 'Unknown',
+        SS: 'Staffing Services',
+        LS: 'Legal Services',
+        OS: 'Other Services'
+    },
+    'Other Services': {
+        UNK: 'Unknown'
+    },
+    'Power & Utilities': {
+        PU: 'Power & Utilities'
+    },
+    'Primary & Secondary Edu/K-12': {
+        PSEK: 'Primary & Secondary Edu/ K-12'
+    },
+    'Process Manufacturing': {
+        CHMCLS: 'Chemicals',
+        UNK: 'Unknown',
+        AB: 'AgriBusiness'
+    },
+    'Public Finance': {
+        TR: 'Tax & Revenue',
+        FBT: 'Finance, Budget & Treasury'
+    },
+    'Public Safety & Justice': {
+        PUSFT: 'Public Safety',
+        JUS: 'Justice',
+        SEC: 'Security'
+    },
+    'Real Estate': {
+        RE: 'Real Estate',
+        CONS: 'Construction',
+        UNK: 'Unknown'
+    },
+    'Retailers': {
+        GM: 'General Merchandise',
+        FS: 'Food Service',
+        HPC: 'Health & Personal Care',
+        SR: 'Specialty Retail',
+        GRC: 'Grocery',
+        MVPD: 'Motor Vehicle & Parts Dealers',
+        RCG: 'Retail Convenience/Gas'
+    },
+    'Social Svcs & Public Health': {
+        GSP: 'Government Social Programs',
+        PCH: 'Public & Community Health',
+        UNK: 'Unknown'
+    },
+    'Telecommunications': {
+        CNSP: 'Comms&Ntwrk Service Providers',
+        CNEP: 'Comms&Ntwrk Equip Providers',
+        HISP: 'Hosters & ISPs',
+        UNK: 'Unknown'
+    },
+    'Transport & Travel': {
+        TH: 'Travel & Hospitality',
+        TL: 'Transport & Logistics'
+    },
+    'Water & Sewage': {
+        WS: 'Water & Sewage'
+    }
+};
 
-    const inpSegSQL = document.getElementById("inpsegsql");
+    const onlyIndustry = [
+        'At scale SW, data & platforms',
+        'Automotive',
+        'Banking',
+        'Capital Markets',
+        'Consumer Goods',
+        'Defense',
+        'Defense Industrial Base',
+        'Dig Native Startups & Unicorns',
+        'Discrete Manufacturing',
+        'Gaming',
+        'Gov Ops & Infrastructure',
+        'Health Payor',
+        'Health Pharma',
+        'Health Provider',
+        'Higher Education',
+        'Hospitality',
+        'Hosting',
+        'Insurance',
+        'Intelligence',
+        'IT Services & Business Advisory',
+        'Libraries & Museums',
+        'Media & Entertainment',
+        'MedTech',
+        'Mining',
+        'Nonprofit & IGO',
+        'Oil & Gas',
+        'Other - Unsegmented',
+        'Other',
+        'Other Professional Services',
+        'Other Services',
+        'Power & Utilities',
+        'Primary & Secondary Edu/K-12',
+        'Process Manufacturing',
+        'Public Finance',
+        'Public Safety & Justice',
+        'Real Estate',
+        'Retailers',
+        'Social Svcs & Public Health',
+        'Telecommunications',
+        'Transport & Travel',
+        'Water & Sewage'
+    ];
 
-    const formSegment = document.getElementById("formSegment");
+    const onlyVertical = [
+        'Mobility Services',
+        'Vehicle OEM',
+        'Vehicle Supplier',
+        'Insurance Direct',
+        'Insurance Other',
+        'Justice',
+        'Public Safety',
+        'Security',
+        'AgriBusiness',
+        'Transport & Logistics',
+        'Travel & Hospitality',
+        'Banking',
+        'Universal Banks',
+        'Consumer Goods',
+        'Food & Beverage',
+        'Wholesale Distribution',
+        'Defense',
+        'National Security',
+        'High Tech Electronics',
+        'Gaming',
+        'Health Payor',
+        'Health Provider',
+        'Higher Education',
+        'Libraries & Museums',
+        'Advertising',
+        'Broadcasters',
+        'Cable & Satellite',
+        'Media&Entertmnt Equip Providrs',
+        'Publishing',
+        'Charities & Philanthropic',
+        'International Organizations',
+        'Membership Organizations',
+        'Other - Unsegmented',
+        'Primary & Secondary Edu/ K-12',
+        'Food Service',
+        'General Merchandise',
+        'Grocery',
+        'Health & Personal Care',
+        'Motor Vehicle & Parts Dealers',
+        'Retail Convenience/Gas',
+        'Specialty Retail',
+        'Comms&Ntwrk Equip Providers',
+        'Comms&Ntwrk Service Providers',
+        'Hosters & ISPs',
+        'Capital Markets/Securities',
+        'Intelligence Agencies',
+        'Faith Based Organizations',
+        'Unknown',
+        'Environmental & Animal Welfare',
+        'Construction',
+        'Real Estate',
+        'Global Development & Aid',
+        'Semiconductor',
+        'Accommodation',
+        'Sports & Live Experiences',
+        'Mining',
+        'NonProfit Aged Care',
+        'NonProfit Health & Human Srvc',
+        'Research',
+        'Oil & Gas',
+        'Legal Services',
+        'Other Services',
+        'Power & Utilities',
+        'Chemicals',
+        'Finance, Budget & Treasury',
+        'Tax & Revenue',
+        'Government Social Programs',
+        'Public & Community Health',
+        'Water & Sewage',
+        'At scale SW, data & platforms',
+        'Defense Industrial Base',
+        'Dig Native Startups & Unicorns',
+        'Aerospace',
+        'Industrial Machinery',
+        'Biotech',
+        'Pharma',
+        'Accounting & Tax Services',
+        'IT Services',
+        'Managed Outsourced Services',
+        'Management Consulting',
+        'Film, Studio, Animation',
+        'MedTech',
+        'Architecture & Engineering',
+        'Staffing Services',
+        'Central Government',
+        'Energy & Resrc Infrastructure',
+        'Gov Ops & Infrastructure ISVs',
+        'Government Operations',
+        'Local & Regional Government',
+        'Transportation Infrastructure'
+    ];
+        
+    const jobRoles = [
+        'Accounting Manager',
+        'Asset Manager',
+        'Auditor',
+        'Bank Director',
+        'Banking Consultant',
+        'Banking Manager',
+        'Bursar',
+        'Controller',
+        'Director of Accounting',
+        'Director of Financial Services',
+        'Director of Risk Management',
+        'Finance Manager',
+        'Financial Advisor',
+        'Fund Accountant',
+        'Institutional Investment Salesperson',
+        'Investment Portfolio Manager',
+        'Manager Risk Management',
+        'Pension Manager',
+        'Revenue Manager',
+        'Treasurer',
+        'Trust Officer',
+        'Underwriter',
+        'Vice President Finance',
+        'Vice President Finance Information Technology',
+        'Vice President of Accounting',
+        'Vice President of Risk Management',
+        'Wealth Manager',
+        'Boss',
+        'Business Development Manager',
+        'Business Planner',
+        'Business Strategist',
+        'Consultant',
+        'Director General',
+        'Director of Business Development',
+        'Manager Positions',
+        'Office Manager',
+        'Planning Director',
+        'Subject Matter Expert',
+        'Vice President of Business Development',
+        'Vice President of Digital Transformation',
+        'Vice President of Planning',
+        'Commander',
+        'Community Development Director',
+        'Community Development Manager',
+        'Director of Development and Community Relations',
+        'Director of Sustainability',
+        'Economic Development Manager',
+        'Environmental Compliance Manager',
+        'Executive Director of Development',
+        'Fundraiser',
+        'Minister',
+        'Public Officer',
+        'Public Sector Director',
+        'Public Sector Manager',
+        'Sustainability Manager',
+        'Sustainable Development Manager',
+        'Compliance Manager',
+        'Director of Compliance',
+        'Document Controller',
+        'Information Risk Manager',
+        'Information Technology Risk Manager',
+        'Privacy Manager',
+        'Risk Compliance Manager',
+        'Risk Compliance Officer',
+        'Vice President Compliance',
+        'Call Center Director',
+        'Call Center Manager',
+        'Customer Service Manager',
+        'Director Customer Experience',
+        'Director of Customer Service',
+        'Director Service Support',
+        'Facilities Manager',
+        'Membership Director',
+        'Service Support Manager',
+        'Technical Support Representative',
+        'Vice President Call Center Operations',
+        'Vice President Customer Service',
+        'Vice President Support Services',
+        'Clinical Data Manager',
+        'Dentist',
+        'Dietitian',
+        'Director Clinical Informatics',
+        'Director Clinical Operations',
+        'Director Health Information Management',
+        'Director Healthcare',
+        'Director of Medical Records',
+        'Doctor',
+        'Health Information Manager',
+        'Medical Advisor',
+        'Medical Assistant',
+        'Medical Director',
+        'Medical Manager',
+        'Medical Practitioner',
+        'Medical Representative',
+        'Medical Research Advisor',
+        'Nurse',
+        'Occupational Therapist',
+        'Pharmacist',
+        'Physical Therapist',
+        'Physician',
+        'Surgeon',
+        'Vice President Clinical Operations',
+        'Vice President Healthcare',
+        'Radiologist',
+        'Benefits Manager',
+        'Career Counselor',
+        'Compensation Manager',
+        'Director Compensation',
+        'Director of Benefits',
+        'Director of Diversity and Inclusion',
+        'Director of Professional Development',
+        'Director of Training',
+        'Diversity and Inclusion Manager',
+        'Human Resources Director',
+        'Human Resources Generalist',
+        'Human Resources Information System Consultant',
+        'Human Resources Legal Consultant',
+        'Human Resources Manager',
+        'Manager Training Organizational Development',
+        'People Manager',
+        'Professional Development Manager',
+        'Trainer',
+        'Vice President Benefits',
+        'Vice President Compensation',
+        'Vice President Human Resources',
+        'Vice President of Diversity and Inclusion',
+        'Vice President Professional Development',
+        'Vice President Talent Management',
+        'Vice President Training',
+        'HR Business Partner',
+        'Director of Intellectual Property',
+        'Director of Legal Services',
+        'Judge',
+        'Lawyer',
+        'Legal Manager',
+        'Legal Practitioner',
+        'Legal Services Manager',
+        'Vice President Intellectual Property',
+        'Vice President Legal',
+        'Advertising Director',
+        'Category Manager',
+        'Market Research Manager',
+        'Marketing Director',
+        'Marketing Manager',
+        'Marketing Product Manager',
+        'Marketing Project Manager',
+        'Online Marketing Manager',
+        'Social Media Director',
+        'Social Media Manager',
+        'Vice President Marketing',
+        'Digital Marketing Director',
+        'Digital Marketing Manager',
+        'Vice President Digital Marketing ',
+        'Website Owner',
+        'Author',
+        'Content Director',
+        'Content Manager',
+        'Digital Art Director',
+        'Digital Content Manager',
+        'Digital Director',
+        'Digital Manager',
+        'Director Editorial Services',
+        'Director Internet Technology',
+        'Director of Audio Visual Services',
+        'Director of Content Development',
+        'Director of Digital Services',
+        'Director of Event Technology',
+        'Director of Public Relations',
+        'Director of Publications',
+        'Director of Web Development',
+        'Editorial Manager',
+        'Medical Writer',
+        'Music Manager',
+        'Musician',
+        'Production Crew',
+        'Public Relations Manager',
+        'Public Speaker',
+        'Publications Manager',
+        'Publisher',
+        'Reporter',
+        'Vice President Content',
+        'Vice President Public Relations',
+        'Vice President Publishing',
+        'Web Content Manager',
+        'Website Manager',
+        'Director of Communications',
+        'Administration Manager',
+        'Director of Administration',
+        'Director of Business Operations',
+        'Director of Operations',
+        'Director of Property Management',
+        'Heavy Equipment Supervisor',
+        'Manager Knowledge Management',
+        'Manufacturing Operations Manager',
+        'Mechanic and Maintenance Tradesperson',
+        'Operations Manager',
+        'Property Manager',
+        'Vice President Administration',
+        'Vice President Operations',
+        'Vice President Property Management',
+        'Construction Project Planner',
+        'Director Project Management',
+        'Manager Project Management',
+        'Planning Manager',
+        'Program Manager',
+        'Project Manager',
+        'Staff Manager',
+        'Vice President Project Management',
+        'Buyer',
+        'Director of Procurement',
+        'Director of Purchasing',
+        'Information Technology Buyer',
+        'Information Technology Procurement Manager',
+        'Information Technology Purchasing Manager',
+        'Marketing Purchasing Manager',
+        'Procurement Manager',
+        'Purchasing Manager',
+        'Sales Purchase Manager',
+        'Vice President Procurement',
+        'Vice President Purchasing',
+        'Physicist',
+        'Academic Researcher',
+        'Agriculturist',
+        'Archaeology and History Researcher',
+        'Bioinformatician',
+        'Chemist',
+        'Clinical System Manager',
+        'Director of Research Development',
+        'Food Technologist',
+        'Geologist',
+        'Head of Information Services',
+        'Head of Library Services',
+        'Laboratory Scientist',
+        'Laboratory Technician',
+        'Life Sciences and Medical Researcher',
+        'Medical Researcher',
+        'Research and Development Manager',
+        'Research Development Researcher',
+        'Scientist',
+        'Vice President Research and Development',
+        'Vice President of Account Management',
+        'Sales Executive',
+        'Account Executive',
+        'Account Manager',
+        'Automotive Salesperson',
+        'Banking Sales Consultant',
+        'Customer Relations Manager',
+        'Director Commerce',
+        'Director of Account Management',
+        'Director of eCommerce',
+        'Director of Sales and Client Services',
+        'eCommerce Manager',
+        'Manager Account Management',
+        'Medical Salesperson',
+        'Relationship Manager',
+        'Retail Director',
+        'Retail Manager',
+        'Sales Director',
+        'Sales Manager',
+        'Sales Operations Manager',
+        'Sales Supervisor',
+        'Vice President eCommerce',
+        'Vice President of Retail',
+        'Vice President of Sales',
+        'Vice President Public Sector',
+        'Director of Logistics',
+        'Director of Manufacturing',
+        'Director of Transportation',
+        'Director of Warehousing',
+        'Director Operations Logistics',
+        'Global Supply Chain Director',
+        'Logistics Manager',
+        'Manufacturing Manager',
+        'Supply Chain Director',
+        'Supply Chain Manager',
+        'Transportation Manager',
+        'Vice President Logistics',
+        'Vice President of Manufacturing',
+        'Vice President Supply Chain',
+        'Vice President Transportation',
+        'Warehouse Manager',
+        'Development Manager',
+        'Senior Developer',
+        'Vice President of Application Development',
+        'Vice President of Software Development',
+        'Web Development Manager',
+        'Android Developer',
+        'App Developer',
+        'Back End Developer',
+        'Big Data Developer',
+        'Blockchain Developer',
+        'C Developer',
+        'Database Developer',
+        'Developer',
+        'Dotnet Developer',
+        'Drupal Developer',
+        'Dynamics Developer',
+        'Freelance Developer',
+        'Full Stack Developer',
+        'Game Developer',
+        'Hadoop Developer',
+        'HTML Developer',
+        'IOS Developer',
+        'Java Developer',
+        'Linux Developer',
+        'Mobile Developer',
+        'Php Developer',
+        'Python Developer',
+        'Rails Developer',
+        'Research Development Software Developer',
+        'Ruby On Rails Developer',
+        'SAP Developer',
+        'Scala Developer',
+        'Sharepoint Developer',
+        'Software Application Developer',
+        'Software Developer',
+        'Sql Developer',
+        'Unix Developer',
+        'Visual Basic Developer',
+        'Web Application Developer',
+        'Web Developer',
+        'Chief Accounting Officer',
+        'Chief Audit Executive',
+        'Chief Economist',
+        'Chief Financial Officer',
+        'Chief Risk Officer',
+        'Chief Enterprise Architect',
+        'Chief Information Technology Architect',
+        'Chief Solutions Architect',
+        'Chief Technology Architect',
+        'Chairperson',
+        'Chief Executive Officer',
+        'Entrepreneur',
+        'Executive',
+        'President',
+        'Executive Director',
+        'Managing Director',
+        'Business Owner',
+        'Founder',
+        'Owner',
+        'Small Business Owner',
+        'Board Member',
+        'Partner',
+        'Chief of Police',
+        'Chief Sustainability Officer',
+        'Fire Chief',
+        'Governor',
+        'Mayor',
+        'Non-Profit Board Member',
+        'Chief of Department',
+        'Chief Compliance Officer',
+        'Chief Privacy Officer',
+        'Chief Experience Officer',
+        'Chief Customer Service Officer',
+        'Chief Data Officer',
+        'Chief Data Scientist',
+        'Chief Developer',
+        'Chancellor',
+        'Chief Academic Officer',
+        'Provost',
+        'Superintendent',
+        'Chief Blockchain Officer',
+        'Chief Medical Officer',
+        'Chief Nursing Officer',
+        'Chief Medical Information Officer',
+        'Chief Diversity and Inclusion Officer',
+        'Chief Human Resources Officer',
+        'Chief Talent Officer',
+        'Chief Information Officer',
+        'Chief Information Technology Officer',
+        'Chief Technology Officer',
+        'Chief Transformation Officer',
+        'Chief Intellectual Property Officer',
+        'Chief Legal Officer',
+        'Chief Marketing Officer',
+        'Marketing Executive',
+        'Chief Communications Officer',
+        'Chief Digital Officer',
+        'Media Executive',
+        'Chief of Staff',
+        'Chief Operations Officer',
+        'Corporate Board Member',
+        'Interim Executive',
+        'Chief Innovation Officer',
+        'Chief Product Officer',
+        'Chief Program Officer',
+        'Chief Project Officer',
+        'Chief Procurement Officer',
+        'Chief Research Officer',
+        'Chief Scientific Officer',
+        'Chief Revenue Officer',
+        'Chief Sales Officer',
+        'Chief Knowledge Officer',
+        'Chief Information Security Officer',
+        'Chief Security Architect',
+        'Chief Supply Chain Officer',
+        'Architecture Manager',
+        'Business Architect',
+        'Business Intelligence Architect',
+        'Cloud Architect',
+        'Data Architect',
+        'Director Enterprise Architecture',
+        'Director Information Technology Architecture',
+        'Director of Architecture',
+        'Director of Information Architecture',
+        'Director Solutions Architecture',
+        'Enterprise Architect',
+        'Enterprise Architecture Manager',
+        'Enterprise Data Architect',
+        'Information Architect',
+        'Information Technology Architect',
+        'Information Technology Architecture Manager',
+        'Infrastructure Architect',
+        'Manager Information Architecture',
+        'Software Architect',
+        'Solutions Architect',
+        'System Architect',
+        'Technical Architect',
+        'Vice President Enterprise Architecture',
+        'Vice President of Architecture',
+        'Web Architect',
+        'Associate Technical Architect',
+        'Architect',
+        'Business Intelligence Consultant',
+        'Business Intelligence Manager',
+        'Data Governance Manager',
+        'Data Manager',
+        'Data Science Manager',
+        'Data Science Vice President',
+        'Data Warehouse Manager',
+        'Database Manager',
+        'Datacenter Manager',
+        'Director Business Intelligence',
+        'Director Data Management',
+        'Director Data Science',
+        'Director of Analytics',
+        'Director of Artificial Intelligence',
+        'Director of Data Services',
+        'Director of Machine Learning',
+        'Manager Clinical Data Management',
+        'Manager Data Management',
+        'Manager of Artificial Intelligence',
+        'Manager of Machine Learning',
+        'Master Data Manager',
+        'Vice President Business Intelligence',
+        'Vice President of Artificial Intelligence',
+        'Vice President of Machine Learning',
+        'Artificial Intelligence Specialist',
+        'Data Specialist',
+        'Data Warehouse Specialist',
+        'Database Marketing Specialist',
+        'Machine Learning Specialist',
+        'Artificial Intelligence Engineer',
+        'Big Data Analyst',
+        'Business Analyst',
+        'Business Intelligence Analyst',
+        'Business Intelligence Engineer',
+        'Data Analyst',
+        'Data Engineer',
+        'Data Entry Clerk',
+        'Data Miner',
+        'Data Scientist',
+        'Data Warehouse Administrator',
+        'Data Warehouse Engineer',
+        'Database Administrator',
+        'Database Engineer',
+        'Deep Learning Engineer',
+        'Machine Learning Engineer',
+        'Computer Aided Design Manager',
+        'Devops Manager',
+        'Director of Engineering',
+        'Director of Software Engineering',
+        'Engineering Manager',
+        'Software Application Manager',
+        'Software Manager',
+        'Vice President of Engineering',
+        'Vice President of Software Engineering',
+        'Virtual Reality Software Engineer',
+        'Wireless Network Engineer',
+        'Devops Specialist',
+        'Telecommunications Engineering Specialist',
+        'Audiovisual Engineer',
+        'Avionics and Flight Engineer',
+        'Chemical Process Engineer',
+        'Civil Engineer',
+        'Cloud Engineer',
+        'Coder',
+        'Computer Aided Design Engineer',
+        'Computer Aided Designer',
+        'Computer Engineer',
+        'Computer Hardware Engineer',
+        'Computer Scientist',
+        'Construction Engineer',
+        'Control Systems Engineer',
+        'Device Engineer',
+        'Devops Engineer',
+        'Electrical Engineer',
+        'Embedded Software Engineer',
+        'Engineer',
+        'Flash Programmer',
+        'Frontend Engineer',
+        'Hacker',
+        'Hardware Engineer',
+        'Industrial Designer',
+        'Information Technology Engineer',
+        'Internet of Things Engineer',
+        'Product Development Engineer',
+        'Professional Engineer',
+        'Programmer',
+        'Quality Assurance Engineer',
+        'Quality Assurance Tester',
+        'Research Development Software Engineer',
+        'Robotics Engineer',
+        'Site Reliability Engineer',
+        'Software Analyst',
+        'Software Engineer',
+        'Software Quality Engineer',
+        'Software Test Engineer',
+        'Software Tester',
+        'Technology Development Engineer',
+        'Test Development Engineer',
+        'Tester',
+        'Agile Coach',
+        'Desktop Publisher',
+        'Desktop Publishing Manager',
+        'Desktop Support Manager',
+        'Director Infrastructure Services',
+        'Director Network Engineering',
+        'Director of Information Management',
+        'Director of Information Technology',
+        'Director of Infrastructure',
+        'Director of User Experience',
+        'Director SAP',
+        'Director Software Quality Assurance',
+        'ERP Consultant',
+        'Game Director',
+        'Game Producer',
+        'Information Manager',
+        'Information Technology Auditor',
+        'Information Technology Consultant',
+        'Information Technology Executive',
+        'Information Technology Governance Manager',
+        'Information Technology Manager',
+        'Infrastructure Manager',
+        'Software Quality Manager',
+        'Software Test Manager',
+        'System Administrator',
+        'Technician',
+        'Technology Consultant',
+        'Technology Manager',
+        'Usability Manager',
+        'User Experience Designer',
+        'User Experience Manager',
+        'Vice President Information Management',
+        'Vice President Information Technology',
+        'Vice President of Infrastructure',
+        'Vice President of Technology',
+        'Vice President User Experience',
+        'Director Information Technology Security',
+        'GIS Specialist',
+        'Information Technology Support Specialist',
+        'Telecommunications Specialist',
+        'Computer Forensic Analyst',
+        'Desktop Support Engineer',
+        'Game Designer',
+        'Game Tester',
+        'Information Technology Administrator',
+        'Information Technology Analyst',
+        'Information Technology Generalist',
+        'Information Technology Help Desk',
+        'Information Technology Intern',
+        'Information Technology System Administrator',
+        'Infrastructure Engineer',
+        'Network Administrator',
+        'Network Engineer',
+        'Salesforce Administrator',
+        'SAP Administrator',
+        'Sharepoint Administrator',
+        'System Analyst',
+        'Usability Engineer',
+        'User Experience Engineer',
+        'User Interface Designer',
+        'Director of Innovation',
+        'Director of Product Management',
+        'Innovation Manager',
+        'Manager Product Management',
+        'Product Manager',
+        'Vice President Innovation',
+        'Vice President of Product Management',
+        'Product Developer',
+        'Director of Knowledge Management',
+        'Cloud Security Manager',
+        'Data Protection Manager',
+        'Cyber Security Architect Director',
+        'Director of Threat Intelligence',
+        'Cyber Security Manager',
+        'Data Security Manager',
+        'Director Information Security',
+        'Director of Cloud Security',
+        'Director of Cyber Security',
+        'Threat Intelligence Engineer',
+        'Threat Intelligence Lead',
+        'Director of Security Architecture',
+        'Director Cyber Intelligence & Data Operations',
+        'Director Security Operations Center',
+        'Head of Security Architecture',
+        'Information Security Manager',
+        'Information Security Officer',
+        'Information Technology Security Manager',
+        'Manager of Cloud Security',
+        'Principal Security Architect',
+        'Security Operations Manager',
+        'Security Risk Manager',
+        'Senior Manager Security Operations',
+        'Senior Security Architect',
+        'Vice President Cybersecurity Operations',
+        'Vice President Information Security',
+        'Vice President of Cloud Security',
+        'Vice President of Security Operations',
+        'Cloud Security Architect',
+        'Cyber Security Analyst',
+        'Cyber Security Engineer',
+        'Safety Specialist',
+        'GSOC (Global Security Operations Center) Operator',
+        'Information Security Analyst',
+        'Information Security Specialist',
+        'Information Technology Security Specialist',
+        'Security Architect',
+        'Security Engineer',
+        'Data Protection Officer',
+        'Fraud Analyst',
+        'Threat Intelligence Analyst',
+        'Capital Markets Specialist',
+        'Corporate Finance Specialist',
+        'Corporate Tax Specialist',
+        'Finance Specialist',
+        'Financial Aid Specialist',
+        'Investment Trader',
+        'Payroll Specialist Accounting',
+        'Personal Tax Specialist',
+        'Tax Specialist',
+        'Accountant',
+        'Accounts Payable Clerk',
+        'Accounts Receivable Clerk',
+        'Actuary',
+        'Banker',
+        'Branch Bank Employee',
+        'Commercial Banker',
+        'Commercial Loan Officer',
+        'Credit Analyst',
+        'Economist',
+        'Equity Analyst',
+        'Equity Research Analyst',
+        'Financial Analyst',
+        'Financial Professional',
+        'Financial Research Analyst',
+        'Global Financial Representative',
+        'Investment Banking Analyst',
+        'Loan Officer',
+        'Personal Banker',
+        'Business Development Specialist',
+        'Competitive Intelligence Specialist',
+        'Corporate Merger Specialist',
+        'Strategic Alliance Specialist',
+        'Business Intern',
+        'Office Worker',
+        'Community Development Specialist',
+        'Environmental Protection Specialist',
+        'Environmental Specialist',
+        'Public Safety Professional',
+        'Sustainability Specialist',
+        'Campaign Coordinator',
+        'Community Development Coordinator',
+        'Military',
+        'Political Staff',
+        'Public Sector',
+        'Social Worker',
+        'Volunteer',
+        'Postal Worker',
+        'Compliance Specialist',
+        'Risk Management Specialist',
+        'Privacy Officer',
+        'Call Center Specialist',
+        'Customer Service Specialist',
+        'Flight Crew',
+        'Food Service Professional',
+        'Hospitality Professional',
+        'Service Delivery Specialist',
+        'Service Support Specialist',
+        'Support Specialist',
+        'Deskside Support',
+        'Event Planner',
+        'Laborer',
+        'Service Desk Administrator',
+        'Behavioral Health Specialist',
+        'Health Information Specialist',
+        'Health Specialist',
+        'Mental Health Professional',
+        'Pet Services Specialist',
+        'Public Health Specialist',
+        'Recreation Professional',
+        'Alternative Medicine Practitioner',
+        'Caregiver',
+        'Clinical Data Coordinator',
+        'Healthcare Administrator',
+        'Healthcare Worker',
+        'Benefits Specialist',
+        'Compensation Specialist',
+        'Human Resources Specialist',
+        'Benefits Administrator',
+        'Recruiter',
+        'Claims Specialist',
+        'Contract Specialist',
+        'Government Policy Specialist',
+        'Intellectual Property Specialist',
+        'Legal Administrative Professional',
+        'Litigation Specialist',
+        'Regulatory Specialist',
+        'Contract Administrator',
+        'Court Clerk',
+        'Legal Contract Administrator',
+        'Professional Fiduciary',
+        'Advertising Specialist',
+        'Marketing Communications Specialist',
+        'Marketing Operations Specialist',
+        'Marketing Research Specialist',
+        'Marketing Specialist',
+        'Pricing Specialist',
+        'Marketing Creative Designer',
+        'Merchandiser',
+        'Audio-Visual Specialist',
+        'Digital Media Specialist',
+        'Language and Localization Specialist',
+        'Multimedia Specialist',
+        'Print Specialist',
+        'Public Relations Specialist',
+        'Social Media Specialist',
+        'Content Developer',
+        'Copywriter',
+        'Digital Media Coordinator',
+        'Digital Media Designer',
+        'Entertainment Administrator',
+        'Graphic Designer',
+        'Graphic Web Designer',
+        'Illustrator',
+        'Journalist',
+        'Motion Graphics Designer',
+        'Performer',
+        'Photographer',
+        'Production Editor',
+        'Proposal Writer',
+        'Public Relations Officer',
+        'Technical Writer',
+        'Visual Designer',
+        'Web Administrator',
+        'Web Designer',
+        'Website Designer',
+        'Customs Specialist',
+        'Executive Assistant',
+        'International Trade Specialist',
+        'Logistics Specialist',
+        'Loss Prevention Specialist',
+        'Managed Services Specialist',
+        'Operations Specialist',
+        'Process Specialist',
+        'Travel and Tourism Professional',
+        'Administrative Employee',
+        'Assistant',
+        'Emergency Response Officer',
+        'Factory Worker',
+        'Operations Staff',
+        '3D Artist',
+        'Animator',
+        'Art Curator',
+        'Creative Designer',
+        'Fashion Designer',
+        'Interior Designer',
+        'Mariner',
+        'Military Officer',
+        'Urban Planner',
+        'Arts Professional',
+        'Commercial Real Estate Specialist',
+        '3D Designer',
+        'Contract Worker',
+        'Gamer',
+        'Homemaker',
+        'Jeweler',
+        'Landscape Designer',
+        'Personal Stylist',
+        'Retired',
+        'Tour Guide',
+        'Unemployed',
+        'Program Administrator',
+        'Program Analyst',
+        'Project Administrator',
+        'Scrum Master',
+        'Sales Purchase Specialist',
+        'Buyer Sourcing',
+        'Information Technology Procurement',
+        'Purchaser',
+        'Purchasing Officer',
+        'Sales Purchasing',
+        'Clinical Research Specialist',
+        'Clinical System Analyst',
+        'Conservationist',
+        'Librarian',
+        'Pharmaceutical Scientist',
+        'Product Researcher',
+        'Research Analyst',
+        'Research Employee',
+        'Research Fellow',
+        'Surveyor',
+        'eCommerce Specialist',
+        'Real Estate Specialist',
+        'Sales Specialist',
+        'Salesperson',
+        'Technical Sales Professional',
+        'Export Sales Specialist',
+        'Federal Salesperson',
+        'Insurance Agent',
+        'New Home Salesperson',
+        'Real Estate Broker',
+        'Retail Salesperson',
+        'Sales Analyst',
+        'Sales Employee',
+        'Sales Engineer',
+        'Transportation Specialist',
+        'Packaging Specialist',
+        'Supply Chain Specialist',
+        'Global Supply Chain Analyst',
+        'Logistics Employee',
+        'Warehouse Employee',
+        'Dean',
+        'Director of Education',
+        'Director of Educational Technology',
+        'Director of Instructional Technology',
+        'Education Administrator',
+        'Education Manager',
+        'Head of School',
+        'Instructional Designer',
+        'Lecturer',
+        'Principal',
+        'Professor',
+        'School Teacher',
+        'Technology Instructor',
+        'University Professor',
+        'Vice Chancellor',
+        'Vice President Education',
+        'Camp Counselor',
+        'Corporate Trainer',
+        'Doctoral Student',
+        'Education Professional',
+        'Educational Technology',
+        'Graduate Student',
+        'Instructional Technology Specialist',
+        'Intern',
+        'Student',
+        'Teacher',
+        'Undergraduate Student',
+        'Unclassified'
+    ]
+    
+    // Sections & Navigation Buttons
 
-    const segmentButton = document.getElementById("okSeg");
+    // Sections
 
-    const dataButton = document.getElementById("dataButton");
+    const mainSection = document.getElementById("main-section");    
+    
+    const emailMenu = document.getElementById("emailMenu");
+    
+    const dataMenu = document.getElementById("dataMenu");
 
-    const emailButton = document.getElementById("emailButton");
+    const segmentsSQLSection = document.getElementById("segments-SQL-section");
 
-    formSegment.onclick = (event) => {
-        event.preventDefault();
-    };
+    const industrySQLSection = document.getElementById("industry-SQL-section");
 
-    segmentButton.addEventListener("click", () => {
+    const indClassSQLSection = document.getElementById("indClass-SQL-section");
 
-        const mashSegments = inpSegMash.value;
+    const segmentsMarketoSection = document.getElementById("segments-marketo-section");
 
-        let inputArray = mashSegments
-        .split("), ")
-        .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment)
+    const industryMarketoSection = document.getElementById("industry-marketo-section");
 
-        inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
+    const marketingAudienceMarketoSection = document.getElementById("marketing-audience-marketo-section");
 
-        if (mashSegments.includes("High Value Individual")) inputArray.push("High Value Individual");
+    const jobRoleMarketoSection = document.getElementById("job-role-marketo-section");
+    
+    let currentSection;
 
-        let newSegments = [];
-        let newSubSegments = [];
-        let newSegment;
-        let newSubSegment;
+    let prevFactory;
 
-        for (let i = 0; i < inputArray.length; i++) {
+    // Functions
 
-            let completeSegment = inputArray[i];
-            
-            if (completeSegment.includes("(Deprecated)")) continue;
-            
-            if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); newSubSegments.push("High Value Individual"); continue };
+    const fixWord = async (word) => {
+        return await word
+        .replace("-", " ")
+        .split("")
+        .map((character, i) => i == 0 ? character
+        .toUpperCase() : character)
+        .join("");
+    }
+    
+    const inputLogic = async (filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3) => {
 
-            newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
+        let list = {};
 
-            if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
+        switch (filter) {
 
-            if (completeSegment.includes("(All SubSegments)")) {
+            case "segments":
 
-                let countSegment = 0;
+                let inputArray = input
+                .split("), ")
+                .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment)
 
-                for (let j = 0; j < inputArray.length; j++) {
+                inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
+
+
+                if (input.includes("High Value Individual")) inputArray.push("High Value Individual");
+
+                let newSegments = [];
+                let newSubSegments = [];
+                let newSegment;
+                let newSubSegment;
+
+                for (let i = 0; i < inputArray.length; i++) {
+
+                    let completeSegment = inputArray[i];
                     
-                    let completeSegment2 = inputArray[j];
+                    if (completeSegment.includes("(Deprecated)")) continue;
+                    
+                    if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); newSubSegments.push("High Value Individual"); continue };
 
-                    let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
+                    newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
 
-                    if (newSegment2 == newSegment) countSegment++;
+                    if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
 
+                    if (completeSegment.includes("(All SubSegments)")) {
+
+                        let countSegment = 0;
+
+                        for (let j = 0; j < inputArray.length; j++) {
+                            
+                            let completeSegment2 = inputArray[j];
+
+                            let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
+
+                            if (newSegment2 == newSegment) countSegment++;
+
+                        }
+
+                        if (countSegment == 1 || factory == "email") {
+
+                            !newSegments.includes(newSegment) && newSegments.push(newSegment);
+                            Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
+                        }
+
+                    } else {
+
+                        newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment))
+                        !newSegments.includes(newSegment) && newSegments.push(newSegment);
+                        !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && newSubSegments.push(newSubSegment);
+                    }
+                }
+    
+                list.subSegments = newSubSegments || "";
+                list.segments = newSegments || "";
+
+            break;
+
+            case "industry":
+
+                let inputArrayIndustry = input
+                .split("), ")
+                .map((industry, i, array) => i < array.length - 1 ? industry = industry.concat(")") : industry)
+
+                let newIndustryArray = [];
+                let newVerticalArray = [];
+
+                for (let i = 0; i < inputArrayIndustry.length; i++) {
+
+                    let completeIndustry = inputArrayIndustry[i];
+
+                    if (completeIndustry.includes("(Deprecated)")) continue;
+
+                    let newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry));
+
+                    if (completeIndustry.includes("(All Verticals)")) {
+
+                        let countIndustry = 0;
+
+                        for (let j = 0; j < inputArrayIndustry.length; j++) {
+                                            
+                            let completeIndustry2 = inputArrayIndustry[j];
+
+                            let newIndustry2 = onlyIndustry.find(industry => completeIndustry2.includes(industry));
+
+                            if (newIndustry2 == newIndustry) countIndustry++;
+
+                        }
+
+                        if (countIndustry == 1 || factory == "email") {
+                            
+                            !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
+                            
+                            Object.values(industryObject[newIndustry]).forEach(vertical => !newVerticalArray.includes(vertical) && newVerticalArray.push(vertical));
+                        
+                        }
+                    
+                    } else {
+
+                        let newVertical = onlyVertical.find(vertical => completeIndustry.includes(vertical))
+                        !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
+                        !newVerticalArray.includes(newVertical) && newVertical != undefined && newVerticalArray.push(newVertical);
+                    }
                 }
 
-                if (countSegment == 1) {
-                    !newSegments.includes(newSegment) && newSegments.push(newSegment);
-                    Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
+                list.vertical = newVerticalArray || "";
+                list.industry = newIndustryArray || "";
+            
+            break;
+            
+            case "marketing-audience":
+                let MKInput1 = input;
+                let inputMKArray1 = MKInput1 == "" ? [] : MKInput1.split(", ");
+                list.marketingAudience = inputMKArray1 || [];
+
+            break;
+
+            case "job-role":
+                
+                let JBRInput1 = input;
+                let JBRArray1 = JBRInput1.split(", ");
+                let JBRArray2 = JBRArray1.map( (JBRInput) => {
+                    return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
+                })
+                let inputJBRArray1 = JBRInput1 == "" ? [] : JBRArray2;
+                list.jobRole = inputJBRArray1 || [];
+
+            break;
+
+            case "indClass":
+
+                let MKInput = input;
+                let CGInput = input2;
+                let JBRInput = input3;
+                let inputMKArray = MKInput == "" ? [] : MKInput.split(", ");
+                let inputCGArray = CGInput == "" ? [] : CGInput.split(", ");
+                let inputJBRArray = JBRInput == "" ? [] : JBRInput.split(", ");
+
+                list.marketingAudience = inputMKArray || [];
+
+                list.customerGroup = inputCGArray || [];
+
+                list.jobRole = inputJBRArray || [];
+        }
+
+        inputBox.addEventListener('input', () => {
+
+            inputBox.classList.add('resizeBox2');
+
+            setTimeout(() => {
+
+                inputBox.classList.remove('resizeBox2');
+
+            }, 10000);
+
+            setTimeout(() => {
+                
+                inputBox.addEventListener("mouseover", () => {
+            
+                    if (inputBox.value != "") {
+                        
+                        inputBox.classList.add('resizeBox2');
+            
+                        inputBox.addEventListener("mouseleave", () => {
+                            
+                            setTimeout(() => {
+
+                                inputBox.classList.remove('resizeBox2');
+
+                            }, 10000);
+                            
+                        });
+                    };
+            
+                });
+
+            }, 10000);
+
+        });
+
+        if (inputBox2) {
+            
+            inputBox2.addEventListener('input', () => {
+    
+                inputBox2.classList.add('resizeBox2');
+    
+                setTimeout(() => {
+    
+                    inputBox2.classList.remove('resizeBox2');
+    
+                }, 10000);
+    
+                setTimeout(() => {
+                    
+                    inputBox2.addEventListener("mouseover", () => {
+                
+                        if (inputBox2.value != "") {
+                            
+                            inputBox2.classList.add('resizeBox2');
+                
+                            inputBox2.addEventListener("mouseleave", () => {
+                                
+                                setTimeout(() => {
+    
+                                    inputBox2.classList.remove('resizeBox2');
+    
+                                }, 10000);
+                                
+                            });
+                        };
+                
+                    });
+    
+                }, 10000);
+    
+            });
+        
+        }
+        
+        if (inputBox3) {
+            
+            inputBox3.addEventListener('input', () => {
+    
+                inputBox3.classList.add('resizeBox2');
+    
+                setTimeout(() => {
+    
+                    inputBox3.classList.remove('resizeBox2');
+    
+                }, 10000);
+    
+                setTimeout(() => {
+                    
+                    inputBox3.addEventListener("mouseover", () => {
+                
+                        if (inputBox3.value != "") {
+                            
+                            inputBox3.classList.add('resizeBox2');
+                
+                            inputBox3.addEventListener("mouseleave", () => {
+                                
+                                setTimeout(() => {
+    
+                                    inputBox3.classList.remove('resizeBox2');
+    
+                                }, 10000);
+                                
+                            });
+                        };
+                
+                    });
+    
+                }, 10000);
+    
+            });
+        
+        }
+
+        return list;
+    }
+
+    const outputLogic = async (filter, list, platform, outputBox, outputBox2) => {
+
+        let output;
+
+        if (platform == "SQL") {
+
+            switch (filter) {
+
+                case "segments":
+
+                    let newSubSegments = list.subSegments;
+
+                    let newSegments = list.segments;
+
+                    for (let l = 0; l < onlySubSegments.length; l++) {
+                        
+                        let DBSubSegment = onlySubSegments[l];
+
+                        if (!newSubSegments.includes(DBSubSegment)) newSubSegments.splice(0, 0, `--'${DBSubSegment}'`);
+                    
+                    }
+                    for (let m = 0; m < onlySegments.length; m++) {
+                        
+                        let DBSegment = onlySegments[m];
+
+                        if (!newSegments.includes(DBSegment)) newSegments.splice(0, 0, `--'${DBSegment}'`);
+                    }
+
+                    newSubSegments = newSubSegments.map(newSubSegment => !newSubSegment.includes("--") ? `'${newSubSegment}'` : newSubSegment);
+                    newSegments = newSegments.map(newSegment => !newSegment.includes("--") ? `'${newSegment}'` : newSegment);
+           
+                    let segmentCode = `
+                    /**Filters on specific list pulls - these filters vary based on request, so are in WHERE clause for easier editing**/\n
+                    \t\t\t\t/**ORG CLASSIFCATION**/\n
+                    \t\tAND  (\n
+                    \t\t\t\tIsNull(IPV.[SegmentName],'UnSegmented')/*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSegment)*/ in (\n\t\t\t\t\t${newSegments.join(",\n\t\t\t\t\t")}\n
+                    \t\t\t\t)\n
+                    \t\t\t\tAND  IsNull(IPV.[SubSegmentName],'UnSegmented') in /*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSubSegment)*/ (\n\t\t\t\t\t\t\t${newSubSegments.join(", \n\t\t\t\t\t\t\t")}\n
+                    \t\t\t\t )\n
+                    \t\t)`;
+
+                    outputBox.value = segmentCode;
+                    outputBox.classList.add("resizeBox");
+                break;
+                
+                case "industry":
+
+                let newIndustryArray = list.industry;
+
+                let newVerticalArray = list.vertical;
+
+                newIndustryArray = newIndustryArray.map(industry => `'${industry}'`);
+
+                newVerticalArray = newVerticalArray.map(vertical => `'${vertical}'`);
+
+                outputBox.value = `AND OPV.IndustryName in (\n\t${newIndustryArray.join(`,\n\t`)}\n)\n\nAND OPV.VerticalName in (\n\t${newVerticalArray.join(`,\n\t`)}\n)`;
+                outputBox.classList.add("resizeBox");
+
+                break;
+
+                case "indClass":
+
+                let marketingAudience = list.marketingAudience;
+
+                let customerGroup = list.customerGroup;
+
+                let jobRole = list.jobRole;
+
+                marketingAudience = marketingAudience.map(MA => `'${MA}'`);
+
+                customerGroup = customerGroup.map(CG => `'${CG}'`);
+
+                jobRole = jobRole.map(JR => `'${JR}'`);
+
+                let checkbox = document.getElementById('NUcheckbox');
+
+                if (checkbox.value.toLowerCase() == "yes") {
+                    outputBox.value = `/**IND CLASSIFCATION**/\nAND (\n\t/*BOB audience*/  IsNull(IPV.CustomerGroup,'UNKNOWN') in/*UCMP_V1.2_UPDATE REPLACED(IPV.MPAAAudience)*/ (${customerGroup.length == 0 ? `'BDM','EXECUTIVES','IT PROFESSIONALS','OTHER PROFESSIONALS','STUDENT/EDUCATOR','DEVELOPER','UNKNOWN'` : customerGroup.join(`, `)})\n\t\t--and IPV.CustomerGroup in ('')\n\t\t${marketingAudience.length == 0 ? "--" : ""}AND IsNull(IPV.MarketingAudience,'UnSegmented') in/*UCMP_V1.2_UPDATE */ (${marketingAudience.length == 0 ? "''" : `\n\t\t\t`+marketingAudience.join(`,\n\t\t\t`)+`\n\t\t`})\n\t\t${jobRole.length == 0 ? "--" : ""}and IPV.JobRole in (${jobRole.length == 0 ? "''" : `\n\t\t`+jobRole.join(`,\n\t\t`)+`\n\t\t`})\n\t\t--and IPV.JobRole Like/*UCMP_V1.2_UPDATE REPLACED(IPV.StandardJobTitle)*/ '%%'\n\t\t--and IPV.JobTitle like '%%'\n\t\t)`;
+                    outputBox.classList.add("resizeBox");
+                } else {
+                    outputBox.value = `/**IND CLASSIFCATION**/\nAND (\n\t/*BOB audience*/  IsNull(IPV.CustomerGroup,'UNKNOWN') in/*UCMP_V1.2_UPDATE REPLACED(IPV.MPAAAudience)*/ (${customerGroup.length == 0 ? `'BDM','EXECUTIVES','IT PROFESSIONALS','OTHER PROFESSIONALS','STUDENT/EDUCATOR','DEVELOPER','UNKNOWN'` : customerGroup.join(`, `)})\n\t\t--and IPV.CustomerGroup in ('')\n\t\t${marketingAudience.length == 0 ? "--" : ""}and IPV.MarketingAudience in (${marketingAudience.length == 0 ? "''" : `\n\t\t\t`+marketingAudience.join(`,\n\t\t\t`)+`\n\t\t`})\n\t\t${jobRole.length == 0 ? "--" : ""}and IPV.JobRole in (${jobRole.length == 0 ? "''" : `\n\t\t`+jobRole.join(`,\n\t\t`)+`\n\t\t`})\n\t\t--and IPV.JobRole Like/*UCMP_V1.2_UPDATE REPLACED(IPV.StandardJobTitle)*/ '%%'\n\t\t--and IPV.JobTitle like '%%'\n)`;
+                    outputBox.classList.add("resizeBox");
                 }
+            }
+        
+        } else {
+           
+            switch (filter) {
+                
+                case "segments":
+                    
+                    let segments = list.segments;
+        
+                    let subSegments = list.subSegments;
+                    
+                    output = `${segments.join(`\n`)}`;
+                    let output2 = `${subSegments.join(`\n`)}`;
+
+                    outputBox.value = output;
+                    outputBox2.value = output2;
+                    outputBox.classList.add("resizeBox");   
+                    outputBox2.classList.add("resizeBox");   
+
+
+                break;
+                
+                case "industry":
+
+                    const { industry, vertical } = list;
+            
+                    output = `${industry.join(`\n`)}`;
+
+                    let output2Industry = `${vertical.join(`\n`)}`;
+                    
+                    outputBox.value = output;
+                    outputBox2.value = output2Industry;
+                    outputBox.classList.add("resizeBox");   
+                    outputBox2.classList.add("resizeBox");   
+                    
+                break;
+
+                case "marketing-audience":
+
+                    const { marketingAudience } = list;
+            
+                    output = `${marketingAudience.join(`\n`)}`;
+                    
+                    outputBox.value = output;
+
+                    outputBox.classList.add("resizeBox");   
+
+                break;
+
+                case "job-role":
+
+                    const { jobRole } = list;
+            
+                    output = `${jobRole.join(`\n`)}`;
+                    
+                    outputBox.value = output;
+
+                    outputBox.classList.add("resizeBox");   
+                
+            }       
+            outputBox.value = output;
+            outputBox.classList.add("resizeBox");   
+        }
+    }
+
+    const convertLogic = async (filter, platform, outputBox, button, inputBox, factory, inputBox2, inputBox3, outputBox2) => {
+
+        await button.addEventListener("click", async () => {
+
+            let input = inputBox ? inputBox.value : "";
+
+            let input2 = inputBox2 ? inputBox2.value : "";
+
+            let input3 = inputBox3 ? inputBox3.value : "";
+
+            let list = await inputLogic(filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3);
+            
+            await outputLogic(filter, list, platform, outputBox, outputBox2);
+        })
+    }
+    
+    const generateSection = async (filter, platform, factory = "data", oldSection) => {
+
+
+        if ((platform == "SQL" && (filter == "segments" || filter == "industry")) || (platform == "marketo" && (filter == "marketing-audience" || filter == "job-role"))) { 
+            // 1 input, 1 output
+            let backMain = document.getElementById(`back-${filter}${platform}-mainmenu`);
+            let backFactMenu = document.getElementById(`back-${filter}${platform}-${factory}`);
+
+            if (!currentSection.innerHTML.includes("article")) {
+                if (
+                    oldSection != mainSection
+                    && oldSection != dataMenu
+                    && oldSection != emailMenu 
+                ) oldSection.innerHTML = "";
+        
+                // Def
+                let title = document.createElement("h1");
+                let subtitle = document.createElement("h2");
+                let article1 = document.createElement("article");
+                let article2 = document.createElement("article");
+                let formInputs = document.createElement("form");
+                let formTitle1 = document.createElement("div");
+                let formTitle2 = document.createElement("div");
+                let containerInputMash = document.createElement("div");
+                let containerInputMash2 = document.createElement("div");
+                let inputMaSH = document.createElement("textarea");
+                let convertButton = document.createElement("button");
+                let containerOutput = document.createElement("div");
+                let output = document.createElement("textarea");
+        
+                // Att
+                title.innerText = "ProStick"
+                subtitle.innerText = `MaSH Text to ${platform == "SQL" ? "SQL Code" : "Marketo"} - ${await fixWord(filter)}`
+                formInputs.id = `form-${filter}-${platform}`;
+                formTitle1.innerText = "MaSH Code";
+                containerInputMash2.className = "border";
+                inputMaSH.id = `input-${filter}-${platform}`;
+                inputMaSH.classList.add("initialinp", "input");
+                convertButton.id = `convert-${filter}-${platform}`;
+                convertButton.innerText = "Convert"
+                formTitle2.innerText = `${platform == "SQL" ? "SQL Code" : "Marketo Input"}`;
+                containerOutput.className = "border";
+                output.name = `input-${filter}-${platform}`;
+                output.id = `output-${filter}-${platform}`;
+                output.classList.add("initialinp", "output");
+                backMain.innerText = "Main Menu";
+                backFactMenu.classList.remove("disappear");
+                article2.className = "article2"
+        
+                // App
+                currentSection.append(article1, article2);
+                article1.append(title, subtitle, formInputs);
+                formInputs.append(formTitle1, containerInputMash, formTitle2, containerOutput);
+                containerInputMash.append(containerInputMash2, convertButton);
+                containerInputMash2.append(inputMaSH);
+                containerOutput.append(output);
+                article2.append(backMain, backFactMenu);
+                
+                // Process
+                formInputs.onclick = (event) => event.preventDefault();
+                await convertLogic(filter, platform, output, convertButton, inputMaSH, factory);
+
             } else {
 
-                newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment))
-                !newSegments.includes(newSegment) && newSegments.push(newSegment);
-                !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && newSubSegments.push(newSubSegment);
+                let formInputs = document.getElementById(`form-${filter}-${platform}`);
+
+                let convertButton = document.getElementById(`convert-${filter}-${platform}`);
+
+                let output = document.getElementById(`output-${filter}-${platform}`);
+
+                let inputMaSH = document.getElementById(`input-${filter}-${platform}`);
+
+                let article2 = document.getElementsByClassName("article2")[0];
+                
+                let oldButton = await article2.childNodes[article2.childNodes.length - 1];
+
+                oldButton.classList.add("disappear");
+
+                let backFactMenu = document.getElementById(`back-${filter}${platform}-${factory}`);
+                
+                backFactMenu.innerText = `${factory} menu`;
+
+                backFactMenu.classList.remove("disappear")
+
+                article2.append(backFactMenu);
+
+                // Process
+                formInputs.onclick = (event) => event.preventDefault();
+                await convertLogic(filter, platform, output, convertButton, inputMaSH, factory);
+
             }
-        }
 
-        for (let l = 0; l < onlySubSegments.length; l++) {
-                
-            let DBSubSegment = onlySubSegments[l];
+            backFactMenu.innerText = `${factory} menu`;
 
-            if (!newSubSegments.includes(DBSubSegment)) newSubSegments.splice(0, 0, `--'${DBSubSegment}'`);
-        }
-        for (let m = 0; m < onlySegments.length; m++) {
-                
-            let DBSegment = onlySegments[m];
+            prevFactory = factory;
 
-            if (!newSegments.includes(DBSegment)) newSegments.splice(0, 0, `--'${DBSegment}'`);
-        }
-
-        newSubSegments = newSubSegments.map(newSubSegment => !newSubSegment.includes("--") ? `'${newSubSegment}'` : newSubSegment);
-        newSegments = newSegments.map(newSegment => !newSegment.includes("--") ? `'${newSegment}'` : newSegment);
-
-        let segmentCode = `
-        /**Filters on specific list pulls - these filters vary based on request, so are in WHERE clause for easier editing**/\n
-        \t\t\t\t/**ORG CLASSIFCATION**/\n
-        \t\tAND  (\n
-        \t\t\t\tIsNull(IPV.[SegmentName],'UnSegmented')/*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSegment)*/ in (\n\t\t\t\t\t${newSegments.join(",\n\t\t\t\t\t")}\n
-        \t\t\t\t)\n
-        \t\t\t\tAND  IsNull(IPV.[SubSegmentName],'UnSegmented') in /*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSubSegment)*/ (\n\t\t\t\t\t\t\t${newSubSegments.join(", \n\t\t\t\t\t\t\t")}\n
-        \t\t\t\t )\n
-        \t\t)`;
-
-        inpSegSQL.value = segmentCode;
-        inpSegSQL.classList.add("resizeBox");
-    });
-
-    inpSegMash.addEventListener('input', () => {
-
-        inpSegMash.classList.add('resizeBox2');
-
-        setTimeout(() => {
-
-        inpSegMash.classList.remove('resizeBox2');
-
-        }, 10000);
-
-        setTimeout(() => {
+        } else if (platform == "SQL" && filter == "indClass") { 
             
-            inpSegMash.addEventListener("mouseover", () => {
+            // 3 inputs, 1 output
+
+            let backMain = document.getElementById(`back-${filter}${platform}-mainmenu`);
+            let backFactMenu = document.getElementById(`back-${filter}${platform}-${factory}`);
+
+            if (!currentSection.innerHTML.includes("article")) {
+                if (
+                    oldSection != mainSection
+                    && oldSection != dataMenu
+                    && oldSection != emailMenu 
+                ) oldSection.innerHTML = "";
         
-                if (inpSegMash.value != "") {
-                    
-                    inpSegMash.classList.add('resizeBox2');
+                // Def
+                let title = document.createElement("h1");
+                let subtitle = document.createElement("h2");
+                let article1 = document.createElement("article");
+                let article2 = document.createElement("article");
+                let formInputs = document.createElement("form");
+                let formTitle1 = document.createElement("div");
+                let formTitle2 = document.createElement("div");
+                let containerInputMash = document.createElement("div");
+                let containerInputMash2 = document.createElement("div");
+                let containerInputMash22 = document.createElement("div");
+                let containerInputMash23 = document.createElement("div");
+                let inputMaSH = document.createElement("textarea");
+                let inputMaSH2 = document.createElement("textarea");
+                let inputMaSH3 = document.createElement("textarea");
+                let convertButton = document.createElement("button");
+                let containerOutput = document.createElement("div");
+                let output = document.createElement("textarea");
+                let nullUnsegmentedText = document.createElement("div");
+                let nullUnsegmentedCheck = document.createElement("textarea");
+                let titleInput1 = document.createElement("div");
+                let titleInput2 = document.createElement("div");
+                let titleInput3 = document.createElement("div");
+
+                // Att
+                title.innerText = "ProStick";
+                subtitle.innerText = `MaSH Text to ${platform == "SQL" ? "SQL Code" : "Marketo"} - ${filter == "indClass" ? "Ind Classification" : filter}`;
+                formInputs.id = `form-${filter}-${platform}`;
+                formTitle1.innerText = "MaSH Code";
+                containerInputMash2.className = "border";
+                containerInputMash22.className = "border";
+                containerInputMash23.className = "border";
+                inputMaSH.id = `input-${filter}-${platform}`;
+                inputMaSH.classList.add("initialinp", "input");
+                inputMaSH2.id = `input-${filter}-${platform}2`;
+                inputMaSH2.classList.add("initialinp", "input");
+                inputMaSH3.id = `input-${filter}-${platform}3`;
+                inputMaSH3.classList.add("initialinp", "input");
+                convertButton.id = `convert-${filter}-${platform}`;
+                convertButton.innerText = "Convert"
+                formTitle2.innerText = `${platform == "SQL" ? "SQL Code" : "Marketo Input"}`;
+                containerOutput.className = "border";
+                output.name = `input-${filter}-${platform}`;
+                output.id = `output-${filter}-${platform}`;
+                output.classList.add("initialinp", "output");
+                backMain.innerText = "Main Menu";
+                backFactMenu.classList.remove("disappear");
+                article2.className = "article2";
+                nullUnsegmentedCheck.id = "NUcheckbox";
+                nullUnsegmentedCheck.classList.add("border", "initialinp", "input");
+                nullUnsegmentedText.innerText = "NULLs as Unsegmented in Marketing Audience ( Yes / No )";
+                titleInput1.innerText = "Marketing Audience";
+                titleInput2.innerText = "Customer Group";
+                titleInput3.innerText = "Job Roles";
+                // App
+                currentSection.append(article1, article2);
+                article1.append(title, subtitle, formInputs);
+                formInputs.append(formTitle1, containerInputMash, formTitle2, containerOutput);
+                containerInputMash.append(titleInput1, containerInputMash2, titleInput2, containerInputMash22, titleInput3, containerInputMash23, nullUnsegmentedText, nullUnsegmentedCheck, convertButton);
+                containerInputMash2.append(inputMaSH);
+                containerInputMash22.append(inputMaSH2);
+                containerInputMash23.append(inputMaSH3);
+                containerOutput.append(output);
+                article2.append(backMain, backFactMenu);
+                
+                // Process
+                formInputs.onclick = (event) => event.preventDefault();
+                await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, inputMaSH2, inputMaSH3);
+
+            } else {
+
+                let formInputs = document.getElementById(`form-${filter}-${platform}`);
+
+                let convertButton = document.getElementById(`convert-${filter}-${platform}`);
+
+                let output = document.getElementById(`output-${filter}-${platform}`);
+
+                let inputMaSH = document.getElementById(`input-${filter}-${platform}`);
+
+                let inputMaSH2 = document.getElementById(`input-${filter}-${platform}2`);
+
+                let inputMaSH3 = document.getElementById(`input-${filter}-${platform}3`);
+
+                let article2 = document.getElementsByClassName("article2")[0];
+                
+                let oldButton = await article2.childNodes[article2.childNodes.length - 1];
+
+                oldButton.classList.add("disappear");
+
+                let backFactMenu = document.getElementById(`back-${filter}${platform}-${factory}`);
+                
+                backFactMenu.innerText = `${factory} menu`;
+
+                backFactMenu.classList.remove("disappear")
+
+                article2.append(backFactMenu);
+
+                // Process
+                formInputs.onclick = (event) => event.preventDefault();
+                await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, inputMaSH2, inputMaSH3);
+
+            }
+
+            backFactMenu.innerText = `${factory} menu`;
+
+            prevFactory = factory;
+
+
+        } else if (platform == "marketo" && (filter == "segments" || filter == "industry")) { 
+            // 1 input, 2 outputs
+
+            let backMain = document.getElementById(`back-${filter}${platform}-mainmenu`);
+            let backFactMenu = document.getElementById(`back-${filter}${platform}-${factory}`);
+
+            if (!currentSection.innerHTML.includes("article")) {
+                if (
+                    oldSection != mainSection
+                    && oldSection != dataMenu
+                    && oldSection != emailMenu 
+                ) oldSection.innerHTML = "";
         
-                    inpSegMash.addEventListener("mouseleave", () => {
-                        
-                        setTimeout(() => {
-
-                            inpSegMash.classList.remove('resizeBox2');
-
-                        }, 10000);
-                        
-                    });
-                };
+                // Def
+                let title = document.createElement("h1");
+                let subtitle = document.createElement("h2");
+                let article1 = document.createElement("article");
+                let article2 = document.createElement("article");
+                let formInputs = document.createElement("form");
+                let formTitle1 = document.createElement("div");
+                let formTitle2 = document.createElement("div");
+                let containerInputMash = document.createElement("div");
+                let containerInputMash2 = document.createElement("div");
+                let inputMaSH = document.createElement("textarea");
+                let convertButton = document.createElement("button");
+                let containerOutput = document.createElement("div");
+                let containerOutput2 = document.createElement("div");
+                let output = document.createElement("textarea");
+                let output2 = document.createElement("textarea");
+                let outputTitle = document.createElement("div");
+                let outputTitle2 = document.createElement("div");
         
-            });
+                // Att
+                title.innerText = "ProStick"
+                subtitle.innerText = `MaSH Text to ${platform == "SQL" ? "SQL Code" : "Marketo"} - ${await fixWord(filter)}`
+                formInputs.id = `form-${filter}-${platform}`;
+                formTitle1.innerText = "MaSH Code";
+                containerInputMash2.className = "border";
+                inputMaSH.id = `input-${filter}-${platform}`;
+                inputMaSH.classList.add("initialinp", "input");
+                convertButton.id = `convert-${filter}-${platform}`;
+                convertButton.innerText = "Convert"
+                formTitle2.innerText = `${platform == "SQL" ? "SQL Code" : "Marketo Input"}`;
+                containerOutput.className = "border";
+                containerOutput2.className = "border";
+                output.name = `input-${filter}-${platform}`;
+                output.id = `output-${filter}-${platform}`;
+                output.classList.add("initialinp", "output");
+                output2.name = `input-${filter}-${platform}2`;
+                output2.id = `output-${filter}-${platform}2`;
+                output2.classList.add("initialinp", "output");
+                backMain.innerText = "Main Menu";
+                backFactMenu.classList.remove("disappear");
+                article2.className = "article2"
+                outputTitle.innerText = filter == "segments" ? "Marketo Segments" : "Marketo Industries";
+                outputTitle2.innerText = filter == "segments" ? "Marketo SubSegments" : "Marketo Verticals";
+        
+                // App
+                currentSection.append(article1, article2);
+                article1.append(title, subtitle, formInputs);
+                formInputs.append(formTitle1, containerInputMash, containerOutput, containerOutput2);
+                containerInputMash.append(containerInputMash2, convertButton);
+                containerInputMash2.append(inputMaSH);
+                containerOutput.append(outputTitle, output);
+                containerOutput2.append(outputTitle2, output2);
+                article2.append(backMain, backFactMenu);
+                
+                // Process
+                formInputs.onclick = (event) => event.preventDefault();
+                await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, undefined, undefined, output2);
 
-        }, 10000);
+            } else {
 
-    });
+                let formInputs = document.getElementById(`form-${filter}-${platform}`);
+
+                let convertButton = document.getElementById(`convert-${filter}-${platform}`);
+
+                let output = document.getElementById(`output-${filter}-${platform}`);
+
+                let output2 = document.getElementById(`output-${filter}-${platform}2`);
+
+                let inputMaSH = document.getElementById(`input-${filter}-${platform}`);
+
+                let article2 = document.getElementsByClassName("article2")[0];
+                
+                let oldButton = await article2.childNodes[article2.childNodes.length - 1];
+
+                oldButton.classList.add("disappear");
+
+                let backFactMenu = document.getElementById(`back-${filter}${platform}-${factory}`);
+                
+                backFactMenu.innerText = `${factory} menu`;
+
+                backFactMenu.classList.remove("disappear")
+
+                article2.append(backFactMenu);
+
+                // Process
+                formInputs.onclick = (event) => event.preventDefault();
+                await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, undefined, undefined, output2);
+
+            }
+
+            backFactMenu.innerText = `${factory} menu`;
+
+            prevFactory = factory;
+        }
+
+    }
+
+    const updateCurrentSection = async () => {
+
+        for (let i = 0; i <= document.getElementsByTagName("section").length; i++) {
+            
+            let section = document.getElementsByTagName("section")[i];
+            
+            if (!section.classList.contains("disappear")) { currentSection = section; break }
+            
+        };
+        
+    };
+    
+    const changeSectionButton = async (where, filter, platform, factory, mySection) => {
+
+        let changeButton;
+        
+        if (
+            mySection.id != "main-section" 
+            && mySection.id != "dataMenu" 
+            && mySection.id != "emailMenu"
+        ) {
+            
+            if (where == dataMenu || where == emailMenu) {            
+
+                changeButton = document.getElementById(`back-${filter}${platform}-${factory}`);
+
+            } else if (where == mainSection) {
+
+                changeButton = document.getElementById(`back-${filter}${platform}-mainmenu`);
+
+            }
+
+        } else if (mySection.id == "main-section") {
+
+            if (factory == "data")  {
+
+                changeButton = document.getElementById("dataButton");
+
+            } else {
+
+                changeButton = document.getElementById("emailButton");
+
+            }
+
+        } else if (mySection.id == "dataMenu" || mySection.id == "emailMenu") {
+
+            if (where == mainSection) {
+
+                changeButton = document.getElementById(`back-${factory}menu-mainmenu`);
+
+            } else {
+
+                changeButton = document.getElementById(`${filter}-${platform}-${factory}-button`);
+
+            }
+
+        }
+
+        return changeButton;
+
+    };
+
+    const changeSection = async (oldSection, newSection, filter, platform, factory = "data") => {
+        
+        let button = await changeSectionButton(newSection, filter, platform, factory, oldSection);
+
+        await button.addEventListener("click", async () => {
+
+            oldSection.classList.add("disappear");
+            newSection.classList.remove("disappear");
+
+            await updateCurrentSection();
+            if (
+                currentSection != mainSection
+                && currentSection != dataMenu
+                && currentSection != emailMenu
+            ) {
+                await generateSection(filter, platform, factory, oldSection, button);
+            }
+        });
+    }
+
+    // Navigation & Procedures
+
+    const navigation = async () => {
+
+        // Menus
+          
+        await changeSection(mainSection, dataMenu);
+        
+        await changeSection(mainSection, emailMenu, "", "", "email");
+        
+        await changeSection(dataMenu, mainSection);
+        
+        await changeSection(emailMenu, mainSection, "", "", "email");
+
+        // Segments - SQL
+        
+        await changeSection(dataMenu, segmentsSQLSection, "segments", "SQL", "data");
+        
+        await changeSection(segmentsSQLSection, mainSection, "segments", "SQL", "data");
+        
+        await changeSection(segmentsSQLSection, dataMenu, "segments", "SQL", "data");
+
+        // Segments - Marketo
+
+        await changeSection(dataMenu, segmentsMarketoSection, "segments", "marketo", "data");
+
+        await changeSection(emailMenu, segmentsMarketoSection, "segments", "marketo", "email");
+
+        await changeSection(segmentsMarketoSection, dataMenu, "segments", "marketo", "data");
+
+        await changeSection(segmentsMarketoSection, emailMenu, "segments", "marketo", "email");
+
+        await changeSection(segmentsMarketoSection, mainSection, "segments", "marketo", "email");
+
+        //  Industry - SQL
+
+        await changeSection(dataMenu, industrySQLSection, "industry", "SQL", "data");
+
+        await changeSection(industrySQLSection, mainSection, "industry", "SQL", "data");
+
+        await changeSection(industrySQLSection, dataMenu, "industry", "SQL", "data");
+
+        // Industry - Marketo
+
+        await changeSection(dataMenu, industryMarketoSection, "industry", "marketo", "data");
+
+        await changeSection(emailMenu, industryMarketoSection, "industry", "marketo", "email");
+
+        await changeSection(industryMarketoSection, dataMenu, "industry", "marketo", "data");
+
+        await changeSection(industryMarketoSection, emailMenu, "industry", "marketo", "email");
+
+        await changeSection(industryMarketoSection, mainSection, "industry", "marketo", "email");
+
+        // IndClass - SQL
+
+        await changeSection(dataMenu, indClassSQLSection, "indClass", "SQL", "data");
+
+        await changeSection(indClassSQLSection, mainSection, "indClass", "SQL", "data");
+
+        await changeSection(indClassSQLSection, dataMenu, "indClass", "SQL", "data");
+
+        // Marketing Audience - Marketo
+
+        await changeSection(dataMenu, marketingAudienceMarketoSection, "marketing-audience", "marketo", "data");
+
+        await changeSection(emailMenu, marketingAudienceMarketoSection, "marketing-audience", "marketo", "email");
+
+        await changeSection(marketingAudienceMarketoSection, dataMenu, "marketing-audience", "marketo", "data");
+
+        await changeSection(marketingAudienceMarketoSection, emailMenu, "marketing-audience", "marketo", "email");
+
+        await changeSection(marketingAudienceMarketoSection, mainSection, "marketing-audience", "marketo", "email");
+
+        // Job Role - Marketo
+
+        await changeSection(dataMenu, jobRoleMarketoSection, "job-role", "marketo", "data");
+
+        await changeSection(emailMenu, jobRoleMarketoSection, "job-role", "marketo", "email");
+
+        await changeSection(jobRoleMarketoSection, dataMenu, "job-role", "marketo", "data");
+
+        await changeSection(jobRoleMarketoSection, emailMenu, "job-role", "marketo", "email");
+
+        await changeSection(jobRoleMarketoSection, mainSection, "job-role", "marketo", "email");
+
+    };
+
+    const main = async () => {
+
+        await navigation();
+
+    };
+
+    // Main running
+
+    await main();
 
   </script>
   <style>
@@ -286,13 +2343,13 @@
         border-radius: 10px;
     }
 
-    #inpsegmash {
+    .input {
         background-color: black;
         color: rgb(0, 174, 255);
         box-shadow: rgb(0, 174, 255) 0px 2px 4px 0px, rgba(60, 64, 67, 0.15) 0px 4px 6px 4px;
     }
 
-    #inpsegsql {
+    .output {
         background-color: black;
         color: orange;
         box-shadow: orange 0px 2px 4px 0px, rgba(60, 64, 67, 0.15) 0px 4px 6px 4px;
