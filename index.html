@@ -1386,62 +1386,65 @@
 
             case "segments":
 
-                let inputArray = input
-                .split("), ")
-                .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment)
-
-                inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
-
-
-                if (input.includes("High Value Individual")) inputArray.push("High Value Individual");
-
-                let newSegments = [];
-                let newSubSegments = [];
-                let newSegment;
-                let newSubSegment;
-
-                for (let i = 0; i < inputArray.length; i++) {
-
-                    let completeSegment = inputArray[i];
+                if (input == "") { list.segments = onlySegments; list.subSegments = onlySubSegments } else {
                     
-                    if (completeSegment.includes("(Deprecated)")) continue;
-                    
-                    if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); newSubSegments.push("High Value Individual"); continue };
-
-                    newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
-
-                    if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
-
-                    if (completeSegment.includes("(All SubSegments)")) {
-
-                        let countSegment = 0;
-
-                        for (let j = 0; j < inputArray.length; j++) {
-                            
-                            let completeSegment2 = inputArray[j];
-
-                            let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
-
-                            if (newSegment2 == newSegment) countSegment++;
-
-                        }
-
-                        if (countSegment == 1 || factory == "email") {
-
-                            !newSegments.includes(newSegment) && newSegments.push(newSegment);
-                            Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
-                        }
-
-                    } else {
-
-                        newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment))
-                        !newSegments.includes(newSegment) && newSegments.push(newSegment);
-                        !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && newSubSegments.push(newSubSegment);
-                    }
-                }
+                    let inputArray = input
+                    .split("), ")
+                    .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment)
     
-                list.subSegments = newSubSegments || "";
-                list.segments = newSegments || "";
+                    inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
+    
+    
+                    if (input.includes("High Value Individual")) inputArray.push("High Value Individual");
+    
+                    let newSegments = [];
+                    let newSubSegments = [];
+                    let newSegment;
+                    let newSubSegment;
+    
+                    for (let i = 0; i < inputArray.length; i++) {
+    
+                        let completeSegment = inputArray[i];
+                        
+                        if (completeSegment.includes("(Deprecated)")) continue;
+                        
+                        if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); newSubSegments.push("High Value Individual"); continue };
+    
+                        newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
+    
+                        if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
+    
+                        if (completeSegment.includes("(All SubSegments)")) {
+    
+                            let countSegment = 0;
+    
+                            for (let j = 0; j < inputArray.length; j++) {
+                                
+                                let completeSegment2 = inputArray[j];
+    
+                                let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
+    
+                                if (newSegment2 == newSegment) countSegment++;
+    
+                            }
+    
+                            if (countSegment == 1 || factory == "email") {
+    
+                                !newSegments.includes(newSegment) && newSegments.push(newSegment);
+                                Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
+                            }
+    
+                        } else {
+    
+                            newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment))
+                            !newSegments.includes(newSegment) && newSegments.push(newSegment);
+                            !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && newSubSegments.push(newSubSegment);
+                        }
+                    }
+    
+                    list.subSegments = newSubSegments || "";
+                    list.segments = newSegments || "";
+                }
 
             break;
 
@@ -1683,7 +1686,7 @@
                     /**Filters on specific list pulls - these filters vary based on request, so are in WHERE clause for easier editing**/\n
                     \t\t\t\t/**ORG CLASSIFCATION**/\n
                     \t\tAND  (\n
-                    \t\t\t\tIsNull(IPV.[SegmentName],'UnSegmented')/*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSegment)*/ in (\n\t\t\t\t\t${newSegments.join(",\n\t\t\t\t\t")}\n
+                    \t\t\tIsNull(IPV.[SegmentName],'UnSegmented')/*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSegment)*/ in (\n\t\t\t\t\t\t${newSegments.join(",\n\t\t\t\t\t\t")}\n
                     \t\t\t\t)\n
                     \t\t\t\tAND  IsNull(IPV.[SubSegmentName],'UnSegmented') in /*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSubSegment)*/ (\n\t\t\t\t\t\t\t${newSubSegments.join(", \n\t\t\t\t\t\t\t")}\n
                     \t\t\t\t )\n
