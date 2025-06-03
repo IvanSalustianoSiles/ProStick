@@ -1541,7 +1541,9 @@
                 let JBRInput = input3.trim();
                 let inputMKArray = MKInput == "" ? [] : MKInput.split(", ");
                 let inputCGArray = CGInput == "" ? [] : CGInput.split(", ");
-                let inputJBRArray = JBRInput == "" ? [] : JBRInput.split(", ");
+                let inputJBRArray = JBRInput == "" ? [] : JBRInput.split(", ").map( (JBRInput) => {
+                    return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
+                });
 
                 list.marketingAudience = inputMKArray || [];
 
