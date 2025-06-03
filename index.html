@@ -1409,7 +1409,7 @@
                         
                         if (completeSegment.includes("(Deprecated)")) continue;
                         
-                        if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); newSubSegments.push("High Value Individual"); continue };
+                        if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); platform == "SQL" && newSubSegments.push("High Value Individual"); continue };
     
                         newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
     
