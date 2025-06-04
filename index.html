@@ -2244,18 +2244,26 @@
         let button = await changeSectionButton(newSection, filter, platform, factory, oldSection);
 
         await button.addEventListener("click", async () => {
+            
+            button.classList.add("clicking");
 
-            oldSection.classList.add("disappear");
-            newSection.classList.remove("disappear");
+            setTimeout(() => {
+                button.classList.remove("clicking");
+            }, 500);
 
-            await updateCurrentSection();
-            if (
-                currentSection != mainSection
-                && currentSection != dataMenu
-                && currentSection != emailMenu
-            ) {
-                await generateSection(filter, platform, factory, oldSection, button);
-            }
+            setTimeout(async () => {
+                oldSection.classList.add("disappear");
+                newSection.classList.remove("disappear");
+    
+                await updateCurrentSection();
+                if (
+                    currentSection != mainSection
+                    && currentSection != dataMenu
+                    && currentSection != emailMenu
+                ) {
+                    await generateSection(filter, platform, factory, oldSection, button);
+                }
+            },500);
         });
     }
 
@@ -2388,6 +2396,17 @@
         padding: 6px;
         margin: 10px 6px 10px 6px;
         transition: all 0.5s;
+    }
+
+    button:active {
+        color: #5C832F;
+        background-color: white;
+    }
+
+    button.clicking {
+        color: #5C832F;
+        background-color: white;
+
     }
 
     button:hover {
