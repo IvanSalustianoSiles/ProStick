@@ -1367,6 +1367,26 @@
 
     // Functions
 
+    const activateButtonLogic = async () => {
+
+        const allButtons = await document.getElementsByTagName("button");
+
+        for (let i = 0; i < allButtons.length; i++) {
+            
+            let button = allButtons[i];
+            
+            await button.addEventListener("click", async () => {
+            
+                button.classList.add("clicking");
+
+                setTimeout(() => {
+                    button.classList.remove("clicking");
+                }, 160);
+
+            })
+        }
+    }
+
     const fixWord = async (word) => {
         return word
         .replace("-", " ")
@@ -1838,7 +1858,6 @@
     
     const generateSection = async (filter, platform, factory = "data", oldSection) => {
 
-
         if ((platform == "SQL" && (filter == "segments" || filter == "industry")) || (platform == "marketo" && (filter == "marketing-audience" || filter == "job-role"))) { 
             // 1 input, 1 output
             let backMain = document.getElementById(`back-${filter}${platform}-mainmenu`);
@@ -1898,6 +1917,8 @@
                 containerInputMash2.append(inputMaSH);
                 containerOutput.append(output);
                 article2.append(backMain, backFactMenu);
+
+                await activateButtonLogic();
                 
                 // Process
                 formInputs.onclick = (event) => event.preventDefault();
@@ -1926,6 +1947,9 @@
                 backFactMenu.classList.remove("disappear")
 
                 article2.append(backFactMenu);
+
+
+                await activateButtonLogic();
 
                 // Process
                 formInputs.onclick = (event) => event.preventDefault();
@@ -2021,6 +2045,8 @@
                 containerInputMash23.append(inputMaSH3);
                 containerOutput.append(output);
                 article2.append(backMain, backFactMenu);
+
+                await activateButtonLogic();
                 
                 // Process
                 formInputs.onclick = (event) => event.preventDefault();
@@ -2053,6 +2079,8 @@
                 backFactMenu.classList.remove("disappear")
 
                 article2.append(backFactMenu);
+
+                await activateButtonLogic();
 
                 // Process
                 formInputs.onclick = (event) => event.preventDefault();
@@ -2136,6 +2164,8 @@
                 containerOutput.append(outputTitle, output);
                 containerOutput2.append(outputTitle2, output2);
                 article2.append(backMain, backFactMenu);
+
+                await activateButtonLogic();
                 
                 // Process
                 formInputs.onclick = (event) => event.preventDefault();
@@ -2166,6 +2196,8 @@
                 backFactMenu.classList.remove("disappear")
 
                 article2.append(backFactMenu);
+
+                await activateButtonLogic();
 
                 // Process
                 formInputs.onclick = (event) => event.preventDefault();
