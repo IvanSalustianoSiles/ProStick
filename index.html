@@ -1368,7 +1368,7 @@
     // Functions
 
     const fixWord = async (word) => {
-        return await word
+        return word
         .replace("-", " ")
         .split("")
         .map((character, i) => i == 0 ? character
@@ -1918,7 +1918,7 @@
 
                 let backFactMenu = document.getElementById(`back-${filter}${platform}-${factory}`);
                 
-                backFactMenu.innerText = `${factory} menu`;
+                backFactMenu.innerText = `${await fixWord(factory)} Menu`;
 
                 backFactMenu.classList.remove("disappear")
 
@@ -1930,7 +1930,7 @@
 
             }
 
-            backFactMenu.innerText = `${factory} menu`;
+            backFactMenu.innerText = `${await fixWord(factory)} Menu`;
 
             prevFactory = factory;
 
@@ -2045,7 +2045,7 @@
 
                 let backFactMenu = document.getElementById(`back-${filter}${platform}-${factory}`);
                 
-                backFactMenu.innerText = `${factory} menu`;
+                backFactMenu.innerText = `${await fixWord(factory)} Menu`;
 
                 backFactMenu.classList.remove("disappear")
 
@@ -2057,7 +2057,7 @@
 
             }
 
-            backFactMenu.innerText = `${factory} menu`;
+            backFactMenu.innerText = `${await fixWord(factory)} Menu`;
 
             prevFactory = factory;
 
@@ -2158,7 +2158,7 @@
 
                 let backFactMenu = document.getElementById(`back-${filter}${platform}-${factory}`);
                 
-                backFactMenu.innerText = `${factory} menu`;
+                backFactMenu.innerText = `${await fixWord(factory)} Menu`;
 
                 backFactMenu.classList.remove("disappear")
 
@@ -2170,7 +2170,7 @@
 
             }
 
-            backFactMenu.innerText = `${factory} menu`;
+            backFactMenu.innerText = `${await fixWord(factory)} Menu`;
 
             prevFactory = factory;
         }
@@ -2359,14 +2359,17 @@
 
   </script>
   <style>
+
     body {
         background-color: rgb(23, 23, 23);
         color: white;
         margin-left: 10px;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     div {
-        margin-top: 5px;
+        margin: 8px 0px 8px 0px;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     h1 {
@@ -2375,14 +2378,31 @@
 
     button {
         margin-top: 8px;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 20px;
+        background-color: #5C832F;
+        color: white;
+        font-weight: bold;
+        border-radius: 4px;
+        border: 0px;
+        padding: 6px;
+        margin: 10px 6px 10px 6px;
+        transition: all 0.5s;
+    }
+
+    button:hover {
+        font-size: 24px;
     }
 
     textarea {
         border-radius: 10px;
+        margin: 5px 6px 5px 6px;
+        margin-left: 6px;
     }
 
     .input {
         background-color: black;
+        margin-left: 6px;
         color: rgb(0, 174, 255);
         box-shadow: rgb(0, 174, 255) 0px 2px 4px 0px, rgba(60, 64, 67, 0.15) 0px 4px 6px 4px;
     }
@@ -2421,8 +2441,9 @@
 
     .titleLogo {
         position: absolute;
-        width: 30px;
-        height: 30px;
+        vertical-align: center;
+        width: 40px;
+        height: 40px;
         border-radius: 4px;
         margin-left: 10px;
     }
