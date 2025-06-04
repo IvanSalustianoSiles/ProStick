@@ -1839,21 +1839,22 @@
 
     const convertLogic = async (filter, platform, outputBox, button, inputBox, factory, inputBox2, inputBox3, outputBox2) => {
         
-        if (inputBox.value != "" && !inputBox2 && !inputBox3 || inputBox && inputBox2 && inputBox3) {
-
             await button.addEventListener("click", async () => {
+        
+                if (inputBox.value != "" && !inputBox2 && !inputBox3 || inputBox && inputBox2 && inputBox3) {
     
-                let input = inputBox ? inputBox.value : "";
-    
-                let input2 = inputBox2 ? inputBox2.value : "";
-    
-                let input3 = inputBox3 ? inputBox3.value : "";
-    
-                let list = await inputLogic(filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform);
+                    let input = inputBox ? inputBox.value : "";
+        
+                    let input2 = inputBox2 ? inputBox2.value : "";
+        
+                    let input3 = inputBox3 ? inputBox3.value : "";
+        
+                    let list = await inputLogic(filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform);
+                    
+                    await outputLogic(filter, list, platform, outputBox, outputBox2);
                 
-                await outputLogic(filter, list, platform, outputBox, outputBox2);
+                }
             })
-        }
     }
     
     const generateSection = async (filter, platform, factory = "data", oldSection) => {
