@@ -1429,7 +1429,7 @@
 
                         let completeSegment = inputArray[i];
 
-                        if (completeSegment.includes("(All SubSegments)")) {
+                        if (completeSegment.includes("(All SubSegments)") || completeSegment == "UnSegmented (UnSegmented)") {
                             
                             if (completeSegment.includes("(Deprecated)")) continue;
 
@@ -1452,7 +1452,7 @@
     
                         if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
     
-                        if (completeSegment.includes("(All SubSegments)")) {
+                        if (completeSegment.includes("(All SubSegments)" || completeSegment == "UnSegmented (UnSegmented)")) {
     
                             let countSegment = 0;
 
@@ -1487,6 +1487,25 @@
     
                     list.subSegments = newSubSegments || "";
                     list.segments = newSegments || "";
+                    
+                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                    && document.getElementById(`formTitle2-${filter}-${platform}-${factory}`).innerText == "";
+
+                    document.getElementById(`formTitle1-${filter}-${platform}-${factory}`)
+                    && document.getElementById(`formTitle1-${filter}-${platform}-${factory}`).innerText == "";
+
+                    if (platform == "SQL") {
+                        document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                        .innerText = "SQL Code".concat(` (${list.segments.length} ${list.segments.length == 1 ? "Segment" : "Segments"}, ${list.subSegments.length} ${list.subSegments.length == 1 ? "SubSegment" : "SubSegments"})`)
+                    } else {  
+
+                        document.getElementById(`outputTitle1-${factory}-${platform}`)
+                        .innerText = "Marketo Segments".concat(` (${list.segments.length} ${list.segments.length == 1 ? "Segment" : "Segments"})`)
+
+                        document.getElementById(`outputTitle2-${factory}-${platform}`)
+                        .innerText = "Marketo SubSegments".concat(` (${list.subSegments.length} ${list.subSegments.length == 1 ? "SubSegment" : "SubSegments"})`)
+                    }
+                    
                 }
 
             break;
@@ -1562,6 +1581,20 @@
 
                 list.vertical = newVerticalArray || "";
                 list.industry = newIndustryArray || "";
+
+
+
+                if (platform == "SQL") {
+                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                    .innerText = "SQL Code".concat(` (${list.industry.length} ${list.industry.length == 1 ? "Industry" : "Industries"}, ${list.vertical.length} ${list.vertical.length == 1 ? "Vertical" : "Verticals"})`)
+                } else {  
+
+                    document.getElementById(`outputTitle1-${factory}-${platform}`)
+                    .innerText = "Marketo Industries".concat(` (${list.industry.length} ${list.industry.length == 1 ? "Industry" : "Industries"})`)
+
+                    document.getElementById(`outputTitle2-${factory}-${platform}`)
+                    .innerText = "Marketo Verticals".concat(` (${list.vertical.length} ${list.vertical.length == 1 ? "Vertical" : "Verticals"})`)
+                }
             
             break;
             
@@ -1569,6 +1602,9 @@
                 let MKInput1 = input;
                 let inputMKArray1 = MKInput1 == "" ? [] : MKInput1.split(", ");
                 list.marketingAudience = inputMKArray1 || [];
+
+                document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                .innerText = "Marketo Marketing Audiences".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"})`)
 
             break;
 
@@ -1581,6 +1617,9 @@
                 })
                 let inputJBRArray1 = JBRInput1 == "" ? [] : JBRArray2;
                 list.jobRole = inputJBRArray1 || [];
+
+                document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                .innerText = "Marketo Job Roles".concat(` (${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
 
             break;
 
@@ -1600,6 +1639,10 @@
                 list.customerGroup = inputCGArray || [];
 
                 list.jobRole = inputJBRArray || [];
+
+                document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                .innerText = "SQL Code".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"}, ${list.customerGroup.length} ${list.customerGroup.length == 1 ? "Customer Group" : "Customer Groups"}, ${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
+    
         }
 
         inputBox.addEventListener('input', () => {
@@ -1922,12 +1965,14 @@
                 subtitle.innerText = `MaSH Text to ${platform == "SQL" ? "SQL Code" : "Marketo"} - ${await fixWord(filter)}`
                 formInputs.id = `form-${filter}-${platform}`;
                 formTitle1.innerText = "MaSH Code";
+                formTitle1.id = `formTitle1-${filter}-${platform}-${factory}`;
                 containerInputMash2.className = "border";
                 inputMaSH.id = `input-${filter}-${platform}`;
                 inputMaSH.classList.add("initialinp", "input");
                 convertButton.id = `convert-${filter}-${platform}`;
                 convertButton.innerText = "Convert"
                 formTitle2.innerText = `${platform == "SQL" ? "SQL Code" : "Marketo Input"}`;
+                formTitle2.id = `formTitle2-${filter}-${platform}-${factory}`;
                 containerOutput.className = "border";
                 output.name = `input-${filter}-${platform}`;
                 output.id = `output-${filter}-${platform}`;
@@ -2036,6 +2081,7 @@
                 subtitle.innerText = `MaSH Text to ${platform == "SQL" ? "SQL Code" : "Marketo"} - ${filter == "indClass" ? "Ind Classification" : filter}`;
                 formInputs.id = `form-${filter}-${platform}`;
                 formTitle1.innerText = "MaSH Code";
+                formTitle1.id = `formTitle1-${filter}-${platform}-${factory}`;
                 containerInputMash2.className = "border";
                 containerInputMash22.className = "border";
                 containerInputMash23.className = "border";
@@ -2047,7 +2093,8 @@
                 inputMaSH3.classList.add("initialinp", "input");
                 convertButton.id = `convert-${filter}-${platform}`;
                 convertButton.innerText = "Convert"
-                formTitle2.innerText = `${platform == "SQL" ? "SQL Code" : "Marketo Input"}`;
+                formTitle2.innerText = `${platform == "SQL" ? "SQL Code" : "Marketo Smart List Input"}`;
+                formTitle2.id = `formTitle2-${filter}-${platform}-${factory}`
                 containerOutput.className = "border";
                 output.name = `input-${filter}-${platform}`;
                 output.id = `output-${filter}-${platform}`;
@@ -2162,12 +2209,14 @@
                 subtitle.innerText = `MaSH Text to ${platform == "SQL" ? "SQL Code" : "Marketo"} - ${await fixWord(filter)}`
                 formInputs.id = `form-${filter}-${platform}`;
                 formTitle1.innerText = "MaSH Code";
+                formTitle1.id = `formTitle1-${filter}-${platform}-${factory}`;
                 containerInputMash2.className = "border";
                 inputMaSH.id = `input-${filter}-${platform}`;
                 inputMaSH.classList.add("initialinp", "input");
                 convertButton.id = `convert-${filter}-${platform}`;
                 convertButton.innerText = "Convert"
                 formTitle2.innerText = `${platform == "SQL" ? "SQL Code" : "Marketo Input"}`;
+                formTitle2.id = `formTitle2-${filter}-${platform}-${factory}`;
                 containerOutput.className = "border";
                 containerOutput2.className = "border";
                 output.name = `input-${filter}-${platform}`;
@@ -2181,6 +2230,8 @@
                 article2.className = "article2"
                 outputTitle.innerText = filter == "segments" ? "Marketo Segments" : "Marketo Industries";
                 outputTitle2.innerText = filter == "segments" ? "Marketo SubSegments" : "Marketo Verticals";
+                outputTitle.id = `outputTitle1-${factory}-${platform}`;
+                outputTitle2.id = `outputTitle2-${factory}-${platform}`;
                 imgLogo.className = "titleLogo";
                 imgLogo.src = "./logo.png";
                 imgLogo.alt = "";
