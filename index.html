@@ -1410,7 +1410,9 @@
                     
                     let inputArray = input
                     .split("), ")
-                    .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment)
+                    .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment);
+
+
     
                     inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
     
@@ -1422,6 +1424,20 @@
                     let newSegment;
                     let newSubSegment;
                     let allSubs = {};
+
+                    for (let i = 0; i < inputArray.length; i++) {
+
+                        let completeSegment = inputArray[i];
+
+                        if (completeSegment.includes("(All SubSegments)")) {
+                            
+                            if (completeSegment.includes("(Deprecated)")) continue;
+
+                            newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
+
+                            allSubs[newSegment] = newSegment;
+                        }
+                    }
     
                     for (let i = 0; i < inputArray.length; i++) {
     
@@ -1431,6 +1447,7 @@
                         
                         if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); platform == "SQL" && newSubSegments.push("High Value Individual"); continue };
     
+
                         newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
     
                         if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
@@ -1438,8 +1455,6 @@
                         if (completeSegment.includes("(All SubSegments)")) {
     
                             let countSegment = 0;
-                            
-                            allSubs[newSegment] = newSegment;
 
                             for (let j = 0; j < inputArray.length; j++) {
                                 
@@ -1485,6 +1500,21 @@
                 let newIndustryArray = [];
                 let newVerticalArray = [];
                 let allVer = {};
+                let newIndustry;
+
+                for (let i = 0; i < inputArrayIndustry.length; i++) {
+
+                    let completeIndustry = inputArrayIndustry[i];
+
+                    if (completeIndustry.includes("(All Verticals)")) {
+                            
+                        if (completeIndustry.includes("(Deprecated)")) continue;
+
+                        newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry)) || "UnSegmented";
+
+                        allVer[newIndustry] = newIndustry;
+                    }
+                }               
 
                 for (let i = 0; i < inputArrayIndustry.length; i++) {
 
@@ -1492,13 +1522,13 @@
 
                     if (completeIndustry.includes("(Deprecated)")) continue;
 
-                    let newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry));
+                    newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry));
 
                     if (completeIndustry.includes("(All Verticals)")) {
 
                         let countIndustry = 0;
 
-                        allVer[newIndustry] = newIndustry;
+                        // allVer[newIndustry] = newIndustry;
 
                         for (let j = 0; j < inputArrayIndustry.length; j++) {
                                             
@@ -1838,7 +1868,7 @@
     }
 
     const convertLogic = async (filter, platform, outputBox, button, inputBox, factory, inputBox2, inputBox3, outputBox2) => {
-        
+
             await button.addEventListener("click", async () => {
         
                 if (inputBox.value != "" && !inputBox2 && !inputBox3 || inputBox && inputBox2 && inputBox3) {
