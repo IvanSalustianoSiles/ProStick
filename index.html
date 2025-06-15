@@ -1625,7 +1625,7 @@
         .join("");
     }
     
-    const inputLogic = async (filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform) => {
+    const inputLogic = async (filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform, builderInputValue, builderInput) => {
         
         input = input.trim();
 
@@ -2139,7 +2139,7 @@
         }
     }
 
-    const convertLogic = async (filter, platform, outputBox, button, inputBox, factory, inputBox2, inputBox3, outputBox2) => {
+    const convertLogic = async (filter, platform, outputBox, button, inputBox, factory, inputBox2, inputBox3, outputBox2, builderInput) => {
 
             await button.addEventListener("click", async () => {
         
@@ -2150,8 +2150,10 @@
                     let input2 = inputBox2 ? inputBox2.value : "";
         
                     let input3 = inputBox3 ? inputBox3.value : "";
+
+                    let builderInputValue = builderInput ? builderInput.value : "";
         
-                    let list = await inputLogic(filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform);
+                    let list = await inputLogic(filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform, builderInputValue, builderInput);
                     
                     await outputLogic(filter, list, platform, outputBox, outputBox2);
                 
@@ -2196,7 +2198,46 @@
                 backBuild.classList.remove("disappear");
 
             }
-            
+
+            if (currentSection.id.includes("peer")) {
+                
+                let output = document.getElementById(`output-${filter}-${platform}-peer`);
+                let convertButton = document.getElementById(`compare-${filter}-${platform}-peer`);
+                
+                if ((platform == "SQL" && (filter == "segments" || filter == "industry")) || (platform == "marketo" && (filter == "marketing-audience" || filter == "job-role"))) {
+                // Process 1 input, 1 output
+    
+                    let inputMaSH = document.getElementById(`input-${filter}-${platform}-MaSH-peer`);
+                    let builderInput = document.getElementById(`input-${filter}-${platform}-peer`);
+                    
+                    formInputs.onclick = (event) => event.preventDefault();
+                    await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, builderInput);
+    
+                } else if (platform == "SQL" && filter == "indClass") {
+                // Process - 4 inputs, 1 output
+                
+                    let inputMaSH;
+                    let inputMaSH2;
+                    let inputMaSH3;
+                    let builderInput;
+    
+                    formInputs.onclick = (event) => event.preventDefault();
+                    await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, inputMaSH2, inputMaSH3, builderInput);
+                
+                } else if (platform == "marketo" && (filter == "segments" || filter == "industry")) {
+                // Process - 1 input, 2 outputs
+    
+                    let inputMaSH;
+                    let output2;
+                    let builderInput;
+                
+                    formInputs.onclick = (event) => event.preventDefault();
+                    await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, undefined, undefined, output2, builderInput);
+                }
+
+            }
+            // else no incluye peer pero incluye new
+
 
         } else {
             
