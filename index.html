@@ -1625,254 +1625,725 @@
         .join("");
     }
     
-    const inputLogic = async (filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform, builderInputValue, builderInput) => {
+    const inputLogic = async (filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform, builderInputValue, builderInput, builderInputValue2, builderInput2) => {
         
         input = input.trim();
 
         let list = {};
 
-        switch (filter) {
+        if (currentSection.id.includes("peer")) {
 
-            case "segments":
-
-                if (input == "") { list.segments = onlySegments; list.subSegments = onlySubSegments } else {
-                    
-                    let inputArray = input
-                    .split("), ")
-                    .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment);
-
-
+            switch (filter) {
     
-                    inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
+                case "segments":
+    
+                    if (input == "") { list.segments = onlySegments; list.subSegments = onlySubSegments } else {
+                        
+                        let inputArray = input
+                        .split("), ")
+                        .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment);
     
     
-                    if (input.includes("High Value Individual")) inputArray.push("High Value Individual");
+        
+                        inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
+        
+        
+                        if (input.includes("High Value Individual")) inputArray.push("High Value Individual");
+        
+                        let newSegments = [];
+                        let newSubSegments = [];
+                        let newSegment;
+                        let newSubSegment;
+                        let allSubs = {};
     
-                    let newSegments = [];
-                    let newSubSegments = [];
-                    let newSegment;
-                    let newSubSegment;
-                    let allSubs = {};
-
-                    for (let i = 0; i < inputArray.length; i++) {
-
-                        let completeSegment = inputArray[i];
-
-                        if (completeSegment.includes("(All SubSegments)") || completeSegment == "UnSegmented (UnSegmented)") {
+                        for (let i = 0; i < inputArray.length; i++) {
+    
+                            let completeSegment = inputArray[i];
+    
+                            if (completeSegment.includes("(All SubSegments)") || completeSegment == "UnSegmented (UnSegmented)") {
+                                
+                                if (completeSegment.includes("(Deprecated)")) continue;
+    
+                                newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
+    
+                                allSubs[newSegment] = newSegment;
+                            }
+                        }
+        
+                        for (let i = 0; i < inputArray.length; i++) {
+        
+                            let completeSegment = inputArray[i];
                             
                             if (completeSegment.includes("(Deprecated)")) continue;
-
+                            
+                            if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); platform == "SQL" && newSubSegments.push("High Value Individual"); continue };
+        
+    
                             newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
-
-                            allSubs[newSegment] = newSegment;
+        
+                            if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
+        
+                            if (completeSegment.includes("(All SubSegments)" || completeSegment == "UnSegmented (UnSegmented)")) {
+        
+                                let countSegment = 0;
+    
+                                for (let j = 0; j < inputArray.length; j++) {
+                                    
+                                    let completeSegment2 = inputArray[j];
+                                    
+                                    let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
+                                    
+                                    if (newSegment2 == newSegment) countSegment++;
+                                    
+                                }
+                                
+                                if (countSegment == 1 || platform == "marketo") {
+        
+                                    if (countSegment == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countSegment == 1 || platform == "marketo" && factory == "email") !newSegments.includes(newSegment) && newSegments.push(newSegment);
+    
+                                    if (countSegment == 1 && platform == "SQL") Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
+                                }
+    
+                            } else {
+    
+                                newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment));
+                                
+                                ((!newSegments.includes(newSegment) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSegments.includes(newSegment) && allSubs[newSegment]))
+                                && newSegments.push(newSegment);
+    
+                                ((!newSubSegments.includes(newSubSegment) && newSubSegment != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && !allSubs[newSegment]) || (platform == "marketo" && factory == "data" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined))
+                                && newSubSegments.push(newSubSegment);
+                            }
                         }
+
+                        // builderInputValue
+
+
+        
+                        list.subSegments = newSubSegments || "";
+                        list.segments = newSegments || "";
+
+                        // peer
+
+                        function extractActiveSqlLines(sqlText) {
+                            const lines = sqlText.split(/\r?\n/);
+                            const activeLines = [];
+                            let inBlockComment = false;
+
+                            for (let line of lines) {
+                                let stripped = line.trim();
+
+                                if (!stripped) continue;
+
+                                if (inBlockComment) {
+                                    if (stripped.includes("*/")) {
+                                        inBlockComment = false;
+                                        stripped = stripped.split("*/")[1]?.trim() || "";
+                                        if (!stripped) continue;
+                                    } else {
+                                        continue;
+                                    }
+                                }
+
+                                while (stripped.includes("/*")) {
+                                    const start = stripped.indexOf("/*");
+                                    const end = stripped.indexOf("*/", start + 2);
+
+                                    if (end !== -1) {
+                                        stripped = stripped.slice(0, start) + stripped.slice(end + 2);
+                                    } else {
+                                        inBlockComment = true;
+                                        stripped = stripped.slice(0, start);
+                                        break;
+                                    }
+                                }
+
+                                if (stripped.startsWith("--")) continue;
+                                if (stripped.includes("--")) {
+                                    stripped = stripped.split("--")[0].trim();
+                                }
+
+                                if (stripped) activeLines.push(stripped);
+                            }
+
+                            return activeLines;
+                        }
+
+                        let results = { 
+                            segments: {},
+                            subSegments: {},
+                            rest: {
+                                segments: {},
+                                subSegments: {},
+                                extra: {}
+                            }
+                        }
+
+                        let builderSQLArray = extractActiveSqlLines(builderInputValue);
+
+                        let builderSegmentsRawArray = [];
+
+                        let builderSubSegmentsRawArray = [];
+
+                        let startPushingSegments = 0;
+
+                        let startPushingSubSegments = 0;
+
+                        for (let i = 0; i < builderSQLArray.length; i++) {
+
+                            let row = builderSQLArray[i];
+
+                            let nextRow = builderSQLArray[i+1] ? builderSQLArray[i+1] : "";
+
+                            if (row.includes("IPV.[SegmentName]")) startPushingSegments = 1;
+
+                            if (row.includes("IPV.[SubSegmentName]")) startPushingSubSegments = 1;
+
+                            if (row[row.length - 1] == ")" && nextRow.includes("OR")) results.rest.extra["ORERROR"] = "OR should be AND";
+
+                            if (startPushingSegments == 1) {
+                                
+                                builderSegmentsRawArray.push(row);
+
+                                if (builderSQLArray[i+1].includes(")")) startPushingSegments = 0;
+                                
+                            }
+
+                            if (startPushingSubSegments == 1) {
+                                
+                                builderSubSegmentsRawArray.push(row);
+                                
+                                if (builderSQLArray[i+1].includes(")")) startPushingSubSegments = 0;
+
+                            }
+                        }
+
+                        let builderSegmentsArray = [];
+
+                        let builderSubSegmentsArray = [];
+
+                        // Cargando arrays de builder
+
+                        for (let i = 0; i < onlySubSegments.length; i++) {
+
+                            let subSegment = onlySubSegments[i];
+
+                            for (let j = 0; j < builderSubSegmentsRawArray.length; j++) {
+
+                                let row = builderSubSegmentsRawArray[j];
+
+                                if (row.includes("IPV.[SegmentName],'UnSegmented'") || row.includes("IPV.[SubSegmentName],'UnSegmented'")) continue;
+
+                                if (row.includes(subSegment) && !builderSubSegmentsArray.includes(subSegment)) builderSubSegmentsArray.push(subSegment);
+                            }
+
+                        }
+
+                        for (let i = 0; i < onlySegments.length; i++) {
+
+                            let segment = onlySegments[i];
+
+                            for (let j = 0; j < builderSegmentsRawArray.length; j++) {
+
+                                let row = builderSegmentsRawArray[j];
+
+                                if (row.includes("IPV.[SegmentName],'UnSegmented'") || row.includes("IPV.[SubSegmentName],'UnSegmented'")) continue;
+
+                                if (row.includes(segment) && !builderSegmentsArray.includes(segment)) builderSegmentsArray.push(segment);
+                            }
+
+                        }
+
+                        // Validation for missing things
+
+
+                        // Segments
+
+                        for (let i = 0; i < list.segments.length; i++) {
+                        
+                            let segment = list.segments[i];
+
+                            results.segments[segment] = 0;
+
+                            if (builderSegmentsArray.includes(segment)) results.segments[segment] = 1;
+
+                        }
+
+                        // SubSegments
+
+                        for (let i = 0; i < list.subSegments.length; i++) {
+                            
+                            let subSegment = list.subSegments[i];
+
+                            let segment;
+
+                            for (let k = 0; k < Object.values(segments).length; k++) {
+
+                                let forSegment = Object.values(segments)[k];
+
+                                for (let j = 0; j < Object.values(forSegment).length; j++) {
+
+                                    let forSubSegment = Object.values(forSegment)[j];
+
+                                    if (subSegment == forSubSegment) {
+
+                                        segment = Object.keys(segments)[k];
+
+                                    }
+
+                                }
+                            };
+
+                            let noSubSegmentsInBuild = true;
+
+                            let allSubSegmentsInMaSH = true;
+
+                            for (let l = 0; l < Object.values(segments[segment]).length; l++) {
+                                
+                                let DBSubSegment = Object.values(segments[segment])[l];
+
+                                if (builderSubSegmentsArray.includes(DBSubSegment)) noSubSegmentsInBuild = false;
+
+                                if (!list.subSegments.includes(DBSubSegment)) allSubSegmentsInMaSH = false;
+                            }
+
+                            if (
+                                builderSegmentsArray.includes(segment) && builderSubSegmentsArray.includes(subSegment)
+                                || !builderSubSegmentsArray.includes(subSegment) && builderSegmentsArray.includes(segment)
+                                && noSubSegmentsInBuild && allSubSegmentsInMaSH
+                            ) {
+
+                                results.subSegments[subSegment] = 1;
+                            
+                            } else {
+
+                                results.subSegments[subSegment] = 0;
+                            }
+
+                        }
+
+                        // Validation for extra things
+
+                        for (let i = 0; i < builderSegmentsArray.length; i++) {
+
+                            let segment = builderSegmentsArray[i];
+
+                            if (!list.segments.includes(segment)) results.rest.segments[segment] = 1;
+
+                        }
+
+                        for (let i = 0; i < builderSubSegmentsArray.length; i++) {
+
+                            let subSegment = builderSubSegmentsArray[i];
+
+                            if (!list.subSegments.includes(subSegment)) results.rest.subSegments[subSegment] = 1;
+                        }
+                        
+                        list.results = results;
+                        
+                        // document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                        // && document.getElementById(`formTitle2-${filter}-${platform}-${factory}`).innerText == "";
+    
+                        // document.getElementById(`formTitle1-${filter}-${platform}-${factory}`)
+                        // && document.getElementById(`formTitle1-${filter}-${platform}-${factory}`).innerText == "";
+    
+                        // if (platform == "SQL") {
+                        //     document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                        //     .innerText = "SQL Code".concat(` (${list.segments.length} ${list.segments.length == 1 ? "Segment" : "Segments"}, ${list.subSegments.length} ${list.subSegments.length == 1 ? "SubSegment" : "SubSegments"})`)
+                        // } else {  
+    
+                        //     document.getElementById(`outputTitle1-${factory}-${platform}`)
+                        //     .innerText = "Marketo Segments".concat(` (${list.segments.length} ${list.segments.length == 1 ? "Segment" : "Segments"})`)
+    
+                        //     document.getElementById(`outputTitle2-${factory}-${platform}`)
+                        //     .innerText = "Marketo SubSegments".concat(` (${list.subSegments.length} ${list.subSegments.length == 1 ? "SubSegment" : "SubSegments"})`)
+                        // }
+                        
                     }
     
-                    for (let i = 0; i < inputArray.length; i++) {
+                break;
     
-                        let completeSegment = inputArray[i];
-                        
-                        if (completeSegment.includes("(Deprecated)")) continue;
-                        
-                        if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); platform == "SQL" && newSubSegments.push("High Value Individual"); continue };
+                case "industry":
     
-
-                        newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
+                    let inputArrayIndustry = input
+                    .split("), ")
+                    .map((industry, i, array) => i < array.length - 1 ? industry = industry.concat(")") : industry)
     
-                        if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
+                    let newIndustryArray = [];
+                    let newVerticalArray = [];
+                    let allVer = {};
+                    let newIndustry;
     
-                        if (completeSegment.includes("(All SubSegments)" || completeSegment == "UnSegmented (UnSegmented)")) {
+                    for (let i = 0; i < inputArrayIndustry.length; i++) {
     
-                            let countSegment = 0;
-
-                            for (let j = 0; j < inputArray.length; j++) {
+                        let completeIndustry = inputArrayIndustry[i];
+    
+                        if (completeIndustry.includes("(All Verticals)")) {
                                 
-                                let completeSegment2 = inputArray[j];
-                                
-                                let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
-                                
-                                if (newSegment2 == newSegment) countSegment++;
-                                
+                            if (completeIndustry.includes("(Deprecated)")) continue;
+    
+                            newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry)) || "UnSegmented";
+    
+                            allVer[newIndustry] = newIndustry;
+                        }
+                    }               
+    
+                    for (let i = 0; i < inputArrayIndustry.length; i++) {
+    
+                        let completeIndustry = inputArrayIndustry[i];
+    
+                        if (completeIndustry.includes("(Deprecated)")) continue;
+    
+                        newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry));
+    
+                        if (completeIndustry.includes("(All Verticals)")) {
+    
+                            let countIndustry = 0;
+    
+                            // allVer[newIndustry] = newIndustry;
+    
+                            for (let j = 0; j < inputArrayIndustry.length; j++) {
+                                                
+                                let completeIndustry2 = inputArrayIndustry[j];
+    
+                                let newIndustry2 = onlyIndustry.find(industry => completeIndustry2.includes(industry));
+    
+                                if (newIndustry2 == newIndustry) countIndustry++;
+    
                             }
+    
+                            if (countIndustry == 1 || platform == "marketo") {
+    
+                                if (countIndustry == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countIndustry == 1 || platform == "marketo" && factory == "email") !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
+                                
+                                if (countIndustry == 1 && platform == "SQL") Object.values(industryObject[newIndustry]).forEach(vertical => !newVerticalArray.includes(vertical) && newVerticalArray.push(vertical));
                             
-                            if (countSegment == 1 || platform == "marketo") {
-    
-                                if (countSegment == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countSegment == 1 || platform == "marketo" && factory == "email") !newSegments.includes(newSegment) && newSegments.push(newSegment);
-
-                                if (countSegment == 1 && platform == "SQL") Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
                             }
-
+                        
                         } else {
-
-                            newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment));
+    
+                            let newVertical = onlyVertical.find(vertical => completeIndustry.includes(vertical));
                             
-                            ((!newSegments.includes(newSegment) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSegments.includes(newSegment) && allSubs[newSegment]))
-                            && newSegments.push(newSegment);
-
-                            ((!newSubSegments.includes(newSubSegment) && newSubSegment != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && !allSubs[newSegment]) || (platform == "marketo" && factory == "data" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined))
-                            && newSubSegments.push(newSubSegment);
+                            ((!newIndustryArray.includes(newIndustry) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newIndustryArray.includes(newIndustry) && allVer[newIndustry]))
+                            && newIndustryArray.push(newIndustry);
+    
+                            ((!newVerticalArray.includes(newVertical) && newVertical != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newVerticalArray.includes(newVertical) && newVertical != undefined && !allVer[newIndustry]) || (platform == "marketo" && factory == "data" && !newVerticalArray.includes(newVertical) && newVertical != undefined))
+                            && newVerticalArray.push(newVertical);
                         }
                     }
     
-                    list.subSegments = newSubSegments || "";
-                    list.segments = newSegments || "";
-                    
-                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                    && document.getElementById(`formTitle2-${filter}-${platform}-${factory}`).innerText == "";
-
-                    document.getElementById(`formTitle1-${filter}-${platform}-${factory}`)
-                    && document.getElementById(`formTitle1-${filter}-${platform}-${factory}`).innerText == "";
-
+                    list.vertical = newVerticalArray || "";
+                    list.industry = newIndustryArray || "";
+    
+    
+    
                     if (platform == "SQL") {
                         document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                        .innerText = "SQL Code".concat(` (${list.segments.length} ${list.segments.length == 1 ? "Segment" : "Segments"}, ${list.subSegments.length} ${list.subSegments.length == 1 ? "SubSegment" : "SubSegments"})`)
+                        .innerText = "SQL Code".concat(` (${list.industry.length} ${list.industry.length == 1 ? "Industry" : "Industries"}, ${list.vertical.length} ${list.vertical.length == 1 ? "Vertical" : "Verticals"})`)
                     } else {  
-
-                        document.getElementById(`outputTitle1-${factory}-${platform}`)
-                        .innerText = "Marketo Segments".concat(` (${list.segments.length} ${list.segments.length == 1 ? "Segment" : "Segments"})`)
-
-                        document.getElementById(`outputTitle2-${factory}-${platform}`)
-                        .innerText = "Marketo SubSegments".concat(` (${list.subSegments.length} ${list.subSegments.length == 1 ? "SubSegment" : "SubSegments"})`)
-                    }
-                    
-                }
-
-            break;
-
-            case "industry":
-
-                let inputArrayIndustry = input
-                .split("), ")
-                .map((industry, i, array) => i < array.length - 1 ? industry = industry.concat(")") : industry)
-
-                let newIndustryArray = [];
-                let newVerticalArray = [];
-                let allVer = {};
-                let newIndustry;
-
-                for (let i = 0; i < inputArrayIndustry.length; i++) {
-
-                    let completeIndustry = inputArrayIndustry[i];
-
-                    if (completeIndustry.includes("(All Verticals)")) {
-                            
-                        if (completeIndustry.includes("(Deprecated)")) continue;
-
-                        newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry)) || "UnSegmented";
-
-                        allVer[newIndustry] = newIndustry;
-                    }
-                }               
-
-                for (let i = 0; i < inputArrayIndustry.length; i++) {
-
-                    let completeIndustry = inputArrayIndustry[i];
-
-                    if (completeIndustry.includes("(Deprecated)")) continue;
-
-                    newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry));
-
-                    if (completeIndustry.includes("(All Verticals)")) {
-
-                        let countIndustry = 0;
-
-                        // allVer[newIndustry] = newIndustry;
-
-                        for (let j = 0; j < inputArrayIndustry.length; j++) {
-                                            
-                            let completeIndustry2 = inputArrayIndustry[j];
-
-                            let newIndustry2 = onlyIndustry.find(industry => completeIndustry2.includes(industry));
-
-                            if (newIndustry2 == newIndustry) countIndustry++;
-
-                        }
-
-                        if (countIndustry == 1 || platform == "marketo") {
-
-                            if (countIndustry == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countIndustry == 1 || platform == "marketo" && factory == "email") !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
-                            
-                            if (countIndustry == 1 && platform == "SQL") Object.values(industryObject[newIndustry]).forEach(vertical => !newVerticalArray.includes(vertical) && newVerticalArray.push(vertical));
-                        
-                        }
-                    
-                    } else {
-
-                        let newVertical = onlyVertical.find(vertical => completeIndustry.includes(vertical));
-                        
-                        ((!newIndustryArray.includes(newIndustry) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newIndustryArray.includes(newIndustry) && allVer[newIndustry]))
-                        && newIndustryArray.push(newIndustry);
-
-                        ((!newVerticalArray.includes(newVertical) && newVertical != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newVerticalArray.includes(newVertical) && newVertical != undefined && !allVer[newIndustry]) || (platform == "marketo" && factory == "data" && !newVerticalArray.includes(newVertical) && newVertical != undefined))
-                        && newVerticalArray.push(newVertical);
-                    }
-                }
-
-                list.vertical = newVerticalArray || "";
-                list.industry = newIndustryArray || "";
-
-
-
-                if (platform == "SQL") {
-                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                    .innerText = "SQL Code".concat(` (${list.industry.length} ${list.industry.length == 1 ? "Industry" : "Industries"}, ${list.vertical.length} ${list.vertical.length == 1 ? "Vertical" : "Verticals"})`)
-                } else {  
-
-                    document.getElementById(`outputTitle1-${factory}-${platform}`)
-                    .innerText = "Marketo Industries".concat(` (${list.industry.length} ${list.industry.length == 1 ? "Industry" : "Industries"})`)
-
-                    document.getElementById(`outputTitle2-${factory}-${platform}`)
-                    .innerText = "Marketo Verticals".concat(` (${list.vertical.length} ${list.vertical.length == 1 ? "Vertical" : "Verticals"})`)
-                }
-            
-            break;
-            
-            case "marketing-audience":
-                let MKInput1 = input;
-                let inputMKArray1 = MKInput1 == "" ? [] : MKInput1.split(", ");
-                list.marketingAudience = inputMKArray1 || [];
-
-                document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                .innerText = "Marketo Marketing Audiences".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"})`)
-
-            break;
-
-            case "job-role":
-                
-                let JBRInput1 = input;
-                let JBRArray1 = JBRInput1.split(", ");
-                let JBRArray2 = JBRArray1.map( (JBRInput) => {
-                    return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
-                })
-                let inputJBRArray1 = JBRInput1 == "" ? [] : JBRArray2;
-                list.jobRole = inputJBRArray1 || [];
-
-                document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                .innerText = "Marketo Job Roles".concat(` (${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
-
-            break;
-
-            case "indClass":
-
-                let MKInput = input;
-                let CGInput = input2.trim();
-                let JBRInput = input3.trim();
-                let inputMKArray = MKInput == "" ? [] : MKInput.split(", ");
-                let inputCGArray = CGInput == "" ? [] : CGInput.split(", ");
-                let inputJBRArray = JBRInput == "" ? [] : JBRInput.split(", ").map( (JBRInput) => {
-                    return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
-                });
-
-                list.marketingAudience = inputMKArray || [];
-
-                list.customerGroup = inputCGArray || [];
-
-                list.jobRole = inputJBRArray || [];
-
-                document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                .innerText = "SQL Code".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"}, ${list.customerGroup.length} ${list.customerGroup.length == 1 ? "Customer Group" : "Customer Groups"}, ${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
     
+                        document.getElementById(`outputTitle1-${factory}-${platform}`)
+                        .innerText = "Marketo Industries".concat(` (${list.industry.length} ${list.industry.length == 1 ? "Industry" : "Industries"})`)
+    
+                        document.getElementById(`outputTitle2-${factory}-${platform}`)
+                        .innerText = "Marketo Verticals".concat(` (${list.vertical.length} ${list.vertical.length == 1 ? "Vertical" : "Verticals"})`)
+                    }
+                
+                break;
+                
+                case "marketing-audience":
+                    let MKInput1 = input;
+                    let inputMKArray1 = MKInput1 == "" ? [] : MKInput1.split(", ");
+                    list.marketingAudience = inputMKArray1 || [];
+    
+                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                    .innerText = "Marketo Marketing Audiences".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"})`)
+    
+                break;
+    
+                case "job-role":
+                    
+                    let JBRInput1 = input;
+                    let JBRArray1 = JBRInput1.split(", ");
+                    let JBRArray2 = JBRArray1.map( (JBRInput) => {
+                        return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
+                    })
+                    let inputJBRArray1 = JBRInput1 == "" ? [] : JBRArray2;
+                    list.jobRole = inputJBRArray1 || [];
+    
+                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                    .innerText = "Marketo Job Roles".concat(` (${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
+    
+                break;
+    
+                case "indClass":
+    
+                    let MKInput = input;
+                    let CGInput = input2.trim();
+                    let JBRInput = input3.trim();
+                    let inputMKArray = MKInput == "" ? [] : MKInput.split(", ");
+                    let inputCGArray = CGInput == "" ? [] : CGInput.split(", ");
+                    let inputJBRArray = JBRInput == "" ? [] : JBRInput.split(", ").map( (JBRInput) => {
+                        return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
+                    });
+    
+                    list.marketingAudience = inputMKArray || [];
+    
+                    list.customerGroup = inputCGArray || [];
+    
+                    list.jobRole = inputJBRArray || [];
+    
+                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                    .innerText = "SQL Code".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"}, ${list.customerGroup.length} ${list.customerGroup.length == 1 ? "Customer Group" : "Customer Groups"}, ${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
+        
+            }
+
+        } else {
+            
+            switch (filter) {
+    
+                case "segments":
+    
+                    if (input == "") { list.segments = onlySegments; list.subSegments = onlySubSegments } else {
+                        
+                        let inputArray = input
+                        .split("), ")
+                        .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment);
+    
+    
+        
+                        inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
+        
+        
+                        if (input.includes("High Value Individual")) inputArray.push("High Value Individual");
+        
+                        let newSegments = [];
+                        let newSubSegments = [];
+                        let newSegment;
+                        let newSubSegment;
+                        let allSubs = {};
+    
+                        for (let i = 0; i < inputArray.length; i++) {
+    
+                            let completeSegment = inputArray[i];
+    
+                            if (completeSegment.includes("(All SubSegments)") || completeSegment == "UnSegmented (UnSegmented)") {
+                                
+                                if (completeSegment.includes("(Deprecated)")) continue;
+    
+                                newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
+    
+                                allSubs[newSegment] = newSegment;
+                            }
+                        }
+        
+                        for (let i = 0; i < inputArray.length; i++) {
+        
+                            let completeSegment = inputArray[i];
+                            
+                            if (completeSegment.includes("(Deprecated)")) continue;
+                            
+                            if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); platform == "SQL" && newSubSegments.push("High Value Individual"); continue };
+        
+    
+                            newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
+        
+                            if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
+        
+                            if (completeSegment.includes("(All SubSegments)" || completeSegment == "UnSegmented (UnSegmented)")) {
+        
+                                let countSegment = 0;
+    
+                                for (let j = 0; j < inputArray.length; j++) {
+                                    
+                                    let completeSegment2 = inputArray[j];
+                                    
+                                    let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
+                                    
+                                    if (newSegment2 == newSegment) countSegment++;
+                                    
+                                }
+                                
+                                if (countSegment == 1 || platform == "marketo") {
+        
+                                    if (countSegment == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countSegment == 1 || platform == "marketo" && factory == "email") !newSegments.includes(newSegment) && newSegments.push(newSegment);
+    
+                                    if (countSegment == 1 && platform == "SQL") Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
+                                }
+    
+                            } else {
+    
+                                newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment));
+                                
+                                ((!newSegments.includes(newSegment) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSegments.includes(newSegment) && allSubs[newSegment]))
+                                && newSegments.push(newSegment);
+    
+                                ((!newSubSegments.includes(newSubSegment) && newSubSegment != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && !allSubs[newSegment]) || (platform == "marketo" && factory == "data" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined))
+                                && newSubSegments.push(newSubSegment);
+                            }
+                        }
+        
+                        list.subSegments = newSubSegments || "";
+                        list.segments = newSegments || "";
+                        
+                        document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                        && document.getElementById(`formTitle2-${filter}-${platform}-${factory}`).innerText == "";
+    
+                        document.getElementById(`formTitle1-${filter}-${platform}-${factory}`)
+                        && document.getElementById(`formTitle1-${filter}-${platform}-${factory}`).innerText == "";
+    
+                        if (platform == "SQL") {
+                            document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                            .innerText = "SQL Code".concat(` (${list.segments.length} ${list.segments.length == 1 ? "Segment" : "Segments"}, ${list.subSegments.length} ${list.subSegments.length == 1 ? "SubSegment" : "SubSegments"})`)
+                        } else {  
+    
+                            document.getElementById(`outputTitle1-${factory}-${platform}`)
+                            .innerText = "Marketo Segments".concat(` (${list.segments.length} ${list.segments.length == 1 ? "Segment" : "Segments"})`)
+    
+                            document.getElementById(`outputTitle2-${factory}-${platform}`)
+                            .innerText = "Marketo SubSegments".concat(` (${list.subSegments.length} ${list.subSegments.length == 1 ? "SubSegment" : "SubSegments"})`)
+                        }
+                        
+                    }
+    
+                break;
+    
+                case "industry":
+    
+                    let inputArrayIndustry = input
+                    .split("), ")
+                    .map((industry, i, array) => i < array.length - 1 ? industry = industry.concat(")") : industry)
+    
+                    let newIndustryArray = [];
+                    let newVerticalArray = [];
+                    let allVer = {};
+                    let newIndustry;
+    
+                    for (let i = 0; i < inputArrayIndustry.length; i++) {
+    
+                        let completeIndustry = inputArrayIndustry[i];
+    
+                        if (completeIndustry.includes("(All Verticals)")) {
+                                
+                            if (completeIndustry.includes("(Deprecated)")) continue;
+    
+                            newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry)) || "UnSegmented";
+    
+                            allVer[newIndustry] = newIndustry;
+                        }
+                    }               
+    
+                    for (let i = 0; i < inputArrayIndustry.length; i++) {
+    
+                        let completeIndustry = inputArrayIndustry[i];
+    
+                        if (completeIndustry.includes("(Deprecated)")) continue;
+    
+                        newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry));
+    
+                        if (completeIndustry.includes("(All Verticals)")) {
+    
+                            let countIndustry = 0;
+    
+                            // allVer[newIndustry] = newIndustry;
+    
+                            for (let j = 0; j < inputArrayIndustry.length; j++) {
+                                                
+                                let completeIndustry2 = inputArrayIndustry[j];
+    
+                                let newIndustry2 = onlyIndustry.find(industry => completeIndustry2.includes(industry));
+    
+                                if (newIndustry2 == newIndustry) countIndustry++;
+    
+                            }
+    
+                            if (countIndustry == 1 || platform == "marketo") {
+    
+                                if (countIndustry == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countIndustry == 1 || platform == "marketo" && factory == "email") !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
+                                
+                                if (countIndustry == 1 && platform == "SQL") Object.values(industryObject[newIndustry]).forEach(vertical => !newVerticalArray.includes(vertical) && newVerticalArray.push(vertical));
+                            
+                            }
+                        
+                        } else {
+    
+                            let newVertical = onlyVertical.find(vertical => completeIndustry.includes(vertical));
+                            
+                            ((!newIndustryArray.includes(newIndustry) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newIndustryArray.includes(newIndustry) && allVer[newIndustry]))
+                            && newIndustryArray.push(newIndustry);
+    
+                            ((!newVerticalArray.includes(newVertical) && newVertical != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newVerticalArray.includes(newVertical) && newVertical != undefined && !allVer[newIndustry]) || (platform == "marketo" && factory == "data" && !newVerticalArray.includes(newVertical) && newVertical != undefined))
+                            && newVerticalArray.push(newVertical);
+                        }
+                    }
+    
+                    list.vertical = newVerticalArray || "";
+                    list.industry = newIndustryArray || "";
+    
+    
+    
+                    if (platform == "SQL") {
+                        document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                        .innerText = "SQL Code".concat(` (${list.industry.length} ${list.industry.length == 1 ? "Industry" : "Industries"}, ${list.vertical.length} ${list.vertical.length == 1 ? "Vertical" : "Verticals"})`)
+                    } else {  
+    
+                        document.getElementById(`outputTitle1-${factory}-${platform}`)
+                        .innerText = "Marketo Industries".concat(` (${list.industry.length} ${list.industry.length == 1 ? "Industry" : "Industries"})`)
+    
+                        document.getElementById(`outputTitle2-${factory}-${platform}`)
+                        .innerText = "Marketo Verticals".concat(` (${list.vertical.length} ${list.vertical.length == 1 ? "Vertical" : "Verticals"})`)
+                    }
+                
+                break;
+                
+                case "marketing-audience":
+                    let MKInput1 = input;
+                    let inputMKArray1 = MKInput1 == "" ? [] : MKInput1.split(", ");
+                    list.marketingAudience = inputMKArray1 || [];
+    
+                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                    .innerText = "Marketo Marketing Audiences".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"})`)
+    
+                break;
+    
+                case "job-role":
+                    
+                    let JBRInput1 = input;
+                    let JBRArray1 = JBRInput1.split(", ");
+                    let JBRArray2 = JBRArray1.map( (JBRInput) => {
+                        return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
+                    })
+                    let inputJBRArray1 = JBRInput1 == "" ? [] : JBRArray2;
+                    list.jobRole = inputJBRArray1 || [];
+    
+                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                    .innerText = "Marketo Job Roles".concat(` (${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
+    
+                break;
+    
+                case "indClass":
+    
+                    let MKInput = input;
+                    let CGInput = input2.trim();
+                    let JBRInput = input3.trim();
+                    let inputMKArray = MKInput == "" ? [] : MKInput.split(", ");
+                    let inputCGArray = CGInput == "" ? [] : CGInput.split(", ");
+                    let inputJBRArray = JBRInput == "" ? [] : JBRInput.split(", ").map( (JBRInput) => {
+                        return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
+                    });
+    
+                    list.marketingAudience = inputMKArray || [];
+    
+                    list.customerGroup = inputCGArray || [];
+    
+                    list.jobRole = inputJBRArray || [];
+    
+                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                    .innerText = "SQL Code".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"}, ${list.customerGroup.length} ${list.customerGroup.length == 1 ? "Customer Group" : "Customer Groups"}, ${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
+        
+            }
         }
+
 
         inputBox.addEventListener('input', () => {
 
@@ -1994,152 +2465,355 @@
 
         let output;
 
-        if (platform == "SQL") {
+        if (currentSection.id.includes("peer")) {
 
-            switch (filter) {
+            if (platform == "SQL") {
 
-                case "segments":
+                switch (filter) {
 
-                    let newSubSegments = list.subSegments;
+                    case "segments":
 
-                    let newSegments = list.segments;
+                        let newSubSegments = list.results.subSegments;
 
-                    for (let l = 0; l < onlySubSegments.length; l++) {
-                        
-                        let DBSubSegment = onlySubSegments[l];
+                        let newSegments = list.results.segments;
 
-                        if (!newSubSegments.includes(DBSubSegment)) newSubSegments.splice(0, 0, `--'${DBSubSegment}'`);
+                        console.log(list.results)
+
+                        if (
+                            !Object.values(newSegments).includes(0)
+                            && !Object.values(newSubSegments).includes(0)
+                            && Object.keys(list.results.rest.segments).length == 0
+                            && Object.keys(list.results.rest.subSegments).length == 0
+                            && Object.keys(list.results.rest.extra).length == 0
+                        ) {
+                            outputBox.value = "Correct.";
+                        } else {
+
+                            if (Object.keys(newSegments).length != 0) {
+
+                                for (let i = 0; i < Object.values(newSegments).length; i++) {
+    
+                                    let booleanValue = Object.values(newSegments)[i];
+    
+                                    let newSegment = Object.keys(newSegments)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Segment "${newSegment}" is missing.\n`);
+                                };
+
+                            }
+
+
+                            if (Object.keys(newSubSegments).length != 0) {
+
+                                for (let i = 0; i < Object.values(newSubSegments).length; i++) {
+    
+                                    let booleanValue = Object.values(newSubSegments)[i];
+    
+                                    let newSubSegment = Object.keys(newSubSegments)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The SubSegment "${newSubSegment}" is missing.\n`);
+                                }
+
+                            }
+
+
+                            if (Object.keys(list.results.rest.segments).length != 0) {
+                                
+                                for (let i = 0; i < Object.values(list.results.rest.segments).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.segments)[i];
+    
+                                    let notRequiredSegment = Object.keys(list.results.rest.segments)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Segment "${notRequiredSegment}" was not required.\n`);
+                                }
+
+                            }
+
+                            if (Object.keys(list.results.rest.subSegments).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.subSegments).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.subSegments)[i];
+    
+                                    let notRequiredSubSegment = Object.keys(list.results.rest.subSegments)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The SubSegment "${notRequiredSubSegment}" was not required.\n`);
+                                }
+
+                            }
+
+                            if (Object.keys(list.results.rest.extra).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.extra).length; i++) {
+    
+                                    let specialError = Object.keys(list.results.rest.extra)[i];
+    
+                                    if (specialError == "ORERROR") outputBox.value = outputBox.value.concat(`- Please change the OR between filters for an AND.\n`);
+                                }
+
+                            }
+
+                        }
+
+                        outputBox.classList.add("resizeBox");
+
+                    break;
                     
+                    case "industry":
+
+                    let newIndustryArray = list.industry;
+
+                    let newVerticalArray = list.vertical;
+
+                    newIndustryArray = newIndustryArray.map(industry => `'${industry}'`);
+
+                    newVerticalArray = newVerticalArray.map(vertical => `'${vertical}'`);
+
+                    outputBox.value = `AND OPV.IndustryName in (\n\t${newIndustryArray.join(`,\n\t`)}\n)\n\nAND OPV.VerticalName in (\n\t${newVerticalArray.join(`,\n\t`)}\n)`;
+                    outputBox.classList.add("resizeBox");
+
+                    break;
+
+                    case "indClass":
+
+                    let marketingAudience = list.marketingAudience;
+
+                    let customerGroup = list.customerGroup;
+
+                    let jobRole = list.jobRole;
+
+                    marketingAudience = marketingAudience.map(MA => `'${MA}'`);
+
+                    customerGroup = customerGroup.map(CG => `'${CG}'`);
+
+                    jobRole = jobRole.map(JR => `'${JR}'`);
+
+                    let checkbox = document.getElementById('NUcheckbox');
+
+                    if (checkbox.value.toLowerCase() == "yes") {
+                        outputBox.value = `/**IND CLASSIFCATION**/\nAND (\n\t/*BOB audience*/  IsNull(IPV.CustomerGroup,'UNKNOWN') in/*UCMP_V1.2_UPDATE REPLACED(IPV.MPAAAudience)*/ (${customerGroup.length == 0 ? `'BDM','EXECUTIVES','IT PROFESSIONALS','OTHER PROFESSIONALS','STUDENT/EDUCATOR','DEVELOPER','UNKNOWN'` : customerGroup.join(`, `)})\n\t\t--and IPV.CustomerGroup in ('')\n\t\t${marketingAudience.length == 0 ? "--" : ""}AND IsNull(IPV.MarketingAudience,'UnSegmented') in/*UCMP_V1.2_UPDATE */ (${marketingAudience.length == 0 ? "''" : `\n\t\t\t`+marketingAudience.join(`,\n\t\t\t`)+`\n\t\t`})\n\t\t${jobRole.length == 0 ? "--" : ""}and IPV.JobRole in (${jobRole.length == 0 ? "''" : `\n\t\t`+jobRole.join(`,\n\t\t`)+`\n\t\t`})\n\t\t--and IPV.JobRole Like/*UCMP_V1.2_UPDATE REPLACED(IPV.StandardJobTitle)*/ '%%'\n\t\t--and IPV.JobTitle like '%%'\n\t\t)`;
+                        outputBox.classList.add("resizeBox");
+                    } else {
+                        outputBox.value = `/**IND CLASSIFCATION**/\nAND (\n\t/*BOB audience*/  IsNull(IPV.CustomerGroup,'UNKNOWN') in/*UCMP_V1.2_UPDATE REPLACED(IPV.MPAAAudience)*/ (${customerGroup.length == 0 ? `'BDM','EXECUTIVES','IT PROFESSIONALS','OTHER PROFESSIONALS','STUDENT/EDUCATOR','DEVELOPER','UNKNOWN'` : customerGroup.join(`, `)})\n\t\t--and IPV.CustomerGroup in ('')\n\t\t${marketingAudience.length == 0 ? "--" : ""}and IPV.MarketingAudience in (${marketingAudience.length == 0 ? "''" : `\n\t\t\t`+marketingAudience.join(`,\n\t\t\t`)+`\n\t\t`})\n\t\t${jobRole.length == 0 ? "--" : ""}and IPV.JobRole in (${jobRole.length == 0 ? "''" : `\n\t\t`+jobRole.join(`,\n\t\t`)+`\n\t\t`})\n\t\t--and IPV.JobRole Like/*UCMP_V1.2_UPDATE REPLACED(IPV.StandardJobTitle)*/ '%%'\n\t\t--and IPV.JobTitle like '%%'\n)`;
+                        outputBox.classList.add("resizeBox");
                     }
-                    for (let m = 0; m < onlySegments.length; m++) {
-                        
-                        let DBSegment = onlySegments[m];
-
-                        if (!newSegments.includes(DBSegment)) newSegments.splice(0, 0, `--'${DBSegment}'`);
-                    }
-
-                    newSubSegments = newSubSegments.map(newSubSegment => !newSubSegment.includes("--") ? `'${newSubSegment}'` : newSubSegment);
-                    newSegments = newSegments.map(newSegment => !newSegment.includes("--") ? `'${newSegment}'` : newSegment);
-           
-                    let segmentCode = `
-                    /**Filters on specific list pulls - these filters vary based on request, so are in WHERE clause for easier editing**/\n
-                    \t\t\t\t/**ORG CLASSIFCATION**/\n
-                    \t\tAND  (\n
-                    \t\t\tIsNull(IPV.[SegmentName],'UnSegmented')/*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSegment)*/ in (\n\t\t\t\t\t\t${newSegments.join(",\n\t\t\t\t\t\t")}\n
-                    \t\t\t\t)\n
-                    \t\t\t\tAND  IsNull(IPV.[SubSegmentName],'UnSegmented') in /*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSubSegment)*/ (\n\t\t\t\t\t\t\t${newSubSegments.join(", \n\t\t\t\t\t\t\t")}\n
-                    \t\t\t\t )\n
-                    \t\t)`;
-
-                    outputBox.value = segmentCode;
-                    outputBox.classList.add("resizeBox");
-                break;
-                
-                case "industry":
-
-                let newIndustryArray = list.industry;
-
-                let newVerticalArray = list.vertical;
-
-                newIndustryArray = newIndustryArray.map(industry => `'${industry}'`);
-
-                newVerticalArray = newVerticalArray.map(vertical => `'${vertical}'`);
-
-                outputBox.value = `AND OPV.IndustryName in (\n\t${newIndustryArray.join(`,\n\t`)}\n)\n\nAND OPV.VerticalName in (\n\t${newVerticalArray.join(`,\n\t`)}\n)`;
-                outputBox.classList.add("resizeBox");
-
-                break;
-
-                case "indClass":
-
-                let marketingAudience = list.marketingAudience;
-
-                let customerGroup = list.customerGroup;
-
-                let jobRole = list.jobRole;
-
-                marketingAudience = marketingAudience.map(MA => `'${MA}'`);
-
-                customerGroup = customerGroup.map(CG => `'${CG}'`);
-
-                jobRole = jobRole.map(JR => `'${JR}'`);
-
-                let checkbox = document.getElementById('NUcheckbox');
-
-                if (checkbox.value.toLowerCase() == "yes") {
-                    outputBox.value = `/**IND CLASSIFCATION**/\nAND (\n\t/*BOB audience*/  IsNull(IPV.CustomerGroup,'UNKNOWN') in/*UCMP_V1.2_UPDATE REPLACED(IPV.MPAAAudience)*/ (${customerGroup.length == 0 ? `'BDM','EXECUTIVES','IT PROFESSIONALS','OTHER PROFESSIONALS','STUDENT/EDUCATOR','DEVELOPER','UNKNOWN'` : customerGroup.join(`, `)})\n\t\t--and IPV.CustomerGroup in ('')\n\t\t${marketingAudience.length == 0 ? "--" : ""}AND IsNull(IPV.MarketingAudience,'UnSegmented') in/*UCMP_V1.2_UPDATE */ (${marketingAudience.length == 0 ? "''" : `\n\t\t\t`+marketingAudience.join(`,\n\t\t\t`)+`\n\t\t`})\n\t\t${jobRole.length == 0 ? "--" : ""}and IPV.JobRole in (${jobRole.length == 0 ? "''" : `\n\t\t`+jobRole.join(`,\n\t\t`)+`\n\t\t`})\n\t\t--and IPV.JobRole Like/*UCMP_V1.2_UPDATE REPLACED(IPV.StandardJobTitle)*/ '%%'\n\t\t--and IPV.JobTitle like '%%'\n\t\t)`;
-                    outputBox.classList.add("resizeBox");
-                } else {
-                    outputBox.value = `/**IND CLASSIFCATION**/\nAND (\n\t/*BOB audience*/  IsNull(IPV.CustomerGroup,'UNKNOWN') in/*UCMP_V1.2_UPDATE REPLACED(IPV.MPAAAudience)*/ (${customerGroup.length == 0 ? `'BDM','EXECUTIVES','IT PROFESSIONALS','OTHER PROFESSIONALS','STUDENT/EDUCATOR','DEVELOPER','UNKNOWN'` : customerGroup.join(`, `)})\n\t\t--and IPV.CustomerGroup in ('')\n\t\t${marketingAudience.length == 0 ? "--" : ""}and IPV.MarketingAudience in (${marketingAudience.length == 0 ? "''" : `\n\t\t\t`+marketingAudience.join(`,\n\t\t\t`)+`\n\t\t`})\n\t\t${jobRole.length == 0 ? "--" : ""}and IPV.JobRole in (${jobRole.length == 0 ? "''" : `\n\t\t`+jobRole.join(`,\n\t\t`)+`\n\t\t`})\n\t\t--and IPV.JobRole Like/*UCMP_V1.2_UPDATE REPLACED(IPV.StandardJobTitle)*/ '%%'\n\t\t--and IPV.JobTitle like '%%'\n)`;
-                    outputBox.classList.add("resizeBox");
                 }
+            
+            } else {
+            
+                switch (filter) {
+                    
+                    case "segments":
+                        
+                        let segments = list.segments;
+            
+                        let subSegments = list.subSegments;
+                        
+                        output = `${segments.join(`\n`)}`;
+                        let output2 = `${subSegments.join(`\n`)}`;
+
+                        outputBox.value = output;
+                        outputBox2.value = output2;
+                        outputBox.classList.add("resizeBox");   
+                        outputBox2.classList.add("resizeBox");   
+
+
+                    break;
+                    
+                    case "industry":
+
+                        const { industry, vertical } = list;
+                
+                        output = `${industry.join(`\n`)}`;
+
+                        let output2Industry = `${vertical.join(`\n`)}`;
+                        
+                        outputBox.value = output;
+                        outputBox2.value = output2Industry;
+                        outputBox.classList.add("resizeBox");   
+                        outputBox2.classList.add("resizeBox");   
+                        
+                    break;
+
+                    case "marketing-audience":
+
+                        const { marketingAudience } = list;
+                
+                        output = `${marketingAudience.join(`\n`)}`;
+                        
+                        outputBox.value = output;
+
+                        outputBox.classList.add("resizeBox");   
+
+                    break;
+
+                    case "job-role":
+
+                        const { jobRole } = list;
+                
+                        output = `${jobRole.join(`\n`)}`;
+                        
+                        outputBox.value = output;
+
+                        outputBox.classList.add("resizeBox");   
+                    
+                }       
+                outputBox.value = output;
+                outputBox.classList.add("resizeBox");   
             }
-        
+
         } else {
-           
-            switch (filter) {
-                
-                case "segments":
+
+            if (platform == "SQL") {
+    
+                switch (filter) {
+    
+                    case "segments":
+    
+                        let newSubSegments = list.subSegments;
+    
+                        let newSegments = list.segments;
+    
+                        for (let l = 0; l < onlySubSegments.length; l++) {
+                            
+                            let DBSubSegment = onlySubSegments[l];
+    
+                            if (!newSubSegments.includes(DBSubSegment)) newSubSegments.splice(0, 0, `--'${DBSubSegment}'`);
+                        
+                        }
+                        for (let m = 0; m < onlySegments.length; m++) {
+                            
+                            let DBSegment = onlySegments[m];
+    
+                            if (!newSegments.includes(DBSegment)) newSegments.splice(0, 0, `--'${DBSegment}'`);
+                        }
+    
+                        newSubSegments = newSubSegments.map(newSubSegment => !newSubSegment.includes("--") ? `'${newSubSegment}'` : newSubSegment);
+                        newSegments = newSegments.map(newSegment => !newSegment.includes("--") ? `'${newSegment}'` : newSegment);
+               
+                        let segmentCode = `
+                        /**Filters on specific list pulls - these filters vary based on request, so are in WHERE clause for easier editing**/\n
+                        \t\t\t\t/**ORG CLASSIFCATION**/\n
+                        \t\tAND  (\n
+                        \t\t\tIsNull(IPV.[SegmentName],'UnSegmented')/*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSegment)*/ in (\n\t\t\t\t\t\t${newSegments.join(",\n\t\t\t\t\t\t")}\n
+                        \t\t\t\t)\n
+                        \t\t\t\tAND  IsNull(IPV.[SubSegmentName],'UnSegmented') in /*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSubSegment)*/ (\n\t\t\t\t\t\t\t${newSubSegments.join(", \n\t\t\t\t\t\t\t")}\n
+                        \t\t\t\t )\n
+                        \t\t)`;
+    
+                        outputBox.value = segmentCode;
+                        outputBox.classList.add("resizeBox");
+                    break;
                     
-                    let segments = list.segments;
-        
-                    let subSegments = list.subSegments;
-                    
-                    output = `${segments.join(`\n`)}`;
-                    let output2 = `${subSegments.join(`\n`)}`;
-
-                    outputBox.value = output;
-                    outputBox2.value = output2;
-                    outputBox.classList.add("resizeBox");   
-                    outputBox2.classList.add("resizeBox");   
-
-
-                break;
-                
-                case "industry":
-
-                    const { industry, vertical } = list;
+                    case "industry":
+    
+                    let newIndustryArray = list.industry;
+    
+                    let newVerticalArray = list.vertical;
+    
+                    newIndustryArray = newIndustryArray.map(industry => `'${industry}'`);
+    
+                    newVerticalArray = newVerticalArray.map(vertical => `'${vertical}'`);
+    
+                    outputBox.value = `AND OPV.IndustryName in (\n\t${newIndustryArray.join(`,\n\t`)}\n)\n\nAND OPV.VerticalName in (\n\t${newVerticalArray.join(`,\n\t`)}\n)`;
+                    outputBox.classList.add("resizeBox");
+    
+                    break;
+    
+                    case "indClass":
+    
+                    let marketingAudience = list.marketingAudience;
+    
+                    let customerGroup = list.customerGroup;
+    
+                    let jobRole = list.jobRole;
+    
+                    marketingAudience = marketingAudience.map(MA => `'${MA}'`);
+    
+                    customerGroup = customerGroup.map(CG => `'${CG}'`);
+    
+                    jobRole = jobRole.map(JR => `'${JR}'`);
+    
+                    let checkbox = document.getElementById('NUcheckbox');
+    
+                    if (checkbox.value.toLowerCase() == "yes") {
+                        outputBox.value = `/**IND CLASSIFCATION**/\nAND (\n\t/*BOB audience*/  IsNull(IPV.CustomerGroup,'UNKNOWN') in/*UCMP_V1.2_UPDATE REPLACED(IPV.MPAAAudience)*/ (${customerGroup.length == 0 ? `'BDM','EXECUTIVES','IT PROFESSIONALS','OTHER PROFESSIONALS','STUDENT/EDUCATOR','DEVELOPER','UNKNOWN'` : customerGroup.join(`, `)})\n\t\t--and IPV.CustomerGroup in ('')\n\t\t${marketingAudience.length == 0 ? "--" : ""}AND IsNull(IPV.MarketingAudience,'UnSegmented') in/*UCMP_V1.2_UPDATE */ (${marketingAudience.length == 0 ? "''" : `\n\t\t\t`+marketingAudience.join(`,\n\t\t\t`)+`\n\t\t`})\n\t\t${jobRole.length == 0 ? "--" : ""}and IPV.JobRole in (${jobRole.length == 0 ? "''" : `\n\t\t`+jobRole.join(`,\n\t\t`)+`\n\t\t`})\n\t\t--and IPV.JobRole Like/*UCMP_V1.2_UPDATE REPLACED(IPV.StandardJobTitle)*/ '%%'\n\t\t--and IPV.JobTitle like '%%'\n\t\t)`;
+                        outputBox.classList.add("resizeBox");
+                    } else {
+                        outputBox.value = `/**IND CLASSIFCATION**/\nAND (\n\t/*BOB audience*/  IsNull(IPV.CustomerGroup,'UNKNOWN') in/*UCMP_V1.2_UPDATE REPLACED(IPV.MPAAAudience)*/ (${customerGroup.length == 0 ? `'BDM','EXECUTIVES','IT PROFESSIONALS','OTHER PROFESSIONALS','STUDENT/EDUCATOR','DEVELOPER','UNKNOWN'` : customerGroup.join(`, `)})\n\t\t--and IPV.CustomerGroup in ('')\n\t\t${marketingAudience.length == 0 ? "--" : ""}and IPV.MarketingAudience in (${marketingAudience.length == 0 ? "''" : `\n\t\t\t`+marketingAudience.join(`,\n\t\t\t`)+`\n\t\t`})\n\t\t${jobRole.length == 0 ? "--" : ""}and IPV.JobRole in (${jobRole.length == 0 ? "''" : `\n\t\t`+jobRole.join(`,\n\t\t`)+`\n\t\t`})\n\t\t--and IPV.JobRole Like/*UCMP_V1.2_UPDATE REPLACED(IPV.StandardJobTitle)*/ '%%'\n\t\t--and IPV.JobTitle like '%%'\n)`;
+                        outputBox.classList.add("resizeBox");
+                    }
+                }
             
-                    output = `${industry.join(`\n`)}`;
-
-                    let output2Industry = `${vertical.join(`\n`)}`;
+            } else {
+               
+                switch (filter) {
                     
-                    outputBox.value = output;
-                    outputBox2.value = output2Industry;
-                    outputBox.classList.add("resizeBox");   
-                    outputBox2.classList.add("resizeBox");   
-                    
-                break;
-
-                case "marketing-audience":
-
-                    const { marketingAudience } = list;
+                    case "segments":
+                        
+                        let segments = list.segments;
             
-                    output = `${marketingAudience.join(`\n`)}`;
+                        let subSegments = list.subSegments;
+                        
+                        output = `${segments.join(`\n`)}`;
+                        let output2 = `${subSegments.join(`\n`)}`;
+    
+                        outputBox.value = output;
+                        outputBox2.value = output2;
+                        outputBox.classList.add("resizeBox");   
+                        outputBox2.classList.add("resizeBox");   
+    
+    
+                    break;
                     
-                    outputBox.value = output;
-
-                    outputBox.classList.add("resizeBox");   
-
-                break;
-
-                case "job-role":
-
-                    const { jobRole } = list;
-            
-                    output = `${jobRole.join(`\n`)}`;
-                    
-                    outputBox.value = output;
-
-                    outputBox.classList.add("resizeBox");   
+                    case "industry":
+    
+                        const { industry, vertical } = list;
                 
-            }       
-            outputBox.value = output;
-            outputBox.classList.add("resizeBox");   
+                        output = `${industry.join(`\n`)}`;
+    
+                        let output2Industry = `${vertical.join(`\n`)}`;
+                        
+                        outputBox.value = output;
+                        outputBox2.value = output2Industry;
+                        outputBox.classList.add("resizeBox");   
+                        outputBox2.classList.add("resizeBox");   
+                        
+                    break;
+    
+                    case "marketing-audience":
+    
+                        const { marketingAudience } = list;
+                
+                        output = `${marketingAudience.join(`\n`)}`;
+                        
+                        outputBox.value = output;
+    
+                        outputBox.classList.add("resizeBox");   
+    
+                    break;
+    
+                    case "job-role":
+    
+                        const { jobRole } = list;
+                
+                        output = `${jobRole.join(`\n`)}`;
+                        
+                        outputBox.value = output;
+    
+                        outputBox.classList.add("resizeBox");   
+                    
+                }       
+                outputBox.value = output;
+                outputBox.classList.add("resizeBox");   
+            }
+
         }
+
     }
 
-    const convertLogic = async (filter, platform, outputBox, button, inputBox, factory, inputBox2, inputBox3, outputBox2, builderInput) => {
+    const convertLogic = async (filter, platform, outputBox, button, inputBox, factory, inputBox2, inputBox3, outputBox2, builderInput, builderInput2) => {
 
             await button.addEventListener("click", async () => {
         
@@ -2152,8 +2826,10 @@
                     let input3 = inputBox3 ? inputBox3.value : "";
 
                     let builderInputValue = builderInput ? builderInput.value : "";
+
+                    let builderInputValue2 = builderInput2 ? builderInput2.value : "";
         
-                    let list = await inputLogic(filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform, builderInputValue, builderInput);
+                    let list = await inputLogic(filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform, builderInputValue, builderInput, builderInputValue2, builderInput2);
                     
                     await outputLogic(filter, list, platform, outputBox, outputBox2);
                 
@@ -2203,36 +2879,37 @@
                 
                 let output = document.getElementById(`output-${filter}-${platform}-peer`);
                 let convertButton = document.getElementById(`compare-${filter}-${platform}-peer`);
+                let formInputs = document.getElementById(`form-${filter}-${platform}-peer`);
                 
                 if ((platform == "SQL" && (filter == "segments" || filter == "industry")) || (platform == "marketo" && (filter == "marketing-audience" || filter == "job-role"))) {
                 // Process 1 input, 1 output
     
                     let inputMaSH = document.getElementById(`input-${filter}-${platform}-MaSH-peer`);
                     let builderInput = document.getElementById(`input-${filter}-${platform}-peer`);
-                    
+
                     formInputs.onclick = (event) => event.preventDefault();
-                    await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, builderInput);
+                    await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, undefined, undefined, undefined, builderInput);
     
                 } else if (platform == "SQL" && filter == "indClass") {
                 // Process - 4 inputs, 1 output
                 
-                    let inputMaSH;
-                    let inputMaSH2;
-                    let inputMaSH3;
-                    let builderInput;
-    
+                    let inputMaSH = document.getElementById(`input-${filter}1-${platform}-MaSH-peer`);
+                    let inputMaSH2 = document.getElementById(`input-${filter}2-${platform}-MaSH-peer`);
+                    let inputMaSH3 = document.getElementById(`input-${filter}2-${platform}-MaSH-peer`);
+                    let builderInput = document.getElementById(`input-${filter}-${platform}-peer`);
+                    
                     formInputs.onclick = (event) => event.preventDefault();
-                    await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, inputMaSH2, inputMaSH3, builderInput);
+                    await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, inputMaSH2, inputMaSH3, undefined, builderInput);
                 
                 } else if (platform == "marketo" && (filter == "segments" || filter == "industry")) {
                 // Process - 1 input, 2 outputs
     
-                    let inputMaSH;
-                    let output2;
-                    let builderInput;
+                    let inputMaSH = document.getElementById(`input-${filter}-${platform}-MaSH-peer`);
+                    let builderInput = document.getElementById(`input-${filter}1-${platform}-peer`);
+                    let builderInput2 = document.getElementById(`input-${filter}2-${platform}-peer`);
                 
                     formInputs.onclick = (event) => event.preventDefault();
-                    await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, undefined, undefined, output2, builderInput);
+                    await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, undefined, undefined, undefined, builderInput, builderInput2);
                 }
 
             }
