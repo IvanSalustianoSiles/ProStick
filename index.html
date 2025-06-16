@@ -2477,8 +2477,6 @@
 
                         let newSegments = list.results.segments;
 
-                        console.log(list.results)
-
                         if (
                             !Object.values(newSegments).includes(0)
                             && !Object.values(newSubSegments).includes(0)
@@ -2486,8 +2484,11 @@
                             && Object.keys(list.results.rest.subSegments).length == 0
                             && Object.keys(list.results.rest.extra).length == 0
                         ) {
+
                             outputBox.value = "Correct.";
+
                         } else {
+
 
                             if (Object.keys(newSegments).length != 0) {
 
