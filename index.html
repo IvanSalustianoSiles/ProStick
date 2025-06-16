@@ -1716,14 +1716,11 @@
                             }
                         }
 
-                        // builderInputValue
-
-
         
                         list.subSegments = newSubSegments || "";
                         list.segments = newSegments || "";
 
-                        // peer
+                        // PEER LOGIC
 
                         function extractActiveSqlLines(sqlText) {
                             const lines = sqlText.split(/\r?\n/);
@@ -1799,7 +1796,9 @@
 
                             if (row.includes("IPV.[SubSegmentName]")) startPushingSubSegments = 1;
 
-                            if (row[row.length - 1] == ")" && nextRow.includes("OR")) results.rest.extra["ORERROR"] = "OR should be AND";
+                            if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
+
+                            if (row[row.length - 1] == ")" && nextRow.includes("OR")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
 
                             if (startPushingSegments == 1) {
                                 
@@ -1877,6 +1876,10 @@
 
                             let segment;
 
+                            results.subSegments[subSegment] = 0;
+
+                            if (builderSubSegmentsArray.includes(subSegment)) { results.subSegments[subSegment] = 1; continue };
+
                             for (let k = 0; k < Object.values(segments).length; k++) {
 
                                 let forSegment = Object.values(segments)[k];
@@ -1908,16 +1911,24 @@
                             }
 
                             if (
-                                builderSegmentsArray.includes(segment) && builderSubSegmentsArray.includes(subSegment)
-                                || !builderSubSegmentsArray.includes(subSegment) && builderSegmentsArray.includes(segment)
+                                !builderSubSegmentsArray.includes(subSegment) && builderSegmentsArray.includes(segment)
                                 && noSubSegmentsInBuild && allSubSegmentsInMaSH
                             ) {
 
                                 results.subSegments[subSegment] = 1;
-                            
-                            } else {
 
-                                results.subSegments[subSegment] = 0;
+                                continue;
+                            
+                            } 
+
+                            if (
+                                builderSubSegmentsArray.includes(subSegment) && !builderSegmentsArray.includes(segment)
+                            ) {
+
+                                results.rest.extra[subSegment] = `The SubSegment "${subSegment}" is included but its Segment ("${segment}") is not.`;
+                            
+                                continue;
+
                             }
 
                         }
@@ -1940,6 +1951,8 @@
                         }
                         
                         list.results = results;
+
+                        console.log(results);
                         
                         // document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
                         // && document.getElementById(`formTitle2-${filter}-${platform}-${factory}`).innerText == "";
@@ -2485,9 +2498,13 @@
                             && Object.keys(list.results.rest.extra).length == 0
                         ) {
 
+                            outputBox.value = "";
+
                             outputBox.value = "Correct.";
 
                         } else {
+
+                            outputBox.value = "";
 
 
                             if (Object.keys(newSegments).length != 0) {
@@ -2526,7 +2543,7 @@
     
                                     let notRequiredSegment = Object.keys(list.results.rest.segments)[i];
     
-                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Segment "${notRequiredSegment}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Segment "${notRequiredSegment}" was not required.\n`);
                                 }
 
                             }
@@ -2539,7 +2556,7 @@
     
                                     let notRequiredSubSegment = Object.keys(list.results.rest.subSegments)[i];
     
-                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The SubSegment "${notRequiredSubSegment}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The SubSegment "${notRequiredSubSegment}" was not required.\n`);
                                 }
 
                             }
@@ -2548,9 +2565,8 @@
 
                                 for (let i = 0; i < Object.values(list.results.rest.extra).length; i++) {
     
-                                    let specialError = Object.keys(list.results.rest.extra)[i];
-    
-                                    if (specialError == "ORERROR") outputBox.value = outputBox.value.concat(`- Please change the OR between filters for an AND.\n`);
+                                    outputBox.value = outputBox.value.concat(Object.values(list.results.rest.extra)[i]);
+
                                 }
 
                             }
