@@ -107,9 +107,9 @@
             <form id="form-segments-SQL-peer">
                 <div id="formTitle1-segments-SQL-peer">Validation</div>
                 <div>
-                    <div>MaSH Filter</div>
+                    <div id="MaSH-title">MaSH Filter</div>
                     <div class="border"><textarea id="input-segments-SQL-MaSH-peer" class="initialinp input"></textarea></div>
-                    <div>Builder Segments & SubSegments</div>
+                    <div id="builder-title">Builder Segments & SubSegments</div>
                     <div class="border"><textarea id="input-segments-SQL-peer" class="initialinp input"></textarea></div>
                     <button id="compare-segments-SQL-peer">Compare</button>
                 </div>
@@ -130,9 +130,9 @@
             <form id="form-industry-SQL-peer">
                 <div id="formTitle1-industry-SQL-peer">Validation</div>
                 <div>
-                    <div>MaSH Filter</div>
+                    <div id="MaSH-title">MaSH Filter</div>
                     <div class="border"><textarea id="input-industry-SQL-MaSH-peer" class="initialinp input"></textarea></div>
-                    <div>Builder Industries & Verticals</div>
+                    <div id="builder-title">Builder Industries & Verticals</div>
                     <div class="border"><textarea id="input-industry-SQL-peer" class="initialinp input"></textarea></div>
                     <button id="compare-industry-SQL-peer">Compare</button>
                 </div>
@@ -153,15 +153,15 @@
             <form id="form-indClass-SQL-peer">
                 <div id="formTitle1-indClass-SQL-peer">Validation</div>
                 <div>
-                    <div>MaSH Marketing Audience</div>
+                    <div id="MaSH-title">MaSH Marketing Audience</div>
                     <div class="border"><textarea id="input-indClass1-SQL-MaSH-peer" class="initialinp input"></textarea></div>
-                    <div>MaSH Customer Group</div>
+                    <div id="MaSH-title2">MaSH Customer Group</div>
                     <div class="border"><textarea id="input-indClass2-SQL-MaSH-peer" class="initialinp input"></textarea></div>
-                    <div>MaSH Job Roles</div>
+                    <div id="MaSH-title3">MaSH Job Roles</div>
                     <div class="border"><textarea id="input-indClass3-SQL-MaSH-peer" class="initialinp input"></textarea></div>
                     <div>NULLs as Unsegmented in Marketing Audience ( Yes / No )</div>
                     <div class="border"><textarea id="input-indClass4-SQL-MaSH-peer" class="initialinp input"></textarea></div>
-                    <div>Builder Ind Classification</div>
+                    <div id="builder-title">Builder Ind Classification</div>
                     <div class="border"><textarea id="input-indClass-SQL-peer" class="initialinp input"></textarea></div>
                     <button id="compare-indClass-SQL-peer">Compare</button>
                 </div>
@@ -182,11 +182,11 @@
             <form id="form-segments-marketo-peer">
                 <div id="formTitle1-segments-marketo-peer">Validation</div>
                 <div>
-                    <div>MaSH Filter</div>
+                    <div id="MaSH-title">MaSH Filter</div>
                     <div class="border"><textarea id="input-segments-marketo-MaSH-peer" class="initialinp input"></textarea></div>
-                    <div>Builder Segments</div>
+                    <div id="builder-title">Builder Segments</div>
                     <div class="border"><textarea id="input-segments-marketo-peer" class="initialinp input"></textarea></div>
-                    <div>Builder SubSegments</div>
+                    <div id="builder-title2">Builder SubSegments</div>
                     <div class="border"><textarea id="input-segments2-marketo-peer" class="initialinp input"></textarea></div>
                     <button id="compare-segments-marketo-peer">Compare</button>
                 </div>
@@ -209,11 +209,11 @@
             <form id="form-industry-marketo-peer">
                 <div id="formTitle1-industry-marketo-peer">Validation</div>
                 <div>
-                    <div>MaSH Filter</div>
+                    <div id="MaSH-title">MaSH Filter</div>
                     <div class="border"><textarea id="input-industry-marketo-MaSH-peer" class="initialinp input"></textarea></div>
-                    <div>Builder Industries</div>
+                    <div id="builder-title">Builder Industries</div>
                     <div class="border"><textarea id="input-industry-marketo-peer" class="initialinp input"></textarea></div>
-                    <div>Builder Verticals</div>
+                    <div id="builder-title2">Builder Verticals</div>
                     <div class="border"><textarea id="input-industry2-marketo-peer" class="initialinp input"></textarea></div>
                     <button id="compare-industry-marketo-peer">Compare</button>
                 </div>
@@ -236,9 +236,9 @@
             <form id="form-marketing-audience-marketo-peer">
                 <div id="formTitle1-marketing-audience-marketo-peer">Validation</div>
                 <div>
-                    <div>MaSH Filter</div>
+                    <div id="MaSH-title">MaSH Filter</div>
                     <div class="border"><textarea id="input-marketing-audience-marketo-MaSH-peer" class="initialinp input"></textarea></div>
-                    <div>Builder Marketing Audience</div>
+                    <div id="builder-title">Builder Marketing Audience</div>
                     <div class="border"><textarea id="input-marketing-audience-marketo-peer" class="initialinp input"></textarea></div>
                     <button id="compare-marketing-audience-marketo-peer">Compare</button>
                 </div>
@@ -261,9 +261,9 @@
             <form id="form-job-role-marketo-peer">
                 <div id="formTitle1-job-role-marketo-peer">Validation</div>
                 <div>
-                    <div>MaSH Filter</div>
+                    <div id="MaSH-title">MaSH Filter</div>
                     <div class="border"><textarea id="input-job-role-marketo-MaSH-peer" class="initialinp input"></textarea></div>
-                    <div>Builder Job Roles</div>
+                    <div id="builder-title">Builder Job Roles</div>
                     <div class="border"><textarea id="input-job-role-marketo-peer" class="initialinp input"></textarea></div>
                     <button id="compare-job-role-marketo-peer">Compare</button>
                 </div>
@@ -369,8 +369,8 @@
     },
     'Banking': {
         UB: 'Universal Banks',
+        UNK: 'Unknown',
         BNK: 'Banking',
-        UNK: 'Unknown'
     },
     'Capital Markets': {
         CMS: 'Capital Markets/Securities'
@@ -1596,6 +1596,102 @@
 
     // Functions
 
+    const extractActiveSqlLines = (sqlText) => {
+        const lines = sqlText.split(/\r?\n/);
+        const activeLines = [];
+        let inBlockComment = false;
+
+        for (let line of lines) {
+            let stripped = line.trim();
+
+            if (!stripped) continue;
+
+            if (inBlockComment) {
+                if (stripped.includes("*/")) {
+                    inBlockComment = false;
+                    stripped = stripped.split("*/")[1]?.trim() || "";
+                    if (!stripped) continue;
+                } else {
+                    continue;
+                }
+            }
+
+            while (stripped.includes("/*")) {
+                const start = stripped.indexOf("/*");
+                const end = stripped.indexOf("*/", start + 2);
+
+                if (end !== -1) {
+                    stripped = stripped.slice(0, start) + stripped.slice(end + 2);
+                } else {
+                    inBlockComment = true;
+                    stripped = stripped.slice(0, start);
+                    break;
+                }
+            }
+
+            if (stripped.startsWith("--")) continue;
+            if (stripped.includes("--")) {
+                stripped = stripped.split("--")[0].trim();
+            }
+
+            if (stripped) activeLines.push(stripped);
+        }
+
+        return activeLines;
+    }
+
+    const chargingBuildersArray = (rawArray) => {
+        let collecting = false;
+        let formalArray = [];
+        for (let line of rawArray) {
+            if (!collecting && /in\s*\(/i.test(line)) {
+                collecting = true;
+                let afterIn = line.split(/in\s*\(/i)[1];
+                if (afterIn) {
+                    formalArray.push(...splitOutsideQuotes(afterIn));
+                }
+            } else if (collecting) {
+                let sinComillas = line.replace(/'[^']*'/g, '');
+                if (sinComillas.includes(")")) {
+                    let beforeParen = line.split(")")[0];
+                    formalArray.push(...splitOutsideQuotes(beforeParen));
+                    collecting = false;
+                } else {
+                    formalArray.push(...splitOutsideQuotes(line));
+                }
+            }           
+        }
+        formalArray = formalArray.map((row, i) => {
+            if (i === formalArray.length - 1 && row.endsWith(")")) {
+                return row.replace(/\'/g, "").slice(0, -1);
+            }
+            return row.replace(/\'/g, "");
+        });
+
+        return formalArray.filter(row => row !== "");
+    };
+
+    const splitOutsideQuotes = (text) => {
+        const result = [];
+        let current = '';
+        let insideQuotes = false;
+
+        for (let char of text) {
+            if (char === "'") {
+                insideQuotes = !insideQuotes;
+                current += char;
+            } else if (char === ',' && !insideQuotes) {
+                result.push(current.trim());
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+
+        if (current) result.push(current.trim());
+        return result;
+    };
+
     const activateButtonLogic = async () => {
 
         const allButtons = await document.getElementsByTagName("button");
@@ -1630,6 +1726,10 @@
         input = input.trim();
 
         let list = {};
+
+        let results;
+
+        let builderSQLArray;
 
         if (currentSection.id.includes("peer")) {
 
@@ -1722,51 +1822,7 @@
 
                         // PEER LOGIC
 
-                        function extractActiveSqlLines(sqlText) {
-                            const lines = sqlText.split(/\r?\n/);
-                            const activeLines = [];
-                            let inBlockComment = false;
-
-                            for (let line of lines) {
-                                let stripped = line.trim();
-
-                                if (!stripped) continue;
-
-                                if (inBlockComment) {
-                                    if (stripped.includes("*/")) {
-                                        inBlockComment = false;
-                                        stripped = stripped.split("*/")[1]?.trim() || "";
-                                        if (!stripped) continue;
-                                    } else {
-                                        continue;
-                                    }
-                                }
-
-                                while (stripped.includes("/*")) {
-                                    const start = stripped.indexOf("/*");
-                                    const end = stripped.indexOf("*/", start + 2);
-
-                                    if (end !== -1) {
-                                        stripped = stripped.slice(0, start) + stripped.slice(end + 2);
-                                    } else {
-                                        inBlockComment = true;
-                                        stripped = stripped.slice(0, start);
-                                        break;
-                                    }
-                                }
-
-                                if (stripped.startsWith("--")) continue;
-                                if (stripped.includes("--")) {
-                                    stripped = stripped.split("--")[0].trim();
-                                }
-
-                                if (stripped) activeLines.push(stripped);
-                            }
-
-                            return activeLines;
-                        }
-
-                        let results = { 
+                        results = { 
                             segments: {},
                             subSegments: {},
                             rest: {
@@ -1776,7 +1832,7 @@
                             }
                         }
 
-                        let builderSQLArray = extractActiveSqlLines(builderInputValue);
+                        builderSQLArray = extractActiveSqlLines(builderInputValue);
 
                         let builderSegmentsRawArray = [];
 
@@ -1792,9 +1848,9 @@
 
                             let nextRow = builderSQLArray[i+1] ? builderSQLArray[i+1] : "";
 
-                            if (row.includes("IPV.[SegmentName]")) startPushingSegments = 1;
+                            if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.segmentname")) startPushingSegments = 1;
 
-                            if (row.includes("IPV.[SubSegmentName]")) startPushingSubSegments = 1;
+                            if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.subsegmentname")) startPushingSubSegments = 1;
 
                             if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
 
@@ -1804,7 +1860,7 @@
                                 
                                 builderSegmentsRawArray.push(row);
 
-                                if (builderSQLArray[i+1].includes(")")) startPushingSegments = 0;
+                                if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingSegments = 0;
                                 
                             }
 
@@ -1812,46 +1868,46 @@
                                 
                                 builderSubSegmentsRawArray.push(row);
                                 
-                                if (builderSQLArray[i+1].includes(")")) startPushingSubSegments = 0;
+                                if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingSubSegments = 0;
 
                             }
                         };
 
-                        let builderSegmentsArray = [];
+                        let builderSegmentsArray = chargingBuildersArray(builderSegmentsRawArray);
 
-                        let builderSubSegmentsArray = [];
+                        let builderSubSegmentsArray = chargingBuildersArray(builderSubSegmentsRawArray);;
 
-                        // Cargando arrays de builder
+                        // Charging builder's arrays
 
-                        for (let i = 0; i < onlySubSegments.length; i++) {
+                        // for (let i = 0; i < onlySubSegments.length; i++) {
 
-                            let subSegment = onlySubSegments[i];
+                        //     let subSegment = onlySubSegments[i];
 
-                            for (let j = 0; j < builderSubSegmentsRawArray.length; j++) {
+                        //     for (let j = 0; j < builderSubSegmentsRawArray.length; j++) {
 
-                                let row = builderSubSegmentsRawArray[j];
+                        //         let row = builderSubSegmentsRawArray[j];
 
-                                if (row.includes("IPV.[SegmentName],'UnSegmented'") || row.includes("IPV.[SubSegmentName],'UnSegmented'")) continue;
+                        //         if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.segmentname,'unsegmented'") || row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.subsegmentname,'unsegmented'")) continue;
 
-                                if (row.includes(subSegment) && !builderSubSegmentsArray.includes(subSegment)) builderSubSegmentsArray.push(subSegment);
-                            }
+                        //         if (row.includes(subSegment) && !builderSubSegmentsArray.includes(subSegment)) builderSubSegmentsArray.push(subSegment);
+                        //     }
 
-                        }
+                        // }
 
-                        for (let i = 0; i < onlySegments.length; i++) {
+                        // for (let i = 0; i < onlySegments.length; i++) {
 
-                            let segment = onlySegments[i];
+                        //     let segment = onlySegments[i];
 
-                            for (let j = 0; j < builderSegmentsRawArray.length; j++) {
+                        //     for (let j = 0; j < builderSegmentsRawArray.length; j++) {
 
-                                let row = builderSegmentsRawArray[j];
+                        //         let row = builderSegmentsRawArray[j];
 
-                                if (row.includes("IPV.[SegmentName],'UnSegmented'") || row.includes("IPV.[SubSegmentName],'UnSegmented'")) continue;
+                        //         if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.segmentname,'unsegmented'") || row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.subsegmentname,'unsegmented'")) continue;
 
-                                if (row.includes(segment) && !builderSegmentsArray.includes(segment)) builderSegmentsArray.push(segment);
-                            }
+                        //         if (row.includes(segment) && !builderSegmentsArray.includes(segment)) builderSegmentsArray.push(segment);
+                        //     }
 
-                        }
+                        // }
 
                         // Validation for missing things
 
@@ -1951,26 +2007,6 @@
                         }
                         
                         list.results = results;
-
-                        console.log(results);
-                        
-                        // document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                        // && document.getElementById(`formTitle2-${filter}-${platform}-${factory}`).innerText == "";
-    
-                        // document.getElementById(`formTitle1-${filter}-${platform}-${factory}`)
-                        // && document.getElementById(`formTitle1-${filter}-${platform}-${factory}`).innerText == "";
-    
-                        // if (platform == "SQL") {
-                        //     document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                        //     .innerText = "SQL Code".concat(` (${list.segments.length} ${list.segments.length == 1 ? "Segment" : "Segments"}, ${list.subSegments.length} ${list.subSegments.length == 1 ? "SubSegment" : "SubSegments"})`)
-                        // } else {  
-    
-                        //     document.getElementById(`outputTitle1-${factory}-${platform}`)
-                        //     .innerText = "Marketo Segments".concat(` (${list.segments.length} ${list.segments.length == 1 ? "Segment" : "Segments"})`)
-    
-                        //     document.getElementById(`outputTitle2-${factory}-${platform}`)
-                        //     .innerText = "Marketo SubSegments".concat(` (${list.subSegments.length} ${list.subSegments.length == 1 ? "SubSegment" : "SubSegments"})`)
-                        // }
                         
                     }
     
@@ -2047,20 +2083,206 @@
     
                     list.vertical = newVerticalArray || "";
                     list.industry = newIndustryArray || "";
-    
-    
-    
-                    if (platform == "SQL") {
-                        document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                        .innerText = "SQL Code".concat(` (${list.industry.length} ${list.industry.length == 1 ? "Industry" : "Industries"}, ${list.vertical.length} ${list.vertical.length == 1 ? "Vertical" : "Verticals"})`)
-                    } else {  
-    
-                        document.getElementById(`outputTitle1-${factory}-${platform}`)
-                        .innerText = "Marketo Industries".concat(` (${list.industry.length} ${list.industry.length == 1 ? "Industry" : "Industries"})`)
-    
-                        document.getElementById(`outputTitle2-${factory}-${platform}`)
-                        .innerText = "Marketo Verticals".concat(` (${list.vertical.length} ${list.vertical.length == 1 ? "Vertical" : "Verticals"})`)
+
+                    // PEER LOGIC
+
+                    results = { 
+                        industry: {},
+                        vertical: {},
+                        rest: {
+                            industry: {},
+                            vertical: {},
+                            extra: {}
+                        }
+                    };
+
+                    builderSQLArray = extractActiveSqlLines(builderInputValue);
+
+                    let builderIndustryRawArray = [];
+
+                    let builderVerticalRawArray = [];
+
+                    let startPushingIndustry = 0;
+
+                    let startPushingVertical = 0;
+
+                    for (let i = 0; i < builderSQLArray.length; i++) {
+
+                        let row = builderSQLArray[i];
+
+                        let nextRow = builderSQLArray[i+1] ? builderSQLArray[i+1] : "";
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.industryname")) startPushingIndustry = 1;
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname")) startPushingVertical = 1;
+
+                        if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
+
+                        if (row[row.length - 1] == ")" && nextRow.includes("OR")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
+
+                        if (startPushingIndustry == 1) {
+                                
+                            builderIndustryRawArray.push(row);
+
+                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingIndustry = 0;
+                                
+                        }
+
+                        if (startPushingVertical == 1) {
+                                
+                            builderVerticalRawArray.push(row);
+                                
+                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingVertical = 0;
+
+                        }
+                    };
+
+                    let builderIndustryArray = chargingBuildersArray(builderIndustryRawArray);
+
+                    let builderVerticalArray = chargingBuildersArray(builderVerticalRawArray);
+
+                    // Charging builder's arrays
+
+                    // for (let i = 0; i < onlyVertical.length; i++) {
+
+                    //     let vertical = onlyVertical[i];
+
+                    //     for (let j = 0; j < builderVerticalRawArray.length; j++) {
+
+                    //         let row = builderVerticalRawArray[j];
+
+                    //         if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.industryname") || row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname")) continue;
+
+                    //         if (row.includes(vertical) && !builderVerticalArray.includes(vertical)) builderVerticalArray.push(vertical);
+                    //     }
+
+                    // }
+
+                    
+                    // for (let i = 0; i < onlyIndustry.length; i++) {
+                    
+                    //     let industry = onlyIndustry[i];
+                    
+                    //     for (let j = 0; j < builderIndustryRawArray.length; j++) {
+                    
+                    //         let row = builderIndustryRawArray[j];
+                    
+                    //         if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.industryname") || row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname")) continue;
+                    
+                    //         if (row.includes(industry) && !builderIndustryArray.includes(industry)) builderIndustryArray.push(industry);
+                    
+                    //     }
+                    
+                    // }
+
+                    
+                    // Validation for missing things
+                    
+                    // Industries
+                    
+                    for (let i = 0; i < list.industry.length; i++) {
+                    
+                        let industry = list.industry[i];
+                    
+                        results.industry[industry] = 0;
+                    
+                        if (builderIndustryArray.includes(industry)) results.industry[industry] = 1;
+                    
                     }
+
+                    
+                    // Verticals
+
+                    let unknownCounter = 0;
+                    
+                    for (let i = 0; i < list.vertical.length; i++) {                                            
+                    
+                        let vertical = list.vertical[i];
+                    
+                        let industry;
+                    
+                        results.vertical[vertical] = 0;
+                    
+                        if (builderVerticalArray.includes(vertical)) { results.vertical[vertical] = 1; continue };
+                    
+                        for (let k = 0; k < Object.values(industryObject).length; k++) {
+                    
+                            let forIndustry = Object.values(industryObject)[k];
+                    
+                            for (let j = 0; j < Object.values(forIndustry).length; j++) {
+                    
+                                let forVertical = Object.values(forIndustry)[j];
+                    
+                                if (vertical == forVertical) {
+                    
+                                    industry = Object.keys(industryObject)[k];
+                    
+                                }
+                    
+                            }
+                    
+                        };
+                        
+                        let noVerticalsInBuild = true;
+                        
+                        let allVerticalsInMaSH = true;
+                        
+                        for (let l = 0; l < Object.values(industryObject[industry]).length; l++) {                                                    
+                        
+                            let DBVertical = Object.values(industryObject[industry])[l];
+                        
+                            if (builderVerticalArray.includes(DBVertical)) noVerticalsInBuild = false;
+                        
+                            if (!list.vertical.includes(DBVertical)) allVerticalsInMaSH = false;
+                        
+                        }
+                        
+                        if (
+                        
+                        !builderVerticalArray.includes(vertical) && builderIndustryArray.includes(industry)                        
+                            && noVerticalsInBuild && allVerticalsInMaSH                        
+                        ) {
+                        
+                            results.vertical[vertical] = 1;
+                        
+                            continue;                         
+                        } 
+                        
+                        if (builderVerticalArray.includes(vertical) && !builderIndustryArray.includes(industry)) {
+                        
+                            results.rest.extra[vertical] = `The Vertical "${vertical}" is included but its Industry ("${industry}") is not.`;                                            
+                            
+                            continue;                        
+                        }
+
+                        if (results.vertical[vertical] == 0 && vertical == "Unknown") {
+                            
+                            unknownCounter++;
+
+                            results.vertical[`${vertical}-${unknownCounter}`] = industry;
+
+                        }
+
+                    }
+
+                    // Validation for extra things
+
+                    for (let i = 0; i < builderIndustryArray.length; i++) {
+
+                        let industry = builderIndustryArray[i];
+
+                        if (!list.industry.includes(industry)) results.rest.industry[industry] = 1;
+
+                    }
+
+                    for (let i = 0; i < builderVerticalArray.length; i++) {
+
+                        let vertical = builderVerticalArray[i];
+
+                        if (!list.vertical.includes(vertical)) results.rest.vertical[vertical] = 1;
+                    }
+                        
+                    list.results = results;
                 
                 break;
                 
@@ -2105,9 +2327,223 @@
                     list.customerGroup = inputCGArray || [];
     
                     list.jobRole = inputJBRArray || [];
+
+                    results = { 
+                        marketingAudience: {},
+                        customerGroup: {},
+                        jobRole: {},
+                        rest: {
+                            marketingAudience: {},
+                            customerGroup: {},
+                            jobRole: {},
+                            extra: {}
+                        }
+                    }
+
+
+                    builderSQLArray = extractActiveSqlLines(builderInputValue);
+
+                    let builderMarketingAudienceRawArray = [];
+
+                    let builderCustomerGroupRawArray = [];
+
+                    let builderJobRoleRawArray = [];
+
+                    let startPushingMarketingAudience = 0;
+
+                    let startPushingCustomerGroup = 0;
+
+                    let startPushingJobRole = 0;
+
+                    let IPVBooleanCustomerGroup = 0;
+
+                    let IPVBooleanMarketingAudience = 0;
+
+                    let IPVBooleanJobRole = 0;
+
+                    const MKUnsegmentedInput = document.getElementById(`input-indClass4-SQL-MaSH-peer`).value;
+
+                    for (let i = 0; i < builderSQLArray.length; i++) {
+
+                        let row = builderSQLArray[i];
+
+                        let nextRow = builderSQLArray[i+1] ? builderSQLArray[i+1] : "";
+
+                        if (!row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`isnull(ipv.customergroup,'unknown')`) && row.replace(/ /g, "").toLowerCase().includes(`ipv.customergroup`)) {
+                            
+                            results.rest.extra["UNKCGERROR"] = `- Please don't forget to replace Customer Group's NULLs for "UNKNOWN".\n`;
+
+                        };
+
+                        if (
+                            !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`isnull(ipv.marketingaudience,'unsegmented')`) 
+                            && row.replace(/ /g, "").toLowerCase().includes(`ipv.marketingaudience`)
+                            && MKUnsegmentedInput.toLowerCase() == "yes"
+                        ) {
+                            
+                            results.rest.extra["UNSMKERROR"] = `- Please don't forget to replace Marketing Audience's NULLs for "Unsegmented".\n`;                        
+                        
+                        };
+
+                        if (
+                            row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`isnull(ipv.marketingaudience,'unsegmented')`) 
+                            && MKUnsegmentedInput.toLowerCase() != "yes"
+                        ) {
+                            
+                            results.rest.extra["UNSMKERROR"] = `- Please don't replace Marketing Audience's NULLs for "Unsegmented".\n`;                        
+                        
+                        };
+
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.customergroup")) startPushingCustomerGroup = 1;
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.marketingaudience")) startPushingMarketingAudience = 1;
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.jobrole")) startPushingJobRole = 1;
+
+                        if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
+
+                        if (row[row.length - 1] == ")" && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
+
+                        if (startPushingMarketingAudience == 1) {
+
+                            if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.marketingaudience")) {
+
+                                IPVBooleanMarketingAudience++;
+                            }
+                            
+                            IPVBooleanMarketingAudience == 1 &&  builderMarketingAudienceRawArray.push(row);
+
+                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingMarketingAudience = 0;
+                            
+                        }
+
+                        if (startPushingCustomerGroup == 1) {
+
+                            if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.customergroup")) {
+
+                                IPVBooleanCustomerGroup++;
+                            }
+                            
+                            IPVBooleanCustomerGroup == 1 &&  builderCustomerGroupRawArray.push(row);
+
+                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingCustomerGroup = 0;
+                            
+                        }
+
+                        if (startPushingJobRole == 1) {
+                            
+                            if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.jobrole")) {
+
+                                IPVBooleanJobRole++;
+                            }
+                            
+                            IPVBooleanJobRole == 1 &&  builderJobRoleRawArray.push(row);
+
+                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingJobRole = 0;
+                            
+                        }
+                    };
+
+                    // Charging builder's arrays
+
+                    let builderMarketingAudienceArray = chargingBuildersArray(builderMarketingAudienceRawArray);
+
+                    let builderCustomerGroupArray = chargingBuildersArray(builderCustomerGroupRawArray);
+
+                    let builderJobRoleArray = chargingBuildersArray(builderJobRoleRawArray);
+
+
+                    // Validation for missing things
+
+                    list.marketingAudience = inputMKArray || [];
+                        
+                    list.customerGroup = inputCGArray || [];
+                        
+                    list.jobRole = inputJBRArray || [];
+
+
+                    // Marketing Audience
+                    
+                    results.marketingAudience = {};
+
+                    for (let i = 0; i < list.marketingAudience.length; i++) {
+
+                        let marketingAudience = list.marketingAudience[i];
+
+
+                        results.marketingAudience[marketingAudience] = 0;
+
+                        if (builderMarketingAudienceArray.includes(marketingAudience)) results.marketingAudience[marketingAudience] = 1;
+
+                    }
+
+                    // Job Role
+                    
+                    results.jobRole = {};
+
+                    for (let i = 0; i < list.jobRole.length; i++) {
+
+                        let jobRole = list.jobRole[i];
+
+
+                        results.jobRole[jobRole] = 0;
+
+                        if (builderJobRoleArray.includes(jobRole)) results.jobRole[jobRole] = 1;
+
+                    }
+
+                    // Customer Group
+                    
+                    results.customerGroup = {};
+
+                    for (let i = 0; i < list.customerGroup.length; i++) {
+
+                        let customerGroup = list.customerGroup[i];
+
+                        results.customerGroup[customerGroup] = 0;
+
+                        if (builderCustomerGroupArray.includes(customerGroup)) results.customerGroup[customerGroup] = 1;
+
+                    }
+
+                    // Validation for extra things
+
+                    // Marketing Audience
+
+                    for (let i = 0; i < builderMarketingAudienceArray.length; i++) {
+
+                        let marketingAudience = builderMarketingAudienceArray[i];
+
+                        if (!list.marketingAudience.includes(marketingAudience)) results.rest.marketingAudience[marketingAudience] = 1;
+
+                    };
+
+                    // Customer Group
+
+                    for (let i = 0; i < builderCustomerGroupArray.length; i++) {
+
+                        let customerGroup = builderCustomerGroupArray[i];
+
+                        if (!list.customerGroup.includes(customerGroup)) results.rest.customerGroup[customerGroup] = 1;
+
+                    }
+
+                    // Job Role
+
+                    for (let i = 0; i < builderJobRoleArray.length; i++) {
+
+                        let jobRole = builderJobRoleArray[i];
+
+                        if (!list.jobRole.includes(jobRole)) results.rest.jobRole[jobRole] = 1;
+
+                    }
+
+                    list.results = results;
+
     
-                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                    .innerText = "SQL Code".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"}, ${list.customerGroup.length} ${list.customerGroup.length == 1 ? "Customer Group" : "Customer Groups"}, ${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
+                    // document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                    // .innerText = "SQL Code".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"}, ${list.customerGroup.length} ${list.customerGroup.length == 1 ? "Customer Group" : "Customer Groups"}, ${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
         
             }
 
@@ -2579,42 +3015,252 @@
                     
                     case "industry":
 
-                    let newIndustryArray = list.industry;
+                        let newVerticals = list.results.vertical;
 
-                    let newVerticalArray = list.vertical;
+                        let newIndustries = list.results.industry;
 
-                    newIndustryArray = newIndustryArray.map(industry => `'${industry}'`);
+                        if (
+                            !Object.values(newIndustries).includes(0)
+                            && !Object.values(newVerticals).includes(0)
+                            && Object.keys(list.results.rest.industry).length == 0
+                            && Object.keys(list.results.rest.vertical).length == 0
+                            && Object.keys(list.results.rest.extra).length == 0
+                        ) {
 
-                    newVerticalArray = newVerticalArray.map(vertical => `'${vertical}'`);
+                            outputBox.value = "";
 
-                    outputBox.value = `AND OPV.IndustryName in (\n\t${newIndustryArray.join(`,\n\t`)}\n)\n\nAND OPV.VerticalName in (\n\t${newVerticalArray.join(`,\n\t`)}\n)`;
-                    outputBox.classList.add("resizeBox");
+                            outputBox.value = "Correct.";
+
+                        } else {
+
+                            outputBox.value = "";
+
+
+                            if (Object.keys(newIndustries).length != 0) {
+
+                                for (let i = 0; i < Object.values(newIndustries).length; i++) {
+    
+                                    let booleanValue = Object.values(newIndustries)[i];
+    
+                                    let newIndustry = Object.keys(newIndustries)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Industry "${newIndustry}" is missing.\n`);
+                                };
+
+                            }
+
+
+                            if (Object.keys(newVerticals).length != 0) {
+
+                                for (let i = 0; i < Object.values(newVerticals).length; i++) {
+    
+                                    let booleanValue = Object.values(newVerticals)[i];
+    
+                                    let newVertical = Object.keys(newVerticals)[i];
+
+                                    if (booleanValue == 0 && newVertical == "Unknown") { 
+
+                                        let industriesWithUnknown = [];
+
+                                        Object.keys(industryObject).forEach((industry) => {
+                                            
+                                            Object.values(industryObject[industry]).forEach((vertical) => {
+                                                
+                                                if (vertical == newVertical) industriesWithUnknown.push(industry);
+                                            });
+
+                                        });
+
+                                        for (let r = 0; r < industriesWithUnknown.length; r++) {
+
+                                            for (let h = 0; h < Object.keys(newIndustries).length; h++) {
+
+                                                if (industriesWithUnknown[r] == Object.keys(newIndustries)[h]) {
+
+                                                    let newIndustry = Object.keys(newIndustries)[h];
+
+                                                    outputBox.value = outputBox.value.concat(`- NOTE: The Vertical "${newVertical}" is missing (Industry: "${newIndustry}"). This might not be an error, but note that some industries are able to contain unknown verticals if required. \n`); 
+
+                                                }
+                                            }
+
+                                        }
+                                        
+                                        continue;
+                                    };
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Vertical "${newVertical}" is missing.\n`);
+                                }
+
+                            }
+
+
+                            if (Object.keys(list.results.rest.industry).length != 0) {
+                                
+                                for (let i = 0; i < Object.values(list.results.rest.industry).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.industry)[i];
+    
+                                    let notRequiredIndustry = Object.keys(list.results.rest.industry)[i];
+    
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Industry "${notRequiredIndustry}" was not required.\n`);
+                                }
+
+                            }
+
+                            if (Object.keys(list.results.rest.vertical).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.vertical).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.vertical)[i];
+    
+                                    let notRequiredVertical = Object.keys(list.results.rest.vertical)[i];
+    
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Vertical "${notRequiredVertical}" was not required.\n`);
+                                }
+
+                            }
+
+                            if (Object.keys(list.results.rest.extra).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.extra).length; i++) {
+    
+                                    outputBox.value = outputBox.value.concat(Object.values(list.results.rest.extra)[i]);
+
+                                }
+
+                            }
+
+                        }
+
+                        outputBox.classList.add("resizeBox");
 
                     break;
 
                     case "indClass":
 
-                    let marketingAudience = list.marketingAudience;
+                        let newMarketingAudience = list.results.marketingAudience;
 
-                    let customerGroup = list.customerGroup;
+                        let newCustomerGroup = list.results.customerGroup;
 
-                    let jobRole = list.jobRole;
+                        let newJobRole = list.results.jobRole;
 
-                    marketingAudience = marketingAudience.map(MA => `'${MA}'`);
+                        if (Object.values(newJobRole).length == 1 && Object.keys(newJobRole).includes("undefined")) newJobRole = [];
 
-                    customerGroup = customerGroup.map(CG => `'${CG}'`);
+                        if (Object.values(newMarketingAudience).length == 1 && Object.keys(newMarketingAudience).includes("undefined")) newMarketingAudience = [];
 
-                    jobRole = jobRole.map(JR => `'${JR}'`);
+                        if (Object.values(newCustomerGroup).length == 1 && Object.keys(newCustomerGroup).includes("undefined")) newCustomerGroup = [];
+                        
+                        if (
+                            !Object.values(newMarketingAudience).includes(0)
+                            && !Object.values(newCustomerGroup).includes(0)
+                            && !Object.values(newJobRole).includes(0)
+                            && Object.keys(list.results.rest.marketingAudience).length == 0
+                            && Object.keys(list.results.rest.customerGroup).length == 0
+                            && Object.keys(list.results.rest.jobRole).length == 0
+                            && Object.keys(list.results.rest.extra).length == 0
+                        ) {
 
-                    let checkbox = document.getElementById('NUcheckbox');
+                            outputBox.value = "";
 
-                    if (checkbox.value.toLowerCase() == "yes") {
-                        outputBox.value = `/**IND CLASSIFCATION**/\nAND (\n\t/*BOB audience*/  IsNull(IPV.CustomerGroup,'UNKNOWN') in/*UCMP_V1.2_UPDATE REPLACED(IPV.MPAAAudience)*/ (${customerGroup.length == 0 ? `'BDM','EXECUTIVES','IT PROFESSIONALS','OTHER PROFESSIONALS','STUDENT/EDUCATOR','DEVELOPER','UNKNOWN'` : customerGroup.join(`, `)})\n\t\t--and IPV.CustomerGroup in ('')\n\t\t${marketingAudience.length == 0 ? "--" : ""}AND IsNull(IPV.MarketingAudience,'UnSegmented') in/*UCMP_V1.2_UPDATE */ (${marketingAudience.length == 0 ? "''" : `\n\t\t\t`+marketingAudience.join(`,\n\t\t\t`)+`\n\t\t`})\n\t\t${jobRole.length == 0 ? "--" : ""}and IPV.JobRole in (${jobRole.length == 0 ? "''" : `\n\t\t`+jobRole.join(`,\n\t\t`)+`\n\t\t`})\n\t\t--and IPV.JobRole Like/*UCMP_V1.2_UPDATE REPLACED(IPV.StandardJobTitle)*/ '%%'\n\t\t--and IPV.JobTitle like '%%'\n\t\t)`;
+                            outputBox.value = "Correct.";
+
+                        } else {
+
+                            outputBox.value = "";
+
+                            if (Object.keys(newMarketingAudience).length != 0) {
+
+                                for (let i = 0; i < Object.values(newMarketingAudience).length; i++) {
+    
+                                    let booleanValue = Object.values(newMarketingAudience)[i];
+    
+                                    let newMarketingAudienceInd = Object.keys(newMarketingAudience)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Marketing Audience "${newMarketingAudienceInd}" is missing.\n`);
+                                };
+
+                            }
+
+                            if (Object.keys(newCustomerGroup).length != 0) {
+
+                                for (let i = 0; i < Object.values(newCustomerGroup).length; i++) {
+    
+                                    let booleanValue = Object.values(newCustomerGroup)[i];
+    
+                                    let newCustomerGroupInd = Object.keys(newCustomerGroup)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Customer Group "${newCustomerGroupInd}" is missing.\n`);
+                                }
+
+                            }
+
+                            if (Object.keys(newJobRole).length != 0) {
+
+                                for (let i = 0; i < Object.values(newJobRole).length; i++) {
+    
+                                    let booleanValue = Object.values(newJobRole)[i];
+    
+                                    let newJobRoleInd = Object.keys(newJobRole)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Job Role "${newJobRoleInd}" is missing.\n`);
+                                }
+
+                            }                    
+
+                            if (Object.keys(list.results.rest.marketingAudience).length != 0) {
+                                
+                                for (let i = 0; i < Object.values(list.results.rest.marketingAudience).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.marketingAudience)[i];
+    
+                                    let notRequiredMarketingAudience = Object.keys(list.results.rest.marketingAudience)[i];
+    
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Marketing Audience "${notRequiredMarketingAudience}" was not required.\n`);
+                                }
+
+                            }
+
+                            if (Object.keys(list.results.rest.customerGroup).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.customerGroup).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.customerGroup)[i];
+    
+                                    let notRequiredCustomerGroup = Object.keys(list.results.rest.customerGroup)[i];
+    
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Customer Group "${notRequiredCustomerGroup}" was not required.\n`);
+                                }
+
+                            }
+
+                            if (Object.keys(list.results.rest.jobRole).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.jobRole).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.jobRole)[i];
+    
+                                    let notRequiredJobRole = Object.keys(list.results.rest.jobRole)[i];
+    
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Job Role "${notRequiredJobRole}" was not required.\n`);
+                                }
+
+                            }                
+
+                            if (Object.keys(list.results.rest.extra).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.extra).length; i++) {
+    
+                                    outputBox.value = outputBox.value.concat(Object.values(list.results.rest.extra)[i]);
+
+                                }
+
+                            }
+
+                        }
+
                         outputBox.classList.add("resizeBox");
-                    } else {
-                        outputBox.value = `/**IND CLASSIFCATION**/\nAND (\n\t/*BOB audience*/  IsNull(IPV.CustomerGroup,'UNKNOWN') in/*UCMP_V1.2_UPDATE REPLACED(IPV.MPAAAudience)*/ (${customerGroup.length == 0 ? `'BDM','EXECUTIVES','IT PROFESSIONALS','OTHER PROFESSIONALS','STUDENT/EDUCATOR','DEVELOPER','UNKNOWN'` : customerGroup.join(`, `)})\n\t\t--and IPV.CustomerGroup in ('')\n\t\t${marketingAudience.length == 0 ? "--" : ""}and IPV.MarketingAudience in (${marketingAudience.length == 0 ? "''" : `\n\t\t\t`+marketingAudience.join(`,\n\t\t\t`)+`\n\t\t`})\n\t\t${jobRole.length == 0 ? "--" : ""}and IPV.JobRole in (${jobRole.length == 0 ? "''" : `\n\t\t`+jobRole.join(`,\n\t\t`)+`\n\t\t`})\n\t\t--and IPV.JobRole Like/*UCMP_V1.2_UPDATE REPLACED(IPV.StandardJobTitle)*/ '%%'\n\t\t--and IPV.JobTitle like '%%'\n)`;
-                        outputBox.classList.add("resizeBox");
-                    }
+
                 }
             
             } else {
