@@ -1974,7 +1974,7 @@
 
                         let builderInputValueFix = document.getElementById(`input-${filter}-${platform}-peer`).value;
 
-                        let builderInputValueFix2 = document.getElementById(`input-${filter}2-${platform}-peer`).value;
+                        let builderInputValueFix2 = platform == "marketo" ? document.getElementById(`input-${filter}2-${platform}-peer`).value : "";
 
                         let builderSegmentsArray = platform == "SQL" ? chargingBuildersArray(builderSegmentsRawArray) : chargingBuildersArray(builderInputValueFix, "marketo");
 
@@ -2252,7 +2252,7 @@
 
                     let builderInputValueFix = document.getElementById(`input-${filter}-${platform}-peer`).value;
 
-                    let builderInputValueFix2 = document.getElementById(`input-${filter}2-${platform}-peer`).value;
+                    let builderInputValueFix2 = platform == "marketo" ? document.getElementById(`input-${filter}2-${platform}-peer`).value : "";
 
                     let builderIndustryArray = platform == "SQL" ? chargingBuildersArray(builderIndustryRawArray) : chargingBuildersArray(builderInputValueFix, "marketo");
 
