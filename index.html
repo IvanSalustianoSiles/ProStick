@@ -364,13 +364,13 @@
     'Automotive': {
         VS: 'Vehicle Supplier',
         VOEM: 'Vehicle OEM',
-        UNK: 'Unknown',
+        // UNK: 'Unknown',
         MS: 'Mobility Services' 
     },
     'Banking': {
         UB: 'Universal Banks',
-        UNK: 'Unknown',
-        BNK: 'Banking',
+        // UNK: 'Unknown',
+        BNK: 'Banking'
     },
     'Capital Markets': {
         CMS: 'Capital Markets/Securities'
@@ -382,8 +382,8 @@
     },
     'Defense': {
         NS: 'National Security',
-        DEF: 'Defense',
-        UNK: 'Unknown'
+        // UNK: 'Unknown',
+        DEF: 'Defense'
 
     },
     'Defense Industrial Base': {
@@ -396,7 +396,7 @@
         SMC: 'Semiconductor',
         IM: 'Industrial Machinery',
         HTE: 'High Tech Electronics',
-        UNK: 'Unknown',
+        // UNK: 'Unknown',
         ARS: 'Aerospace'
     },
     'Gaming': {
@@ -418,20 +418,20 @@
         PH: 'Pharma'
     },
     'Health Provider': {
-        HP: 'Health Provider',
-        UNK: 'Unknown'
+        // UNK: 'Unknown',
+        HP: 'Health Provider'
     },
     'Higher Education': {
-        HE: 'Higher Education',
-        UNK: 'Unknown'
+        // UNK: 'Unknown',
+        HE: 'Higher Education'
     },
     'Hospitality': {
-        AC: 'Accommodation',
-        UNK: 'Unknown'
+        // UNK: 'Unknown',
+        AC: 'Accommodation'
     },
     'Hosting': {
-        HOS: 'Hosting',
-        UNK: 'Unknown'
+        // UNK: 'Unknown',
+        HOS: 'Hosting'
     },
     'Insurance': {
         ID: 'Insurance Direct',
@@ -456,8 +456,8 @@
         PUB: 'Publishing',
         FSA: 'Film, Studio, Animation',
         SLE: 'Sports & Live Experiences',
-        CS: 'Cable & Satellite',
-        UNK: 'Unknown'
+        // UNK: 'Unknown',
+        CS: 'Cable & Satellite'
     },
     'MedTech': {
         MT: 'MedTech'
@@ -470,7 +470,7 @@
         NPHHS: 'NonProfit Health & Human Srvc',
         FBO: 'Faith Based Organizations',
         EAW: 'Environmental & Animal Welfare',
-        UNK: 'Unknown',
+        // UNK: 'Unknown',
         GDA: 'Global Development & Aid',
         IO: 'International Organizations',
         CP: 'Charities & Philanthropic',
@@ -478,19 +478,19 @@
         MO: 'Membership Organizations'
     },
     'Oil & Gas': {
-        OG: 'Oil & Gas',
-        UNK: 'Unknown'
+        // UNK: 'Unknown',
+        OG: 'Oil & Gas'
     },
     'Other - Unsegmented': {
-        OU: 'Other - Unsegmented',
-        UNK: 'Unknown'
+        UNK: 'Unknown',
+        OU: 'Other - Unsegmented'
     },
     'Other': {
         UNK: 'Unknown'
     },
     'Other Professional Services': {
         AE: 'Architecture & Engineering',
-        UNK: 'Unknown',
+        // UNK: 'Unknown',
         SS: 'Staffing Services',
         LS: 'Legal Services',
         OS: 'Other Services'
@@ -506,7 +506,7 @@
     },
     'Process Manufacturing': {
         CHMCLS: 'Chemicals',
-        UNK: 'Unknown',
+        // UNK: 'Unknown',
         AB: 'AgriBusiness'
     },
     'Public Finance': {
@@ -520,8 +520,8 @@
     },
     'Real Estate': {
         RE: 'Real Estate',
-        CONS: 'Construction',
-        UNK: 'Unknown'
+        // UNK: 'Unknown',
+        CONS: 'Construction'
     },
     'Retailers': {
         GM: 'General Merchandise',
@@ -534,14 +534,14 @@
     },
     'Social Svcs & Public Health': {
         GSP: 'Government Social Programs',
-        PCH: 'Public & Community Health',
-        UNK: 'Unknown'
+        // UNK: 'Unknown',
+        PCH: 'Public & Community Health'
     },
     'Telecommunications': {
         CNSP: 'Comms&Ntwrk Service Providers',
         CNEP: 'Comms&Ntwrk Equip Providers',
-        HISP: 'Hosters & ISPs',
-        UNK: 'Unknown'
+        // UNK: 'Unknown',
+        HISP: 'Hosters & ISPs'
     },
     'Transport & Travel': {
         TH: 'Travel & Hospitality',
@@ -1640,7 +1640,15 @@
         return activeLines;
     }
 
-    const chargingBuildersArray = (rawArray) => {
+    const chargingBuildersArray = (rawArray, platform = "SQL") => {
+        
+        if (platform == "marketo") {
+            return rawArray
+            .split('\n')  
+            .map(line => line.trim())  
+            .filter(line => line !== "")
+        };
+
         let collecting = false;
         let formalArray = [];
         for (let line of rawArray) {
@@ -1730,6 +1738,22 @@
         let results;
 
         let builderSQLArray;
+
+        let builderMarketingAudienceRawArray;
+
+        let startPushingMarketingAudience;
+
+        let IPVBooleanMarketingAudience;
+
+        let builderMarketingAudienceArray;
+
+        let builderJobRoleRawArray;
+
+        let startPushingJobRole;
+
+        let IPVBooleanJobRole;
+
+        let builderJobRoleArray;
 
         if (currentSection.id.includes("peer")) {
 
@@ -1854,8 +1878,8 @@
 
                             if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
 
-                            if (row[row.length - 1] == ")" && nextRow.includes("OR")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
-
+                            if (row[row.length - 1] == ")" && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oripv")) results.rest.extra["ORERROR"] = `- Please change the between filters for an AND.\n`;
+                    
                             if (startPushingSegments == 1) {
                                 
                                 builderSegmentsRawArray.push(row);
@@ -1873,9 +1897,13 @@
                             }
                         };
 
-                        let builderSegmentsArray = chargingBuildersArray(builderSegmentsRawArray);
+                        let builderInputValueFix = document.getElementById(`input-${filter}-${platform}-peer`).value;
 
-                        let builderSubSegmentsArray = chargingBuildersArray(builderSubSegmentsRawArray);;
+                        let builderInputValueFix2 = document.getElementById(`input-${filter}2-${platform}-peer`).value;
+
+                        let builderSegmentsArray = platform == "SQL" ? chargingBuildersArray(builderSegmentsRawArray) : chargingBuildersArray(builderInputValueFix, "marketo");
+
+                        let builderSubSegmentsArray = platform == "SQL" ? chargingBuildersArray(builderSubSegmentsRawArray) : chargingBuildersArray(builderInputValueFix2, "marketo");
 
                         // Charging builder's arrays
 
@@ -1931,6 +1959,8 @@
                             let subSegment = list.subSegments[i];
 
                             let segment;
+                            
+                            let otherSubSegmentsBoolean = false;
 
                             results.subSegments[subSegment] = 0;
 
@@ -1964,11 +1994,19 @@
                                 if (builderSubSegmentsArray.includes(DBSubSegment)) noSubSegmentsInBuild = false;
 
                                 if (!list.subSegments.includes(DBSubSegment)) allSubSegmentsInMaSH = false;
+                    
+                            }
+
+                            for (let r = 0; r < builderSubSegmentsArray.length; r++) {
+
+                                let builderSubSegment = builderSubSegmentsArray[r];
+
+                                if (!segment.includes(builderSubSegment)) otherSubSegmentsBoolean = true;
                             }
 
                             if (
                                 !builderSubSegmentsArray.includes(subSegment) && builderSegmentsArray.includes(segment)
-                                && noSubSegmentsInBuild && allSubSegmentsInMaSH
+                                && noSubSegmentsInBuild && allSubSegmentsInMaSH && !otherSubSegmentsBoolean
                             ) {
 
                                 results.subSegments[subSegment] = 1;
@@ -2004,7 +2042,7 @@
                             let subSegment = builderSubSegmentsArray[i];
 
                             if (!list.subSegments.includes(subSegment)) results.rest.subSegments[subSegment] = 1;
-                        }
+                        }                                                
                         
                         list.results = results;
                         
@@ -2118,7 +2156,7 @@
 
                         if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
 
-                        if (row[row.length - 1] == ")" && nextRow.includes("OR")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
+                        if (row[row.length - 1] == ")" && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oropv")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
 
                         if (startPushingIndustry == 1) {
                                 
@@ -2137,9 +2175,13 @@
                         }
                     };
 
-                    let builderIndustryArray = chargingBuildersArray(builderIndustryRawArray);
+                    let builderInputValueFix = document.getElementById(`input-${filter}-${platform}-peer`).value;
 
-                    let builderVerticalArray = chargingBuildersArray(builderVerticalRawArray);
+                    let builderInputValueFix2 = document.getElementById(`input-${filter}2-${platform}-peer`).value;
+
+                    let builderIndustryArray = platform == "SQL" ? chargingBuildersArray(builderIndustryRawArray) : chargingBuildersArray(builderInputValueFix, "marketo");
+
+                    let builderVerticalArray = platform == "SQL" ? chargingBuildersArray(builderVerticalRawArray) : chargingBuildersArray(builderInputValueFix2, "marketo");
 
                     // Charging builder's arrays
 
@@ -2193,13 +2235,23 @@
                     
                     // Verticals
 
-                    let unknownCounter = 0;
+                    let unknownIndustries = [];
+
+                    for (let i = 0; i < Object.values(industryObject).length; i++) {
+
+                        let forIndustry = Object.values(industryObject)[i];
+
+                        if (Object.values(forIndustry).includes("Unknown")) unknownIndustries.push(Object.keys(industryObject)[i]);
+
+                    }
                     
                     for (let i = 0; i < list.vertical.length; i++) {                                            
                     
                         let vertical = list.vertical[i];
                     
                         let industry;
+
+                        let otherVerticalsBoolean = false;
                     
                         results.vertical[vertical] = 0;
                     
@@ -2236,11 +2288,33 @@
                             if (!list.vertical.includes(DBVertical)) allVerticalsInMaSH = false;
                         
                         }
-                        
+
+                        for (let r = 0; r < builderVerticalArray.length; r++) {
+
+                            let builderVertical = builderVerticalArray[r];
+
+                            if (!industry.includes(builderVertical)) otherVerticalsBoolean = true;
+                        }
+
+                        let builderIndustriesHasUnknown = false;
+
+                        builderIndustryArray.forEach(builderIndustry => {
+                            builderIndustriesHasUnknown = unknownIndustries.some(unknownIndustry => unknownIndustry == builderIndustry);
+                        })
+
                         if (
-                        
-                        !builderVerticalArray.includes(vertical) && builderIndustryArray.includes(industry)                        
-                            && noVerticalsInBuild && allVerticalsInMaSH                        
+                            (vertical != "Unknown"                        
+                            && !builderVerticalArray.includes(vertical) 
+                            && builderIndustryArray.includes(industry)                        
+                            && noVerticalsInBuild 
+                            && allVerticalsInMaSH 
+                            && !otherVerticalsBoolean)
+                            || vertical == "Unknown"                        
+                            && !builderVerticalArray.includes(vertical) 
+                            && builderIndustriesHasUnknown                        
+                            && noVerticalsInBuild 
+                            && allVerticalsInMaSH 
+                            && !otherVerticalsBoolean                                    
                         ) {
                         
                             results.vertical[vertical] = 1;
@@ -2253,14 +2327,6 @@
                             results.rest.extra[vertical] = `The Vertical "${vertical}" is included but its Industry ("${industry}") is not.`;                                            
                             
                             continue;                        
-                        }
-
-                        if (results.vertical[vertical] == 0 && vertical == "Unknown") {
-                            
-                            unknownCounter++;
-
-                            results.vertical[`${vertical}-${unknownCounter}`] = industry;
-
                         }
 
                     }
@@ -2290,13 +2356,118 @@
                     let MKInput1 = input;
                     let inputMKArray1 = MKInput1 == "" ? [] : MKInput1.split(", ");
                     list.marketingAudience = inputMKArray1 || [];
+
+                    // PEER LOGIC
+
+                   results = { 
+                        marketingAudience: {},
+                        rest: {
+                            marketingAudience: {},
+                            extra: {}
+                        }
+                    }
+
+
+                    builderSQLArray = extractActiveSqlLines(builderInputValue);
+
+                    builderMarketingAudienceRawArray = [];
+
+                    startPushingMarketingAudience = 0;
+
+                    IPVBooleanMarketingAudience = 0;
+
+                    const MKUnsegmentedInput2 = document.getElementById(`input-indClass4-SQL-MaSH-peer`).value;
+
+                    for (let i = 0; i < builderSQLArray.length; i++) {
+
+                        let row = builderSQLArray[i];
+
+                        let nextRow = builderSQLArray[i+1] ? builderSQLArray[i+1] : "";
+
+                        if (
+                            !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`isnull(ipv.marketingaudience,'unsegmented')`) 
+                            && row.replace(/ /g, "").toLowerCase().includes(`ipv.marketingaudience`)
+                            && MKUnsegmentedInput2.toLowerCase() == "yes"
+                        ) {
+                            
+                            results.rest.extra["UNSMKERROR"] = `- Please don't forget to replace Marketing Audience's NULLs for "Unsegmented".\n`;                        
+                        
+                        };
+
+                        if (
+                            row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`isnull(ipv.marketingaudience,'unsegmented')`) 
+                            && MKUnsegmentedInput2.toLowerCase() != "yes"
+                        ) {
+                            
+                            results.rest.extra["UNSMKERROR"] = `- Please don't replace Marketing Audience's NULLs for "Unsegmented".\n`;                        
+                        
+                        };
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.marketingaudience")) startPushingMarketingAudience = 1;
+
+                        if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
+
+                        if (row[row.length - 1] == ")" && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oripv")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
+
+                        if (startPushingMarketingAudience == 1) {
+
+                            if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.marketingaudience")) {
+
+                                IPVBooleanMarketingAudience++;
+                            }
+                            
+                            IPVBooleanMarketingAudience == 1 &&  builderMarketingAudienceRawArray.push(row);
+
+                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingMarketingAudience = 0;
+                            
+                        }
+
+                    };
+
+                    // Charging builder's arrays
+
+                    builderMarketingAudienceArray = platform == "SQL" ? chargingBuildersArray(builderMarketingAudienceRawArray) : chargingBuildersArray(builderInputValue, "marketo");
+
+                    // Validation for missing things
+
+                    list.marketingAudience = inputMKArray1 || [];
+
+                    // Marketing Audience
+                    
+                    results.marketingAudience = {};
+
+                    for (let i = 0; i < list.marketingAudience.length; i++) {
+
+                        let marketingAudience = list.marketingAudience[i];
+
+                        results.marketingAudience[marketingAudience] = 0;
+
+                        if (builderMarketingAudienceArray.includes(marketingAudience)) results.marketingAudience[marketingAudience] = 1;
+
+                    }
+
+
+                    // Validation for extra things
+
+                    // Marketing Audience
+
+                    for (let i = 0; i < builderMarketingAudienceArray.length; i++) {
+
+                        let marketingAudience = builderMarketingAudienceArray[i];
+
+                        if (!list.marketingAudience.includes(marketingAudience)) results.rest.marketingAudience[marketingAudience] = 1;
+
+                    };
+
+                    list.results = results;
     
-                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                    .innerText = "Marketo Marketing Audiences".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"})`)
+                    // document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                    // .innerText = "Marketo Marketing Audiences".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"})`)
     
                 break;
     
                 case "job-role":
+                    
                     
                     let JBRInput1 = input;
                     let JBRArray1 = JBRInput1.split(", ");
@@ -2304,10 +2475,95 @@
                         return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
                     })
                     let inputJBRArray1 = JBRInput1 == "" ? [] : JBRArray2;
+                    list.jobRole = inputJBRArray1 || [];   
+
+                    // PEER LOGIC
+
+                   results = { 
+                        jobRole: {},
+                        rest: {
+                            jobRole: {},
+                            extra: {}
+                        }
+                    }
+
+                    builderSQLArray = extractActiveSqlLines(builderInputValue);
+
+                    builderJobRoleRawArray = [];
+
+                    startPushingJobRole = 0;
+
+                    IPVBooleanJobRole = 0;
+
+                    for (let i = 0; i < builderSQLArray.length; i++) {
+
+                        let row = builderSQLArray[i];
+
+                        let nextRow = builderSQLArray[i+1] ? builderSQLArray[i+1] : "";
+
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.jobrole")) startPushingJobRole = 1;
+
+                        if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
+
+                        if (row[row.length - 1] == ")" && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oripv")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
+
+                        if (startPushingJobRole == 1) {
+
+                            if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.jobrole")) {
+
+                                IPVBooleanJobRole++;
+                            }
+                            
+                            IPVBooleanJobRole == 1 &&  builderJobRoleRawArray.push(row);
+
+                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingJobRole = 0;
+                            
+                        }
+
+                    };
+
+                    // Charging builder's arrays
+
+                    let builderInputValueFix3 = document.getElementById(`input-${filter}-${platform}-peer`).value;
+
+                    builderJobRoleArray = platform == "SQL" ? chargingBuildersArray(builderJobRoleRawArray) : chargingBuildersArray(builderInputValueFix3, "marketo");
+
+                    // Validation for missing things
+
                     list.jobRole = inputJBRArray1 || [];
+
+                    // Job Role
+                    
+                    results.jobRole = {};
+
+                    for (let i = 0; i < list.jobRole.length; i++) {
+
+                        let jobRole = list.jobRole[i];
+
+                        results.jobRole[jobRole] = 0;
+
+                        if (builderJobRoleArray.includes(jobRole)) results.jobRole[jobRole] = 1;
+
+                    }
+
+
+                    // Validation for extra things
+
+                    // Job Role
+
+                    for (let i = 0; i < builderJobRoleArray.length; i++) {
+
+                        let jobRole = builderJobRoleArray[i];
+
+                        if (!list.jobRole.includes(jobRole)) results.rest.jobRole[jobRole] = 1;
+
+                    };
+
+                    list.results = results;
     
-                    document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                    .innerText = "Marketo Job Roles".concat(` (${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
+                    // document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
+                    // .innerText = "Marketo Job Roles".concat(` (${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
     
                 break;
     
@@ -2343,23 +2599,23 @@
 
                     builderSQLArray = extractActiveSqlLines(builderInputValue);
 
-                    let builderMarketingAudienceRawArray = [];
+                    builderMarketingAudienceRawArray = [];
 
                     let builderCustomerGroupRawArray = [];
 
-                    let builderJobRoleRawArray = [];
+                    builderJobRoleRawArray = [];
 
-                    let startPushingMarketingAudience = 0;
+                    startPushingMarketingAudience = 0;
 
                     let startPushingCustomerGroup = 0;
 
-                    let startPushingJobRole = 0;
+                    startPushingJobRole = 0;
 
                     let IPVBooleanCustomerGroup = 0;
 
-                    let IPVBooleanMarketingAudience = 0;
+                    IPVBooleanMarketingAudience = 0;
 
-                    let IPVBooleanJobRole = 0;
+                    IPVBooleanJobRole = 0;
 
                     const MKUnsegmentedInput = document.getElementById(`input-indClass4-SQL-MaSH-peer`).value;
 
@@ -2403,7 +2659,7 @@
 
                         if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
 
-                        if (row[row.length - 1] == ")" && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
+                        if (row[row.length - 1] == ")" && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oripv")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
 
                         if (startPushingMarketingAudience == 1) {
 
@@ -2447,11 +2703,11 @@
 
                     // Charging builder's arrays
 
-                    let builderMarketingAudienceArray = chargingBuildersArray(builderMarketingAudienceRawArray);
+                    builderMarketingAudienceArray = chargingBuildersArray(builderMarketingAudienceRawArray);
 
                     let builderCustomerGroupArray = chargingBuildersArray(builderCustomerGroupRawArray);
 
-                    let builderJobRoleArray = chargingBuildersArray(builderJobRoleRawArray);
+                    builderJobRoleArray = chargingBuildersArray(builderJobRoleRawArray);
 
 
                     // Validation for missing things
@@ -3049,7 +3305,6 @@
 
                             }
 
-
                             if (Object.keys(newVerticals).length != 0) {
 
                                 for (let i = 0; i < Object.values(newVerticals).length; i++) {
@@ -3058,7 +3313,7 @@
     
                                     let newVertical = Object.keys(newVerticals)[i];
 
-                                    if (booleanValue == 0 && newVertical == "Unknown") { 
+                                    if (booleanValue == 0 && newVertical == "Unknown" && Object.values(newVerticals).includes(1)) { 
 
                                         let industriesWithUnknown = [];
 
@@ -3269,60 +3524,340 @@
                     
                     case "segments":
                         
-                        let segments = list.segments;
-            
-                        let subSegments = list.subSegments;
-                        
-                        output = `${segments.join(`\n`)}`;
-                        let output2 = `${subSegments.join(`\n`)}`;
+                        let newSubSegments = list.results.subSegments;
 
-                        outputBox.value = output;
-                        outputBox2.value = output2;
-                        outputBox.classList.add("resizeBox");   
-                        outputBox2.classList.add("resizeBox");   
+                        let newSegments = list.results.segments;
 
+                        if (
+                            !Object.values(newSegments).includes(0)
+                            && !Object.values(newSubSegments).includes(0)
+                            && Object.keys(list.results.rest.segments).length == 0
+                            && Object.keys(list.results.rest.subSegments).length == 0
+                            && Object.keys(list.results.rest.extra).length == 0
+                        ) {
+
+                            outputBox.value = "";
+
+                            outputBox.value = "Correct.";
+
+                        } else {
+
+                            outputBox.value = "";
+
+
+                            if (Object.keys(newSegments).length != 0) {
+
+                                for (let i = 0; i < Object.values(newSegments).length; i++) {
+    
+                                    let booleanValue = Object.values(newSegments)[i];
+    
+                                    let newSegment = Object.keys(newSegments)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Segment "${newSegment}" is missing.\n`);
+                                };
+
+                            }
+
+
+                            if (Object.keys(newSubSegments).length != 0) {
+
+                                for (let i = 0; i < Object.values(newSubSegments).length; i++) {
+    
+                                    let booleanValue = Object.values(newSubSegments)[i];
+    
+                                    let newSubSegment = Object.keys(newSubSegments)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The SubSegment "${newSubSegment}" is missing.\n`);
+                                }
+
+                            }
+
+
+                            if (Object.keys(list.results.rest.segments).length != 0) {
+                                
+                                for (let i = 0; i < Object.values(list.results.rest.segments).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.segments)[i];
+    
+                                    let notRequiredSegment = Object.keys(list.results.rest.segments)[i];
+    
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Segment "${notRequiredSegment}" was not required.\n`);
+                                }
+
+                            }
+
+                            if (Object.keys(list.results.rest.subSegments).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.subSegments).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.subSegments)[i];
+    
+                                    let notRequiredSubSegment = Object.keys(list.results.rest.subSegments)[i];
+    
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The SubSegment "${notRequiredSubSegment}" was not required.\n`);
+                                }
+
+                            }
+
+                            if (Object.keys(list.results.rest.extra).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.extra).length; i++) {
+    
+                                    outputBox.value = outputBox.value.concat(Object.values(list.results.rest.extra)[i]);
+
+                                }
+
+                            }
+
+                        }
+
+                        outputBox.classList.add("resizeBox");  
 
                     break;
                     
                     case "industry":
 
-                        const { industry, vertical } = list;
-                
-                        output = `${industry.join(`\n`)}`;
+                        let newVerticals = list.results.vertical;
 
-                        let output2Industry = `${vertical.join(`\n`)}`;
-                        
-                        outputBox.value = output;
-                        outputBox2.value = output2Industry;
-                        outputBox.classList.add("resizeBox");   
-                        outputBox2.classList.add("resizeBox");   
+                        let newIndustries = list.results.industry;
+
+                        if (
+                            !Object.values(newIndustries).includes(0)
+                            && !Object.values(newVerticals).includes(0)
+                            && Object.keys(list.results.rest.industry).length == 0
+                            && Object.keys(list.results.rest.vertical).length == 0
+                            && Object.keys(list.results.rest.extra).length == 0
+                        ) {
+
+                            outputBox.value = "";
+
+                            outputBox.value = "Correct.";
+
+                        } else {
+
+                            outputBox.value = "";
+
+
+                            if (Object.keys(newIndustries).length != 0) {
+
+                                for (let i = 0; i < Object.values(newIndustries).length; i++) {
+    
+                                    let booleanValue = Object.values(newIndustries)[i];
+    
+                                    let newIndustry = Object.keys(newIndustries)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Industry "${newIndustry}" is missing.\n`);
+                                };
+
+                            }
+
+                            if (Object.keys(newVerticals).length != 0) {
+
+                                for (let i = 0; i < Object.values(newVerticals).length; i++) {
+    
+                                    let booleanValue = Object.values(newVerticals)[i];
+    
+                                    let newVertical = Object.keys(newVerticals)[i];
+
+                                    if (booleanValue == 0 && newVertical == "Unknown" && Object.values(newVerticals).includes(1)) { 
+
+                                        let industriesWithUnknown = [];
+
+                                        Object.keys(industryObject).forEach((industry) => {
+                                            
+                                            Object.values(industryObject[industry]).forEach((vertical) => {
+                                                
+                                                if (vertical == newVertical) industriesWithUnknown.push(industry);
+                                            });
+
+                                        });
+
+                                        for (let r = 0; r < industriesWithUnknown.length; r++) {
+
+                                            for (let h = 0; h < Object.keys(newIndustries).length; h++) {
+
+                                                if (industriesWithUnknown[r] == Object.keys(newIndustries)[h]) {
+
+                                                    let newIndustry = Object.keys(newIndustries)[h];
+
+                                                    outputBox.value = outputBox.value.concat(`- NOTE: The Vertical "${newVertical}" is missing (Industry: "${newIndustry}"). This might not be an error, but note that some industries are able to contain unknown verticals if required. \n`); 
+
+                                                }
+                                            }
+
+                                        }
+                                        
+                                        continue;
+                                    };
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Vertical "${newVertical}" is missing.\n`);
+                                }
+
+                            }
+
+
+                            if (Object.keys(list.results.rest.industry).length != 0) {
+                                
+                                for (let i = 0; i < Object.values(list.results.rest.industry).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.industry)[i];
+    
+                                    let notRequiredIndustry = Object.keys(list.results.rest.industry)[i];
+    
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Industry "${notRequiredIndustry}" was not required.\n`);
+                                }
+
+                            }
+
+                            if (Object.keys(list.results.rest.vertical).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.vertical).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.vertical)[i];
+    
+                                    let notRequiredVertical = Object.keys(list.results.rest.vertical)[i];
+    
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Vertical "${notRequiredVertical}" was not required.\n`);
+                                }
+
+                            }
+
+                            if (Object.keys(list.results.rest.extra).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.extra).length; i++) {
+    
+                                    outputBox.value = outputBox.value.concat(Object.values(list.results.rest.extra)[i]);
+
+                                }
+
+                            }
+
+                        }
+
+                        outputBox.classList.add("resizeBox");  
                         
                     break;
 
                     case "marketing-audience":
 
-                        const { marketingAudience } = list;
-                
-                        output = `${marketingAudience.join(`\n`)}`;
-                        
-                        outputBox.value = output;
+                        let newMarketingAudience = list.results.marketingAudience;
 
-                        outputBox.classList.add("resizeBox");   
+                        if (Object.values(newMarketingAudience).length == 1 && Object.keys(newMarketingAudience).includes("undefined")) newMarketingAudience = [];
+                                                
+                        if (
+                            !Object.values(newMarketingAudience).includes(0)
+                            && Object.keys(list.results.rest.marketingAudience).length == 0
+                            && Object.keys(list.results.rest.extra).length == 0
+                        ) {
+
+                            outputBox.value = "";
+
+                            outputBox.value = "Correct.";
+
+                        } else {
+
+                            outputBox.value = "";
+
+                            if (Object.keys(newMarketingAudience).length != 0) {
+
+                                for (let i = 0; i < Object.values(newMarketingAudience).length; i++) {
+    
+                                    let booleanValue = Object.values(newMarketingAudience)[i];
+    
+                                    let newMarketingAudienceInd = Object.keys(newMarketingAudience)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Marketing Audience "${newMarketingAudienceInd}" is missing.\n`);
+                                };
+
+                            }               
+
+                            if (Object.keys(list.results.rest.marketingAudience).length != 0) {
+                                
+                                for (let i = 0; i < Object.values(list.results.rest.marketingAudience).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.marketingAudience)[i];
+    
+                                    let notRequiredMarketingAudience = Object.keys(list.results.rest.marketingAudience)[i];
+    
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Marketing Audience "${notRequiredMarketingAudience}" was not required.\n`);
+                                }
+
+                            }           
+
+                            if (Object.keys(list.results.rest.extra).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.extra).length; i++) {
+    
+                                    outputBox.value = outputBox.value.concat(Object.values(list.results.rest.extra)[i]);
+
+                                }
+
+                            }
+
+                        }   
 
                     break;
 
                     case "job-role":
 
-                        const { jobRole } = list;
-                
-                        output = `${jobRole.join(`\n`)}`;
-                        
-                        outputBox.value = output;
+                        let newJobRole = list.results.jobRole;
 
-                        outputBox.classList.add("resizeBox");   
+                        if (Object.values(newJobRole).length == 1 && Object.keys(newJobRole).includes("undefined")) newJobRole = [];
+                                                
+                        if (
+                            !Object.values(newJobRole).includes(0)
+                            && Object.keys(list.results.rest.jobRole).length == 0
+                            && Object.keys(list.results.rest.extra).length == 0
+                        ) {
+
+                            outputBox.value = "";
+
+                            outputBox.value = "Correct.";
+
+                        } else {
+
+                            outputBox.value = "";
+
+                            if (Object.keys(newJobRole).length != 0) {
+
+                                for (let i = 0; i < Object.values(newJobRole).length; i++) {
+    
+                                    let booleanValue = Object.values(newJobRole)[i];
+    
+                                    let newJobRoleInd = Object.keys(newJobRole)[i];
+    
+                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Job Role "${newJobRoleInd}" is missing.\n`);
+                                };
+
+                            }               
+
+                            if (Object.keys(list.results.rest.jobRole).length != 0) {
+                                
+                                for (let i = 0; i < Object.values(list.results.rest.jobRole).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.jobRole)[i];
+    
+                                    let notRequiredJobRole = Object.keys(list.results.rest.jobRole)[i];
+    
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Job Role "${notRequiredJobRole}" was not required.\n`);
+                                }
+
+                            }           
+
+                            if (Object.keys(list.results.rest.extra).length != 0) {
+
+                                for (let i = 0; i < Object.values(list.results.rest.extra).length; i++) {
+    
+                                    outputBox.value = outputBox.value.concat(Object.values(list.results.rest.extra)[i]);
+
+                                }
+
+                            }
+
+                        };  
                     
                 }       
-                outputBox.value = output;
+                
                 outputBox.classList.add("resizeBox");   
             }
 
@@ -3494,6 +4029,7 @@
         
                     let list = await inputLogic(filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform, builderInputValue, builderInput, builderInputValue2, builderInput2);
                     
+                    
                     await outputLogic(filter, list, platform, outputBox, outputBox2);
                 
                 }
@@ -3546,13 +4082,14 @@
                 
                 if ((platform == "SQL" && (filter == "segments" || filter == "industry")) || (platform == "marketo" && (filter == "marketing-audience" || filter == "job-role"))) {
                 // Process 1 input, 1 output
-    
+                    
                     let inputMaSH = document.getElementById(`input-${filter}-${platform}-MaSH-peer`);
                     let builderInput = document.getElementById(`input-${filter}-${platform}-peer`);
 
                     formInputs.onclick = (event) => event.preventDefault();
                     await convertLogic(filter, platform, output, convertButton, inputMaSH, factory, undefined, undefined, undefined, builderInput);
-    
+
+
                 } else if (platform == "SQL" && filter == "indClass") {
                 // Process - 4 inputs, 1 output
                 
