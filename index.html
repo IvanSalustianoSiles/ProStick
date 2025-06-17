@@ -19,6 +19,7 @@
         <button id="segments-SQL-data-button">Segments To SQL</button>
         <button id="industry-SQL-data-button">Industries To SQL</button>
         <button id="indClass-SQL-data-button">Ind Classification To SQL</button>
+        <button id="to-script-SQL-data-button">To Script</button>
         <button id="segments-marketo-data-button">Segments To Marketo</button>
         <button id="industry-marketo-data-button">Industries To Marketo</button>
         <button id="marketing-audience-marketo-data-button">Marketing Audience To Marketo</button>
@@ -46,6 +47,78 @@
         <button id="back-indClassSQL-data" class="disappear"></button>
         <button id="back-indClassSQL-mainmenu"></button>
         <button id="peer-indClassSQL-data" class="disappear"></button>
+    </section>
+    <section id="to-script-SQL-section-new" class="disappear">
+        <article>
+            <h1>ProStick <img src="./logo.png" alt="" class="titleLogo"></h1>
+            <h2>MaSH Text To Script</h2>
+            <h2>End Customer</h2>
+            <form>
+                <div>Validation</div>
+                <div>
+                    <h3>Search & Replace</h3>
+                    <div>Schema (SchmaXXX)</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>CampaignID (SRreqXXX)</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>CampaignName (SRNamexxx)</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>Subsidiary (Subsidiaryxxx)</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>AllocadiaID (Allocxxx)</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>CampaignOwner (Ownerxxx)</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>CampaignDate (YYYYMMDD)</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>CommunicationType (ComTypexxx)</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>Vehicle (Vehxxx)</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>WorkFlowID (WFKxxx)</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>PreferredLanguage (PrefLang)</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>MaxContactPerAccount (#MaxContacts)</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <h3>If List Hygiene also add:</h3>
+                    <div>HasGAWapproval (GAWxxx) - [Y/N]</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>AddUnknown (AddUnknownxxx) - [Yes/No]</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>PartnerUnMatchedContactable (PartnerUnmatchedCXXXX31) - 31.Contactable - Partner</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>UnMatchedContactable (UnmatchedCXXXX16n21) - 21.Unmatched Contactable</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <h3>Main Query Filters</h3>
+
+                    <div>Non-Responder Table</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>ACS Initial Table</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>Segments & SubSegments</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>Industries & Verticals</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>Marketing Audience</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>Customer Group</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <div>Job Role</div>
+                    <div class="border"><textarea class="initialinp input"></textarea></div>
+                    <button id="generate-to-script-SQL-peer">Generate</button>
+                </div>
+                <div id="formTitle2-to-script-SQL-peer">New Script</div>
+                <div class="border"><textarea name="input-to-script-SQL" class="initialinp output"></textarea></div>
+            </form>
+            <h2>Partner</h2>
+            <h2>Renewal</h2>
+        </article>
+        <article class="article2-new">
+            <button id="back-to-scriptSQLbuild-data-peer-new" class="disappear">Back to Build</button>
+            <button id="back-to-scriptSQL-data-peer-new" class="disappear">Data Menu</button>
+            <button id="back-to-scriptSQL-mainmenu-peer-new">Main Menu</button>
+        </article>
     </section>
     <section id="segments-marketo-section" class="disappear">
         <button id="back-segmentsmarketo-data" class="disappear"></button>
@@ -1589,6 +1662,8 @@
     const marketingAudienceMarketoSectionPeer = document.getElementById("marketing-audience-marketo-section-peer-new");
 
     const jobRoleMarketoSectionPeer = document.getElementById("job-role-marketo-section-peer-new");
+
+    const toScriptSection = document.getElementById("to-script-SQL-section-new");
     
     let currentSection;
 
@@ -4824,6 +4899,10 @@
         await changeSection(segmentsMarketoSectionPeer, dataMenu, "segments", "marketo", "data");
 
         await changeSection(segmentsMarketoSectionPeer, emailMenu, "segments", "marketo", "email");
+
+        // To Script - SQL
+
+        await changeSection(dataMenu, toScriptSection, "to-script", "SQL", "data");
 
     };
 
