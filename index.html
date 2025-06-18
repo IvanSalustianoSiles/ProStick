@@ -2646,12 +2646,12 @@
     
                     let MKInput = input;
                     let CGInput = input2.trim();
-                    let JBRInput = input3.trim();
+                    let JBRInput = document.getElementById(`input-indClass3-SQL-MaSH-peer`).value.trim();
                     let inputMKArray = MKInput == "" ? [] : MKInput.split(", ");
                     let inputCGArray = CGInput == "" ? [] : CGInput.split(", ");
                     let inputJBRArray = JBRInput == "" ? [] : JBRInput.split(", ").map( (JBRInput) => {
                         return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
-                    });
+                    }); 
     
                     list.marketingAudience = inputMKArray || [];
     
