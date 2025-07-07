@@ -1625,6 +1625,96 @@
         'Unclassified'
     ]
     
+    const customerGroups = [
+        'BDM',
+        'DEVELOPER',
+        'EXECUTIVES',
+        'IT PROFESSIONALS',
+        'OTHER PROFESSIONALS',
+        'STUDENT/EDUCATOR',
+        'UNKNOWN'
+    ];
+
+    const marketingAudiences = [
+        'Accounting and Finance DM',
+        'Business Development DM',
+        'Community and Social Services DM',
+        'Compliance DM',
+        'Customer Service and Support DM',
+        'Healthcare Services DM',
+        'Human Resources DM',
+        'Legal DM',
+        'Marketing DM',
+        'Media and Communication DM',
+        'Operations DM',
+        'Program and Project Management DM',
+        'Purchasing DM',
+        'Research DM',
+        'Sales DM',
+        'Supply and Logistics DM',
+        'Developer DM',
+        'Developer User',
+        'Accounting and Finance CXO',
+        'Architect CXO',
+        'Business Development CXO',
+        'Community and Social Services CXO',
+        'Compliance CXO',
+        'Customer Service and Support CXO',
+        'Data Professional CXO',
+        'Developer CXO',
+        'Education CXO',
+        'Engineering CXO',
+        'Healthcare Services CXO',
+        'Human Resources CXO',
+        'Information Technology CXO',
+        'Legal CXO',
+        'Marketing CXO',
+        'Media and Communication CXO',
+        'Operations CXO',
+        'Other CXO',
+        'Product Management CXO',
+        'Program and Project Management CXO',
+        'Purchasing CXO',
+        'Research CXO',
+        'Sales CXO',
+        'Security CXO',
+        'Supply and Logistics CXO',
+        'Architect DM',
+        'Architect User',
+        'Data Professional DM',
+        'Data Professional User',
+        'Engineering DM',
+        'Engineering User',
+        'Information Technology DM',
+        'Information Technology User',
+        'Product Management DM',
+        'Product Management User',
+        'Security DM',
+        'Security User',
+        'Accounting and Finance User',
+        'Business Development User',
+        'Community and Social Services User',
+        'Compliance User',
+        'Customer Service and Support User',
+        'Healthcare Services User',
+        'Human Resources User',
+        'Legal User',
+        'Marketing User',
+        'Media and Communication User',
+        'Operations User',
+        'Other DM',
+        'Other User',
+        'Program and Project Management User',
+        'Purchasing User',
+        'Research User',
+        'Sales User',
+        'Supply and Logistics User',
+        'Education DM',
+        'Education User',
+        'Unclassified'
+    ];
+
+
     // Sections & Navigation Buttons
 
     // Sections
@@ -1670,6 +1760,27 @@
     let prevFactory;
 
     // Functions
+
+
+    const contieneParentesisAfueraDeComillas = (texto) => {
+    let dentroDeComillas = false;
+
+    for (let i = 0; i < texto.length; i++) {
+        const char = texto[i];
+
+        if (char === "'") {
+        // Alternar estado de comillas (ignorando comillas escapadas)
+        if (i === 0 || texto[i - 1] !== "\\") {
+            dentroDeComillas = !dentroDeComillas;
+        }
+        }
+
+        if (char === "(" && !dentroDeComillas) {
+        return true; // Paréntesis de apertura fuera de comillas
+        }
+    }
+    }
+
 
     const extractActiveSqlLines = (sqlText) => {
         const lines = sqlText.split(/\r?\n/);
@@ -2745,11 +2856,14 @@
                             
                             IPVBooleanMarketingAudience == 1 &&  builderMarketingAudienceRawArray.push(row);
 
-                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingMarketingAudience = 0;
+                            if (/in\s*\([^)]*\)/i.test(row) || /\)/.test(row) && !/in\s*\([^)]*\)/i.test(row) && !contieneParentesisAfueraDeComillas(row)) {
+
+                                startPushingMarketingAudience = 0;
+                            };                            
                             
                         }
 
-                        if (startPushingCustomerGroup == 1) {
+                        if (startPushingCustomerGroup == 1) {                
 
                             if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.customergroup")) {
 
@@ -2758,7 +2872,10 @@
                             
                             IPVBooleanCustomerGroup == 1 &&  builderCustomerGroupRawArray.push(row);
 
-                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingCustomerGroup = 0;
+                            if (/in\s*\([^)]*\)/i.test(row) || /\)/.test(row) && !/in\s*\([^)]*\)/i.test(row) && !contieneParentesisAfueraDeComillas(row)) {
+
+                                startPushingCustomerGroup = 0;
+                            };
                             
                         }
 
@@ -2771,7 +2888,10 @@
                             
                             IPVBooleanJobRole == 1 &&  builderJobRoleRawArray.push(row);
 
-                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingJobRole = 0;
+                            if (/in\s*\([^)]*\)/i.test(row) || /\)/.test(row) && !/in\s*\([^)]*\)/i.test(row) && !contieneParentesisAfueraDeComillas(row)) {
+
+                                startPushingJobRole = 0;
+                            };                            
                             
                         }
                     };
@@ -2784,15 +2904,91 @@
 
                     builderJobRoleArray = chargingBuildersArray(builderJobRoleRawArray);
 
-
-                    // Validation for missing things
-
                     list.marketingAudience = inputMKArray || [];
                         
                     list.customerGroup = inputCGArray || [];
                         
                     list.jobRole = inputJBRArray || [];
 
+                    // Validation for None in MaSH but All in Builders
+
+                    let noneMarketingAudienceMaSH = false;
+
+                    let noneCustomerGroupMaSH = false;
+
+                    let noneJobRoleMaSH = false;
+
+                    let allMarketingAudienceBuilder = true;
+
+                    let allJobRoleBuilder = true;
+
+                    let allCustomerGroupBuilder = true;
+
+                    // Marketing Audience
+
+                    if (list.marketingAudience.length == 0) noneMarketingAudienceMaSH = true;
+
+                    if (noneMarketingAudienceMaSH == true) {
+
+                        for (let i = 0; i < marketingAudiences.length; i++) {
+                        
+                            if (!builderMarketingAudienceArray.includes(marketingAudiences[i])) allMarketingAudienceBuilder = false;
+
+                        }
+
+                    };
+
+                    let noExtraMarketingAudience = false;
+
+                    if (noneMarketingAudienceMaSH && allMarketingAudienceBuilder) {
+
+                        noExtraMarketingAudience = true;
+                    }
+
+                    // Customer Group
+
+                    if (list.customerGroup.length == 0) noneCustomerGroupMaSH = true;
+
+                    if (noneCustomerGroupMaSH == true) {
+
+                        for (let i = 0; i < customerGroups.length; i++) {
+                        
+                            if (!builderCustomerGroupArray.includes(customerGroups[i])) allCustomerGroupBuilder = false;
+
+                        }
+
+                    };
+
+                    let noExtraCustomerGroup = false;
+
+                    if (noneCustomerGroupMaSH && allCustomerGroupBuilder) {
+
+                        noExtraCustomerGroup = true;
+                    };    
+                    
+                    // Job Roles
+
+                    if (list.jobRole.length == 0) noneJobRoleMaSH = true;
+
+                    if (noneJobRoleMaSH == true) {
+
+                        for (let i = 0; i < jobRoles.length; i++) {
+                        
+                            if (!builderJobRoleArray.includes(jobRoles[i])) allJobRoleBuilder = false;
+
+                        }
+
+                    };
+
+                    let noExtraJobRole = false;
+
+                    if (noneJobRoleMaSH && allJobRoleBuilder) {
+
+                        noExtraJobRole = true;
+                    };                        
+
+
+                    // Validation for missing things
 
                     // Marketing Audience
                     
@@ -2801,7 +2997,6 @@
                     for (let i = 0; i < list.marketingAudience.length; i++) {
 
                         let marketingAudience = list.marketingAudience[i];
-
 
                         results.marketingAudience[marketingAudience] = 0;
 
@@ -2816,7 +3011,6 @@
                     for (let i = 0; i < list.jobRole.length; i++) {
 
                         let jobRole = list.jobRole[i];
-
 
                         results.jobRole[jobRole] = 0;
 
@@ -2840,19 +3034,28 @@
 
                     // Validation for extra things
 
-                    // Marketing Audience
+                    // Marketing Audience                    
 
-                    for (let i = 0; i < builderMarketingAudienceArray.length; i++) {
+                    if (!allMarketingAudienceBuilder || !noneMarketingAudienceMaSH) {
 
-                        let marketingAudience = builderMarketingAudienceArray[i];
+                        for (let i = 0; i < builderMarketingAudienceArray.length; i++) {
 
-                        if (!list.marketingAudience.includes(marketingAudience)) results.rest.marketingAudience[marketingAudience] = 1;
+                            if (noExtraMarketingAudience) break;
+    
+                            let marketingAudience = builderMarketingAudienceArray[i];
+    
+                            if (!list.marketingAudience.includes(marketingAudience)) results.rest.marketingAudience[marketingAudience] = 1;
+    
+                        };
 
-                    };
+                    }
+
 
                     // Customer Group
 
                     for (let i = 0; i < builderCustomerGroupArray.length; i++) {
+
+                        if (noExtraCustomerGroup) break;
 
                         let customerGroup = builderCustomerGroupArray[i];
 
@@ -2863,6 +3066,8 @@
                     // Job Role
 
                     for (let i = 0; i < builderJobRoleArray.length; i++) {
+
+                        if (noExtraJobRole) break;
 
                         let jobRole = builderJobRoleArray[i];
 

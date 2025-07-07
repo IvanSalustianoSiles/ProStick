@@ -1,3 +1,7 @@
+FY25 MASH FILTERS EXAMPLES
+-------------------------------------------------------
+
+
 -------------- Job Role -----------------------
 
 Job Role: BUSINESS DEVELOPMENT MANAGER, DATA GOVERNANCE MANAGER, DIRECTOR DATA MANAGEMENT, DIRECTOR DATA SCIENCE, DIRECTOR OF BUSINESS OPERATIONS, DIRECTOR OF OPERATIONS, MANAGER DATA MANAGEMENT
@@ -17,22 +21,71 @@ Segment: Small, Medium & Corporate Public Sector (All SubSegments), Small, Mediu
 -------------- MASH INPUT -----------------------
 
 
-Small, Medium & Corporate Public Sector (SM&C Education - SMB), Small, Medium & Corporate Public Sector (SM&C Government - Corporate), Small, Medium & Corporate Public Sector (SM&C Government - SMB), Small, Medium & Corporate Public Sector (UnSegmented), Major Commercial (Major - Commercial Other), Strategic Public Sector (All SubSegments), Strategic Public Sector (Strategic - Federal Government), Major Commercial (All SubSegments), Major Commercial (Major - Health), Major Commercial (Major - Other), Major Public Sector (All SubSegments), Major Public Sector (Major - Education), Major Public Sector (Major - Federal Government), Major Public Sector (Major - Government Other), Major Public Sector (Major - State & Local Governments), Small, Medium & Corporate Commercial (All SubSegments), Small, Medium & Corporate Commercial (SM&C Commercial - Corporate), Small, Medium & Corporate Commercial (SM&C Commercial - SMB), Small, Medium & Corporate Commercial (SM&C Commercial - SMB Default), Strategic Commercial (All SubSegments), Strategic Commercial (Strategic - Health), Strategic Commercial (Strategic - Commercial Other), Strategic Public Sector (Strategic - Public Sector)
-
--------------- Lo que debería poner builder -----------------------
-
-Major Commercial
-Strategic Public Sector
-Major Public Sector
-Small, Medium & Corporate Commercial
-Strategic Commercial
-
-
-SM&C Education - SMB
-SM&C Government - Corporate
-SM&C Government - SMB
-
-
 -------------- Industry -----------------------
 
 Industry: Automotive (All Verticals), Consumer Goods (All Verticals)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    const chargingBuildersArray = (rawArray, platform = "SQL") => {
+        
+        if (platform == "marketo") {
+            return rawArray
+            .split('\n')  
+            .map(line => line.trim())  
+            .filter(line => line !== "")
+        };
+
+        let collecting = false;
+        let formalArray = [];
+        for (let line of rawArray) {
+            if (!collecting && /in\s*\(/i.test(line)) {
+                collecting = true;
+                let afterIn = line.split(/in\s*\(/i)[1];
+                if (afterIn) {
+                    formalArray.push(...splitOutsideQuotes(afterIn));
+                }
+            } else if (collecting) {
+                let sinComillas = line.replace(/'[^']*'/g, '');
+                if (sinComillas.includes(")")) {
+                    let beforeParen = line.split(")")[0];
+                    formalArray.push(...splitOutsideQuotes(beforeParen));
+                    collecting = false;
+                } else {
+                    formalArray.push(...splitOutsideQuotes(line));
+                }
+            }           
+        }
+        formalArray = formalArray.map((row, i) => {
+            if (i === formalArray.length - 1 && row.endsWith(")")) {
+                return row.replace(/\'/g, "").slice(0, -1);
+            }
+            return row.replace(/\'/g, "");
+        });
+
+        return formalArray.filter(row => row !== "");
+    };

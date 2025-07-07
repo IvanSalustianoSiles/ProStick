@@ -1,3 +1,299 @@
+Presentación:
+
+Sección filtros contemplados ya usables y en desarrollo
+
+Sección cosas a tener en cuenta:
+
+Seguridad: Hosting / herramientas de terceros
+
+Escalabilidad (immune a updates de script, taxonomy)
+
+- Taxonomy updates, fácilmente actualizable y escalable.
+
+
+Filtering Criteria
+
+Current Filters (for both UCMP & Marketo, Build & Peer Review):
+
+Segments 
+
+Industries
+
+Marketing Audience
+
+Job Role
+
+Customer Group
+
+What's next?
+
+Partner Requests Filters
+
+FY26 Taxonomy Update
+
+
+
+Escalabilidad: 
+
+- Inmune a updates de template scripts. ProStick trabaja los filtros de MaSH de manera individual, por lo que el SDS tiene el control de dónde y cómo utilizar los resultados.
+
+- Fácil de actualizar frente a taxonomy updates: La lógica del código resulta lo suficientemente escalable como para contemplar posibles cambios en el criterio de filtros. Un cambio general de taxonomía puede tomar solo unas horas en actualizarse en ProStick.
+
+Seguridad
+
+ProStick NO:
+-	maneja PII de microsoft ni posee base de datos.
+-	almacena ningún tipo de información personal del usuario que la utiliza.
+-	Utiliza ningún código de terceros ajenos a Microsoft.
+- está hosteada / deployeada en ninguna nube externa.
+
+ProStick SÍ:
+
+- Funciona en MVD.
+
+- Se ejecuta en tu navegador local, sin tomar datos de tu computadora o de Internet.
+
+- Puede estar subida a un sharepoint y mantener su última version disponible para descargar, como el Old Lead Upload Template, el Personal Data Sharing Template, los template scripts de SQL, entre otros ejemplos.
+
+
+
+_________________________________________________________________
+
+
+Tool:
+
+ - Si no se pidió a ninguno, pero están todos, está bien (para todos los filtros End Customer hasta el momento)
+
+- Si se pidieron a todos y no hay ninguno (Customer Group, Segments) dejar una advertencia de que no solemos dejar vacío ese filtro y que el peer lo debería chequear. Lo mismo para segments
+(We don't usually comment (filter), despite no filter of this category was required. Please check builder's (filter) column values)
+
+
+
+
+- Cambiar "Unsegmented" de MKA
+
+- Que en todos los filtros se corteje con un array de filtros
+
+- Cambiar arrays de taxonomy - Not yet
+
+- Si aparece un deprecated en customer group, no saltearlo - Not yet
+
+- Preparar atajarme con varias cosas. Chequear el powerpoint y preparar respuestas.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+New Customer Groups:
+
+Technical Practitioner
+Unclassified
+Business Practitioner
+Other Practitioner
+Other Decision Maker
+Academic Practitioner
+Academic Decision Maker
+Technical Decision Maker
+Business Decision Maker
+
+
+New Marketing Audience:
+
+Architect DM
+Information Technology DM
+Security DM
+Supply and Logistics DM
+Purchasing CXO
+Purchasing User
+Human Resources DM
+Supply and Logistics CXO
+Sales DM
+Security CXO
+Education DM
+Healthcare Services User
+NULL
+Product Management DM
+Program and Project Management DM
+Business Development DM
+Marketing User
+Community and Social Services CXO
+Business Development CXO
+Data Professional User
+Accounting and Finance DM
+Sales User
+Business Development User
+Engineering DM
+Human Resources CXO
+Program and Project Management User
+Research User
+Operations CXO
+Legal DM
+Research DM
+Research CXO
+Healthcare Services CXO
+Education User
+Operations DM
+Sales CXO
+Information Technology CXO
+Education CXO
+Community and Social Services DM
+Security User
+Compliance DM
+Media and Communication CXO
+Engineering CXO
+Operations User
+Other User
+Data Professional DM
+Customer Service and Support User
+Architect CXO
+Other CXO
+Customer Service and Support DM
+Product Management User
+Healthcare Services DM
+Legal CXO
+Accounting and Finance CXO
+Marketing DM
+Human Resources User
+Accounting and Finance User
+Architect User
+Product Management CXO
+Unclassified
+Information Technology User
+Media and Communication DM
+Media and Communication User
+Data Professional CXO
+Supply and Logistics User
+Program and Project Management CXO
+Compliance User
+Community and Social Services User
+Engineering User
+Marketing CXO
+Purchasing DM
+Legal User
+Other DM
+Customer Service and Support CXO
+Compliance CXO
+
+New Segments:
+
+High Value Individual
+SME&C - Corporate Commercial
+Hoster
+Strategic Commercial
+Network Services
+Unsegmented
+CSO Partner
+Distributor
+Upper Majors Commercial
+Strategic Public Sector
+Small, Medium & Corporate Commercial
+Major Commercial
+Upper Majors Public Sector
+SME&C - SMB Public Sector
+Small, Medium & Corporate Public Sector
+Major Public Sector
+SME&C - SMB Commercial
+SME&C - Corporate Public Sector
+
+New SubSegments:
+
+Strategic - Commercial Other
+UnSegmented
+Upper Majors - Education
+SME&C - SMB Education
+SM&C Commercial - Corporate
+SME&C - Corporate Education
+Distributor
+Strategic - Federal Government
+SME&C - SMB Commercial
+Strategic - Public Sector
+Upper Majors - Government
+Major - Commercial Other
+High Value Individual
+SM&C Government - Corporate
+Major - State & Local Governments
+Network Operator
+Virtual Network Operator
+Major - Health
+SME&C Commercial - SMB Default
+SME&C - Corporate Commercial
+Commercial Distributor
+SM&C Commercial - SMB Default
+Major - Government Other
+SM&C Education - SMB
+SME&C - Corporate Government
+Hosting
+Major - Federal Government
+Major - Other
+SM&C Government - SMB
+SM&C Commercial - SMB
+Strategic - Health
+Major - Education
+SM&C Education - Corporate
+Unsegmented Reseller
+Strategic - Commercial
+SME&C - SMB Government
+Upper Majors - Federal Government
+
+New Industry:
+
+Retailers
+Higher Education
+Mining
+Gov Ops & Infrastructure
+Hospitality
+Other Services
+Central, Federal and Regional Government
+Defense Industrial Base
+Nonprofit & IGO
+Real Estate
+Public Safety & Justice
+Defense
+Health Provider
+Consumer Goods
+Telecommunications
+Libraries & Museums
+NULL
+Discrete Manufacturing
+Banking
+Health Payor
+Water & Sewage
+Dig Native Startups & Unicorns
+Intelligence
+MedTech
+Cities, Transportation & Infrastructure
+Primary & Secondary Edu/K-12
+Media & Entertainment
+Other Professional Services
+Insurance
+Other - Unsegmented
+Capital Markets
+Oil & Gas
+Public Finance
+Automotive
+Social Svcs & Public Health
+At scale SW, data & platforms
+Power & Utilities
+IT Services & Business Advisory
+Transport & Travel
+Health Pharma
+Gaming
+Process Manufacturings
+
+New Ve
+
+_____________________________________________________________
+
+
 ['Automotive (Mobility Services)',
 'Automotive (Vehicle OEM)',
 'Automotive (Vehicle Supplier)',
@@ -1112,4 +1408,92 @@ Industries:
 'Student',
 'Teacher',
 'Undergraduate Student',
+'Unclassified']
+
+
+[
+'BDM',
+'DEVELOPER',
+'EXECUTIVES',
+'IT PROFESSIONALS',
+'OTHER PROFESSIONALS',
+'STUDENT/EDUCATOR',
+'UNKNOWN']
+
+
+['Accounting and Finance DM',
+'Business Development DM',
+'Community and Social Services DM',
+'Compliance DM',
+'Customer Service and Support DM',
+'Healthcare Services DM',
+'Human Resources DM',
+'Legal DM',
+'Marketing DM',
+'Media and Communication DM',
+'Operations DM',
+'Program and Project Management DM',
+'Purchasing DM',
+'Research DM',
+'Sales DM',
+'Supply and Logistics DM',
+'Developer DM',
+'Developer User',
+'Accounting and Finance CXO',
+'Architect CXO',
+'Business Development CXO',
+'Community and Social Services CXO',
+'Compliance CXO',
+'Customer Service and Support CXO',
+'Data Professional CXO',
+'Developer CXO',
+'Education CXO',
+'Engineering CXO',
+'Healthcare Services CXO',
+'Human Resources CXO',
+'Information Technology CXO',
+'Legal CXO',
+'Marketing CXO',
+'Media and Communication CXO',
+'Operations CXO',
+'Other CXO',
+'Product Management CXO',
+'Program and Project Management CXO',
+'Purchasing CXO',
+'Research CXO',
+'Sales CXO',
+'Security CXO',
+'Supply and Logistics CXO',
+'Architect DM',
+'Architect User',
+'Data Professional DM',
+'Data Professional User',
+'Engineering DM',
+'Engineering User',
+'Information Technology DM',
+'Information Technology User',
+'Product Management DM',
+'Product Management User',
+'Security DM',
+'Security User',
+'Accounting and Finance User',
+'Business Development User',
+'Community and Social Services User',
+'Compliance User',
+'Customer Service and Support User',
+'Healthcare Services User',
+'Human Resources User',
+'Legal User',
+'Marketing User',
+'Media and Communication User',
+'Operations User',
+'Other DM',
+'Other User',
+'Program and Project Management User',
+'Purchasing User',
+'Research User',
+'Sales User',
+'Supply and Logistics User',
+'Education DM',
+'Education User',
 'Unclassified']
