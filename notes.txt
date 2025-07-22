@@ -1,3 +1,73 @@
+(Presentación con primera carilla)
+
+FieldFlex is a converter tool designed to convert MaSH default request filters into the specific format required by the SDS, for both the Email And Data Team and for both UCMP and Marketo, regarding specially to SQL Code for main queries and marketo smart list input values for marketo campaign counts of data team and marketo tasks for email team.
+
+The main concept related to this tool is standardization
+
+
+Because its fundamental purpose is to create a work environment where the analysis of the input boxes of the requests is automatic, eliminating this human evaluation process, despite free texts and timeline comments.
+
+I will show you now some examples of its use so you can see this better.
+
+(ProStick Build)
+
+As you can see, the text extracted directly from the MaSH filters is automatically converted into the required format, based on the filter, platform and team involved.
+
+This not only enhances efficiency but also simplifies the peer review process by producing consistent and accurate outputs, that can also be analyzed on this button
+
+(ProStick Peer)
+
+As you can see, this system allows Build Stage errors to be easily catchable.
+This will imply a drastic decrease of the rejection percentage for Data Team.
+Since the vast majority of TLP errors are found in the main query, and the vast majority of its filters will be standardized in FieldFlex for both Build and Peer Review.
+
+Also here I am working with the filters separately, but in a request there are many cases where there are many filters at once, so FieldFlex will also help us reduce the time per stage and avoid task delays.
+
+Let's see a more complex example of its use (Ind Classification)
+
+
+- Standardization of the process
+
+- Less margin error / rejection percentage
+
+- Less time per stage
+
+- Scalable & Secure, easy to update
+
+
+
+
+
+
+
+
+Diapo 7, después de automated process:
+
+It is important to emphasize this, as FieldFlex does not replace the work of the SDS. FieldFlex automates the analysis of input boxes of service requests, but the SDS must continue to check for clarifications from the requestors in free text or in the mash timeline.
+
+So the purpose of FieldFlex is not to replace the work of the SDS but to help automate some readings and conversion processes.
+
+
+
+Diapo 8, al final:
+
+—like the Old Lead Upload Template, the Personal Data Sharing Template, SQL script templates, and other examples.
+
+
+Final diapo 10:
+
+So, if all goes well, I'll have the FY26 FieldFlex version ready in about a week, also including the partner filters.
+
+
+
+
+
+I coded it by myself but Buenos Aires team helped to test the tool.
+
+
+
+
+
 Presentación:
 
 Sección filtros contemplados ya usables y en desarrollo

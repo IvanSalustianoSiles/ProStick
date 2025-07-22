@@ -36,7 +36,14 @@ Industry: Automotive (All Verticals), Consumer Goods (All Verticals)
 
 
 
-
+UnSegmented
+High Value Individual
+Small, Medium & Corporate Public Sector
+Major Commercial
+Strategic Public Sector
+Major Public Sector
+Small, Medium & Corporate Commercial
+Strategic Commercial
 
 
 
