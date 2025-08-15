@@ -1,0 +1,68 @@
+/**IND CLASSIFCATION**/
+
+/**Audience Classification, Please adjust the criteria based on MaSH filters**/
+ 
+				AND (
+					/*Customer Group*/  
+						(
+							IPV.MarketingAudienceCategory in (
+                                                            'Academic Decision Maker',
+															'Academic Practitioner',
+															'Business Decision Maker',
+															'Business Practitioner',
+															'Other Decision Maker',
+															'Other Practitioner',
+															'Unclassified',
+															'Technical Decision Maker',
+															'Technical Practitioner')
+
+ 
+			/*Use below code if you have specific Marketing Audience need to be included, Be ensure Developer code is adjusted (Include/Exclude) based on the requirements*/
+ 
+				--AND IPV.MarketingAudience in (
+				/*Academic Decision Maker*/
+					--'Education CXO','Education DM',
+ 
+				/*Academic Practitioner*/
+					--'Education User',
+ 
+				/*Business Decision Maker*/
+					--'Accounting and Finance CXO','Accounting and Finance DM','Business Development CXO','Business Development DM',
+					--'Community and Social Services CXO','Community and Social Services DM','Compliance CXO','Compliance DM','Customer Service and Support CXO',
+					--'Customer Service and Support DM','Healthcare Services CXO','Healthcare Services DM','Human Resources CXO','Human Resources DM',
+					--'Legal CXO','Legal DM','Marketing CXO','Marketing DM','Media and Communication CXO','Media and Communication DM','Program and Project Management CXO',
+					--'Program and Project Management DM','Purchasing CXO','Purchasing DM','Sales CXO','Sales DM','Supply and Logistics CXO',
+					--'Supply and Logistics DM',
+ 
+				/*Business Practitioner*/
+					--'Accounting and Finance User','Business Development User','Community and Social Services User','Compliance User',
+					--'Customer Service and Support User','Healthcare Services User','Human Resources User','Legal User','Marketing User','Media and Communication User',
+					--'Program and Project Management User','Purchasing User','Sales User','Supply and Logistics User',
+ 
+				/*Other Decision Maker*/
+					--'Other CXO','Other DM',
+ 
+        		/*Other Practitioner*/
+	        		--'Other User',
+ 
+				/*Unclassified*/
+             		--''Unclassified','
+				/*Technical Decision Maker*/
+             		--'Architect CXO','Architect DM','Data Professional CXO','Data Professional DM','Engineering CXO','Engineering DM',
+					--'Information Technology CXO','Information Technology DM','Operations CXO','Operations DM','Product Management CXO','Product Management DM',
+					--'Research CXO','Research DM','Security CXO','Security DM',
+				/*Technical Practitioner*/
+             		--'Architect User','Data Professional User','Engineering User','Information Technology User','Operations User',
+					--'Product Management User','Research User','Security User'
+				--)	
+			)
+ 
+			/*Use Below code to include Developer Job Roles*/
+			--OR IPV.DeveloperFlag = 'Developer'	
+ 
+			/*Use Below code to Exclude Developer Job Roles*/
+			--AND IPV.DeveloperFlag = 'Non-Developer'
+ 
+			/*Use AND/OR condition as per the requirement*/
+			--AND/OR IPV.JobRole in ('')
+	)

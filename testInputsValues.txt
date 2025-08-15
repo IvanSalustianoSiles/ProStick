@@ -48,8 +48,11 @@ Strategic Commercial
 
 
 
+Si IndustryName es Other, no lo agregues al array de industries, agregame un OR OPV.IndustryName is null
 
+Si verticalName es Unknown, no lo agregues al array de verticals, agregame un OR OPV.IndustryName = (industry) AND OPV.VerticalName is null -- Adding this taking in count "Unknown" vertical requirement
 
+Preguntar esto a Abhishek
 
 
 
@@ -96,3 +99,8 @@ Strategic Commercial
 
         return formalArray.filter(row => row !== "");
     };
+
+
+
+
+
