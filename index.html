@@ -146,9 +146,9 @@
                     <div>NULLs as Unclassified in Marketing Audience ( Yes / No )</div>
                     <div class="border"><textarea id="input-indClass4-SQL-MaSH-peer" class="initialinp input"></textarea></div>
                     <div>All Developer Job Roles ( Yes / No / Blank )</div>
-                    <div class="border"><textarea id="andOr-peer" class="initialinp input"></textarea></div>
-                    <div>AND / OR Job Role Condition ( AND / OR )</div>
                     <div class="border"><textarea id="allDevs-peer" class="initialinp input"></textarea></div>
+                    <div>AND / OR Job Role Condition ( AND / OR )</div>
+                    <div class="border"><textarea id="andOr-peer" class="initialinp input"></textarea></div>
                     <div id="builder-title">Builder Ind Classification</div>
                     <div class="border"><textarea id="input-indClass-SQL-peer" class="initialinp input"></textarea></div>
                     <button id="compare-indClass-SQL-peer">Compare</button>
@@ -3412,38 +3412,6 @@
 
                         let builderSubSegmentsArray = platform == "SQL" ? chargingBuildersArray(builderSubSegmentsRawArray) : chargingBuildersArray(builderInputValueFix2, "marketo");
 
-                        // Charging builder's arrays
-
-                        // for (let i = 0; i < onlySubSegments.length; i++) {
-
-                        //     let subSegment = onlySubSegments[i];
-
-                        //     for (let j = 0; j < builderSubSegmentsRawArray.length; j++) {
-
-                        //         let row = builderSubSegmentsRawArray[j];
-
-                        //         if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.segmentname,'unsegmented'") || row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.subsegmentname,'unsegmented'")) continue;
-
-                        //         if (row.includes(subSegment) && !builderSubSegmentsArray.includes(subSegment)) builderSubSegmentsArray.push(subSegment);
-                        //     }
-
-                        // }
-
-                        // for (let i = 0; i < onlySegments.length; i++) {
-
-                        //     let segment = onlySegments[i];
-
-                        //     for (let j = 0; j < builderSegmentsRawArray.length; j++) {
-
-                        //         let row = builderSegmentsRawArray[j];
-
-                        //         if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.segmentname,'unsegmented'") || row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.subsegmentname,'unsegmented'")) continue;
-
-                        //         if (row.includes(segment) && !builderSegmentsArray.includes(segment)) builderSegmentsArray.push(segment);
-                        //     }
-
-                        // }
-
                         // Validation for missing things
 
 
@@ -4134,6 +4102,57 @@
 
                     const andOrInputPeer = document.getElementById(`andOr-peer`).value;
 
+
+                    // Charging Raw Arrays & Specific errors
+
+                    let allDevs = false;
+
+                    let allNonDevs = false;
+
+                    // Devs check
+                    
+                    for (let i = 0; i < builderSQLArray.length; i++) {
+                        
+                        let row = builderSQLArray[i];
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`developerflag='developer'`)) allDevs = true;
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`developerflag='non-developer'`)) allNonDevs = true;
+
+                    }
+
+                    let allDevsValue = allDevsInputPeer.toLowerCase();
+
+                    // Dev Flag
+
+                    switch (true) {
+                        case (!allDevs && allNonDevs && allDevsValue == "yes"):
+                            results.rest.extra["ALLDEVSMISSING"] = `- Please include All Developer Job Roles as per requirement (Include Developer Flag & remove Non-Developer Flag).\n`;
+                        break;
+                        case (!allDevs && allDevsValue == "yes"):
+                            results.rest.extra["ALLDEVSMISSING"] = `- Please include All Developer Job Roles as per requirement (Include Developer Flag).\n`;
+                        break;
+                        case (allNonDevs && allDevsValue == "yes"):
+                            results.rest.extra["ALLDEVSMISSING"] = `- Please include All Developer Job Roles as per requirement (Remove Non-Developer Flag).\n`;
+                        break;
+
+                    }
+                    
+                    // Non-Dev Flag
+
+                    switch (true) {
+                        case (!allNonDevs && allDevs && allDevsValue == "no"):
+                            results.rest.extra["REMOVEALLDEVSMISSING"] = `- Please remove All Developer Job Roles as per requirement (Include Non-Developer Flag & remove Developer Flag).\n`;
+                        break;                        
+                        case (!allNonDevs && allDevsValue == "no"):
+                            results.rest.extra["REMOVEALLDEVSMISSING"] = `- Please remove All Developer Job Roles as per requirement (Include Non-Developer Flag).\n`;
+                        break;
+                        case (allDevs && allDevsValue == "no"):
+                            results.rest.extra["REMOVEALLDEVSMISSING"] = `- Please remove All Developer Job Roles as per requirement (Remove Developer Flag).\n`;
+                        break;
+
+                    }                  
+
                     for (let i = 0; i < builderSQLArray.length; i++) {
 
                         let row = builderSQLArray[i];
@@ -4151,6 +4170,7 @@
                         if (
                             !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`isnull(ipv.marketingaudience,'unclassified')`) 
                             && row.replace(/ /g, "").toLowerCase().includes(`ipv.marketingaudience`)
+                            && !row.replace(/ /g, "").toLowerCase().includes(`ipv.marketingaudiencecategory`)
                             && MKUnsegmentedInput.toLowerCase() == "yes"
                         ) {
                             
@@ -4158,47 +4178,31 @@
                         
                         };
 
-                        
-
                         if (
                             row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`isnull(ipv.marketingaudience,'unclassified')`) 
+                            && !row.replace(/ /g, "").toLowerCase().includes(`ipv.marketingaudiencecategory`)
                             && MKUnsegmentedInput.toLowerCase() != "yes"
                         ) {
                             
-                            results.rest.extra["UNSMKERROR"] = `- Please don't replace Marketing Audience's NULLs for "Unsegmented".\n`;                        
+                            results.rest.extra["UNSMKERROR"] = `- Please don't replace Marketing Audience's NULLs for "Unclassified".\n`;                        
                         
-                        };
+                        };                
+                        
+                        // "All Devs" as blank
 
-                        if (
-                            !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`oripv.developerflag='developer'`)
-                            && allDevsInputPeer.toLowerCase() == "yes"
-                        ) {
-                            
-                            results.rest.extra["ALLDEVSMISSING"] = `- Please include All Developer Job Roles as per requirement".\n`;                        
-                        
-                        };
-
-                        if (
-                            !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`andipv.developerflag='non-developer'`)
-                            && allDevsInputPeer.toLowerCase() == "no"
-                        ) {
-                            
-                            results.rest.extra["REMOVEALLDEVSMISSING"] = `- Please remove All Developer Job Roles as per requirement".\n`;                        
-                        
-                        };    
-                        
                         if (
                             (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`andipv.developerflag='non-developer'`)
                             || row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`oripv.developerflag='developer'`))
-                            && allDevsInputPeer.toLowerCase() != ""
+                            && allDevsInputPeer.toLowerCase() == ""
                         ) {
                             
-                            results.rest.extra["BLANKALLDEVS"] = `- Please keep commented All Developer Job Roles filters as per blank request field".\n`;                        
+                            results.rest.extra["BLANKALLDEVS"] = `- Please keep commented All Non-Dev/Developer Job Roles filter flags as per blank request field.\n`;                        
                         
                         };                           
                         
                         if (
                             row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`isnull(ipv.marketingaudience,'unclassified')`) 
+                            && !row.replace(/ /g, "").toLowerCase().includes(`ipv.marketingaudiencecategory`)
                             && MKUnsegmentedInput.toLowerCase() != "yes"
                         ) {
                             
@@ -4209,17 +4213,21 @@
 
                         if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.marketingaudiencecategory")) startPushingMarketingAudienceCategory = 1;
 
-                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.marketingaudience")) startPushingMarketingAudience = 1;
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.marketingaudience") && !row.replace(/ /g, "").toLowerCase().includes(`ipv.marketingaudiencecategory`)) startPushingMarketingAudience = 1;
 
                         if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.jobrole")) startPushingJobRole = 1;
 
                         if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
 
-                        if (row[row.length - 1] == ")" && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oripv")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
+                        if ((row[row.length - 1] == ")" && row != ")"  && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oripv")) && !row.toLowerCase().includes("developerflag")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`oripv.developerflag='non-developer'`)) results.rest.extra["ORERRORNONDEV"] = `- Please change the OR in Non-Dev Filter for an AND.\n`;
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`andipv.developerflag='developer'`)) results.rest.extra["ANDERRORDEV"] = `- Please change the AND in Dev Filter for an OR.\n`;
 
                         if (startPushingMarketingAudience == 1) {
 
-                            if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.marketingaudience")) {
+                            if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.marketingaudience") && !row.replace(/ /g, "").toLowerCase().includes(`ipv.marketingaudiencecategory`)) {
 
                                 IPVBooleanMarketingAudience++;
                             }
@@ -4266,7 +4274,7 @@
                         }
                     };
 
-                    // Charging builder's arrays
+                    // Charging builder's arrays 
 
                     builderMarketingAudienceArray = chargingBuildersArray(builderMarketingAudienceRawArray);
 
@@ -5579,7 +5587,7 @@
         
                         newVerticalArray = newVerticalArray.map(vertical => `'${vertical}'`);
 
-                                    let warningMessage = document.getElementById(`warning-${filter}-${platform}-build1`);
+                        let warningMessage = document.getElementById(`warning-${filter}-${platform}-build1`);
 
                         if (warningMessage.classList[warningMessage.classList.length - 1] == "disappear") {
         
