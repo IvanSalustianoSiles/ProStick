@@ -2859,7 +2859,6 @@
 
     const marketingAudiences = [
         'Accounting and Finance DM',
-        'Accounting and Finance DM',
         'Business Development DM',
         'Community and Social Services DM',
         'Compliance DM',
@@ -3055,6 +3054,33 @@
     let prevFactory;
 
     // Functions
+
+    const mashToArray = async (DDBBArray, filterInput) => {
+
+        let inputFilterArray = [];
+
+        for (let i = 0; i < DDBBArray.length; i++) {
+            
+            let DDBBFilter = DDBBArray[i];              
+
+            let largerDDBBFilter = await DDBBArray.find(Filter => Filter != DDBBFilter && Filter.includes(DDBBFilter) && Filter.length > DDBBFilter.length) || "";
+                        
+            if (largerDDBBFilter != "") {
+
+                let smallerFilterInput = filterInput.toLowerCase().replace(largerDDBBFilter.toLowerCase(), "")
+                
+                if (smallerFilterInput.includes(DDBBFilter.toLowerCase()) && !inputFilterArray.includes(DDBBFilter)) inputFilterArray.push(DDBBFilter);
+                        
+            } else if (filterInput.toLowerCase().includes(DDBBFilter.toLowerCase()) && !inputFilterArray.includes(DDBBFilter)) {
+                            
+                inputFilterArray.push(DDBBFilter);
+
+            };
+
+        };  
+        
+        return await inputFilterArray || [];
+    };
 
     const containsBracketsOutside = (textParam) => {
         
@@ -3275,8 +3301,7 @@
                         .split("), ")
                         .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment);
     
-    
-        
+
                         inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
         
         
@@ -3828,8 +3853,11 @@
                 break;
                 
                 case "marketing-audience":
-                    let MKInput1 = input;
-                    let inputMKArray1 = MKInput1 == "" ? [] : MKInput1.split(", ");
+                    
+                    let MKInput1 = input;            
+
+                    let inputMKArray1 = await mashToArray(marketingAudiences, MKInput1);            
+
                     list.marketingAudience = inputMKArray1 || [];
 
                     // PEER LOGIC
@@ -3854,8 +3882,6 @@
                     const MKUnsegmentedInput2 = document.getElementById(`input-indClass4-SQL-MaSH-peer`).value;
 
                     const allDevsPeerInput = document.getElementById(`allDevs-peer`).value;
-
-                    const andOrPeerInput = document.getElementById(`andOr-peer`).value;
 
                     for (let i = 0; i < builderSQLArray.length; i++) {
 
@@ -3946,14 +3972,13 @@
                 break;
     
                 case "job-role":
+                                        
+                    let JBRInput1 = input;                
                     
+                    let JBRArray2 = await mashToArray(jobRoles, JBRInput1);
                     
-                    let JBRInput1 = input;
-                    let JBRArray1 = JBRInput1.split(", ");
-                    let JBRArray2 = JBRArray1.map( (JBRInput) => {
-                        return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
-                    })
                     let inputJBRArray1 = JBRInput1 == "" ? [] : JBRArray2;
+                    
                     list.jobRole = inputJBRArray1 || [];   
 
                     // PEER LOGIC
@@ -4046,16 +4071,14 @@
     
                 break;
     
-                case "indClass":
+                case "indClass":              
     
                     let MKInput = input;
                     let CGInput = input2.trim();
                     let JBRInput = document.getElementById(`input-indClass3-SQL-MaSH-peer`).value.trim();
-                    let inputMKArray = MKInput == "" ? [] : MKInput.split(", ");
-                    let inputCGArray = CGInput == "" ? [] : CGInput.split(", ");
-                    let inputJBRArray = JBRInput == "" ? [] : JBRInput.split(", ").map( (JBRInput) => {
-                        return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
-                    }); 
+                    let inputMKArray = await mashToArray(marketingAudiences, MKInput);
+                    let inputCGArray = await mashToArray(MarketingAudienceCategories, CGInput);
+                    let inputJBRArray = await mashToArray(jobRoles, JBRInput);
     
                     list.marketingAudience = inputMKArray || [];
     
@@ -4101,7 +4124,6 @@
                     const allDevsInputPeer = document.getElementById(`allDevs-peer`).value;
 
                     const andOrInputPeer = document.getElementById(`andOr-peer`).value;
-
 
                     // Charging Raw Arrays & Specific errors
 
@@ -4198,7 +4220,33 @@
                             
                             results.rest.extra["BLANKALLDEVS"] = `- Please keep commented All Non-Dev/Developer Job Roles filter flags as per blank request field.\n`;                        
                         
-                        };                           
+                        };         
+                        
+                        
+                        // OR Job Role                        
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`andipv.jobrole`)                            
+                         
+                            && andOrInputPeer.toLowerCase() == "or"
+                        
+                        ) {
+                            
+                            results.rest.extra["ORJOBROLES"] = `- Please change the AND from Job Role filter for an OR.\n`;                        
+                        
+                        };
+                        
+                        // AND Job Role
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`oripv.jobrole`)                            
+                         
+                            && andOrInputPeer.toLowerCase() == "and"
+                        
+                        ) {
+                            
+                            results.rest.extra["ANDJOBROLES"] = `- Please change the OR from Job Role filter for an AND.\n`;                        
+                        
+                        };                        
+
                         
                         if (
                             row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`isnull(ipv.marketingaudience,'unclassified')`) 
@@ -4219,7 +4267,7 @@
 
                         if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
 
-                        if ((row[row.length - 1] == ")" && row != ")"  && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oripv")) && !row.toLowerCase().includes("developerflag")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
+                        if ((row[row.length - 1] == ")" && row != ")"  && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oripv")) && !row.toLowerCase().includes("developerflag") && !row.toLowerCase().includes("ipv.jobrole")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
 
                         if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(`oripv.developerflag='non-developer'`)) results.rest.extra["ORERRORNONDEV"] = `- Please change the OR in Non-Dev Filter for an AND.\n`;
 
@@ -4456,7 +4504,6 @@
                     }
 
                     list.results = results;
-
     
                     // document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
                     // .innerText = "SQL Code".concat(` (${list.marketingAudience.length} ${list.marketingAudience.length == 1 ? "Marketing Audience" : "Marketing Audiences"}, ${list.marketingAudienceCategory.length} ${list.marketingAudienceCategory.length == 1 ? "Marketing Audience Category" : "Marketing Audience Categorys"}, ${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
@@ -4466,8 +4513,7 @@
         } else {            
             
             switch (filter) {
-
-    
+  
                 case "segments":
     
                     if (input == "") { list.segments = onlySegments; list.subSegments = onlySubSegments } else {
@@ -4683,8 +4729,11 @@
                 break;
                 
                 case "marketing-audience":
-                    let MKInput1 = input;
-                    let inputMKArray1 = MKInput1 == "" ? [] : MKInput1.split(", ");
+                    
+                    let MKInput1 = input;        
+
+                    let inputMKArray1 = await mashToArray(marketingAudiences, MKInput1);            
+                    
                     list.marketingAudience = inputMKArray1 || [];
     
                     document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
@@ -4693,15 +4742,15 @@
                 break;
     
                 case "job-role":
+
+                    let JBRInput1 = input;                
                     
-                    let JBRInput1 = input;
-                    let JBRArray1 = JBRInput1.split(", ");
-                    let JBRArray2 = JBRArray1.map( (JBRInput) => {
-                        return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
-                    })
+                    let JBRArray2 = await mashToArray(jobRoles, JBRInput1);
+                    
                     let inputJBRArray1 = JBRInput1 == "" ? [] : JBRArray2;
-                    list.jobRole = inputJBRArray1 || [];
-    
+                    
+                    list.jobRole = inputJBRArray1 || [];  
+
                     document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
                     .innerText = "Marketo Job Roles".concat(` (${list.jobRole.length} ${list.jobRole.length == 1 ? "Job Role" : "Job Roles"})`)
     
@@ -4711,12 +4760,10 @@
     
                     let MKInput = input;
                     let CGInput = input2.trim();
-                    let JBRInput = input3.trim();
-                    let inputMKArray = MKInput == "" ? [] : MKInput.split(", ");
-                    let inputCGArray = CGInput == "" ? [] : CGInput.split(", ");
-                    let inputJBRArray = JBRInput == "" ? [] : JBRInput.split(", ").map( (JBRInput) => {
-                        return jobRoles.find(jobRole => jobRole.toLocaleLowerCase() == JBRInput.toLowerCase());
-                    });
+                    let JBRInput = document.getElementById(`input-indClass3-SQL-MaSH-peer`).value.trim();
+                    let inputMKArray = await mashToArray(marketingAudiences, MKInput);
+                    let inputCGArray = await mashToArray(MarketingAudienceCategories, CGInput);
+                    let inputJBRArray = await mashToArray(jobRoles, JBRInput);
     
                     list.marketingAudience = inputMKArray || [];
     
