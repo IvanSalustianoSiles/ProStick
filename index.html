@@ -3061,9 +3061,9 @@
 
         for (let i = 0; i < DDBBArray.length; i++) {
             
-            let DDBBFilter = DDBBArray[i];              
+            let DDBBFilter = DDBBArray[i];
 
-            let largerDDBBFilter = await DDBBArray.find(Filter => Filter != DDBBFilter && Filter.includes(DDBBFilter) && Filter.length > DDBBFilter.length) || "";
+            let largerDDBBFilter = await DDBBArray.find(Filter => Filter != DDBBFilter && Filter.includes(DDBBFilter) && Filter.length >= DDBBFilter.length) || "";
                         
             if (largerDDBBFilter != "") {
 
@@ -3297,81 +3297,88 @@
     
                     if (input == "") { list.segments = onlySegments; list.subSegments = onlySubSegments } else {
                         
-                        let inputArray = input
-                        .split("), ")
-                        .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment);
+
+                        // FY 25
+
+                        // let inputArray = input
+                        // .split("), ")
+                        // .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment);
     
 
-                        inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
+                        // inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
         
         
-                        if (input.includes("High Value Individual")) inputArray.push("High Value Individual");
+                        // if (input.includes("High Value Individual")) inputArray.push("High Value Individual");
         
-                        let newSegments = [];
-                        let newSubSegments = [];
-                        let newSegment;
-                        let newSubSegment;
-                        let allSubs = {};
+                        // let newSegments = [];
+                        // let newSubSegments = [];
+                        // let newSegment;
+                        // let newSubSegment;
+                        // let allSubs = {};
     
-                        for (let i = 0; i < inputArray.length; i++) {
+                        // for (let i = 0; i < inputArray.length; i++) {
     
-                            let completeSegment = inputArray[i];
+                        //     let completeSegment = inputArray[i];
     
-                            if (completeSegment.includes("(All SubSegments)") || completeSegment == "UnSegmented (UnSegmented)") {
+                        //     if (completeSegment.includes("(All SubSegments)") || completeSegment == "UnSegmented (UnSegmented)") {
                                 
-                                if (completeSegment.includes("(Deprecated)")) continue;
+                        //         if (completeSegment.includes("(Deprecated)")) continue;
     
-                                newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
+                        //         newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
     
-                                allSubs[newSegment] = newSegment;
-                            }
-                        }
+                        //         allSubs[newSegment] = newSegment;
+                        //     }
+                        // }
         
-                        for (let i = 0; i < inputArray.length; i++) {
+                        // for (let i = 0; i < inputArray.length; i++) {
         
-                            let completeSegment = inputArray[i];
+                        //     let completeSegment = inputArray[i];
                             
-                            if (completeSegment.includes("(Deprecated)")) continue;
+                        //     if (completeSegment.includes("(Deprecated)")) continue;
                             
-                            if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); platform == "SQL" && newSubSegments.push("High Value Individual"); continue };
+                        //     if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); platform == "SQL" && newSubSegments.push("High Value Individual"); continue };
         
     
-                            newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
+                        //     newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
         
-                            if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
+                        //     if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
         
-                            if (completeSegment.includes("(All SubSegments)" || completeSegment == "UnSegmented (UnSegmented)")) {
+                        //     if (completeSegment.includes("(All SubSegments)" || completeSegment == "UnSegmented (UnSegmented)")) {
         
-                                let countSegment = 0;
+                        //         let countSegment = 0;
     
-                                for (let j = 0; j < inputArray.length; j++) {
+                        //         for (let j = 0; j < inputArray.length; j++) {
                                     
-                                    let completeSegment2 = inputArray[j];
+                        //             let completeSegment2 = inputArray[j];
                                     
-                                    let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
+                        //             let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
                                     
-                                    if (newSegment2 == newSegment) countSegment++;
+                        //             if (newSegment2 == newSegment) countSegment++;
                                     
-                                }
+                        //         }
                                 
-                                if (countSegment == 1 || platform == "marketo") {
+                        //         if (countSegment == 1 || platform == "marketo") {
         
-                                    if (countSegment == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countSegment == 1 || platform == "marketo" && factory == "email") !newSegments.includes(newSegment) && newSegments.push(newSegment);
+                        //             if (countSegment == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countSegment == 1 || platform == "marketo" && factory == "email") !newSegments.includes(newSegment) && newSegments.push(newSegment);
     
-                                    if (countSegment == 1 && platform == "SQL") Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
-                                }
+                        //             if (countSegment == 1 && platform == "SQL") Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
+                        //         }
     
-                            } else {
+                        //     } else {
     
-                                newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment));
+                        //         newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment));
                                 
-                                ((!newSegments.includes(newSegment) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSegments.includes(newSegment) && allSubs[newSegment]))
-                                && newSegments.push(newSegment);
+                        //         ((!newSegments.includes(newSegment) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSegments.includes(newSegment) && allSubs[newSegment]))
+                        //         && newSegments.push(newSegment);
     
-                                ((!newSubSegments.includes(newSubSegment) && newSubSegment != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && !allSubs[newSegment]) || (platform == "marketo" && factory == "data" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined))
-                                && newSubSegments.push(newSubSegment);
-                            }
-                        }                
+                        //         ((!newSubSegments.includes(newSubSegment) && newSubSegment != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && !allSubs[newSegment]) || (platform == "marketo" && factory == "data" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined))
+                        //         && newSubSegments.push(newSubSegment);
+                        //     }
+                        // }           
+                        
+                        let newSegments = await mashToArray(onlySegments, input);
+
+                        let newSubSegments = await mashToArray(onlySubSegments, input);
         
                         list.subSegments = newSubSegments || "";
                         list.segments = newSegments || "";
@@ -3552,75 +3559,79 @@
     
                 case "industry":
     
-                    let inputArrayIndustry = input
-                    .split("), ")
-                    .map((industry, i, array) => i < array.length - 1 ? industry = industry.concat(")") : industry)
+                    // let inputArrayIndustry = input
+                    // .split("), ")
+                    // .map((industry, i, array) => i < array.length - 1 ? industry = industry.concat(")") : industry)
     
-                    let newIndustryArray = [];
-                    let newVerticalArray = [];
-                    let allVer = {};
-                    let newIndustry;
+                    // let newIndustryArray = [];
+                    // let newVerticalArray = [];
+                    // let allVer = {};
+                    // let newIndustry;
     
-                    for (let i = 0; i < inputArrayIndustry.length; i++) {
+                    // for (let i = 0; i < inputArrayIndustry.length; i++) {
     
-                        let completeIndustry = inputArrayIndustry[i];
+                    //     let completeIndustry = inputArrayIndustry[i];
     
-                        if (completeIndustry.includes("(All Verticals)")) {
+                    //     if (completeIndustry.includes("(All Verticals)")) {
                                 
-                            if (completeIndustry.includes("(Deprecated)")) continue;
+                    //         if (completeIndustry.includes("(Deprecated)")) continue;
     
-                            newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry)) || "UnSegmented";
+                    //         newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry)) || "UnSegmented";
     
-                            allVer[newIndustry] = newIndustry;
-                        }
-                    }               
+                    //         allVer[newIndustry] = newIndustry;
+                    //     }
+                    // }               
     
-                    for (let i = 0; i < inputArrayIndustry.length; i++) {
+                    // for (let i = 0; i < inputArrayIndustry.length; i++) {
     
-                        let completeIndustry = inputArrayIndustry[i];
+                    //     let completeIndustry = inputArrayIndustry[i];
     
-                        if (completeIndustry.includes("(Deprecated)")) continue;
+                    //     if (completeIndustry.includes("(Deprecated)")) continue;
     
-                        newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry));
+                    //     newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry));
     
-                        if (completeIndustry.includes("(All Verticals)")) {
+                    //     if (completeIndustry.includes("(All Verticals)")) {
     
-                            let countIndustry = 0;
+                    //         let countIndustry = 0;
     
-                            // allVer[newIndustry] = newIndustry;
+                    //         // allVer[newIndustry] = newIndustry;
     
-                            for (let j = 0; j < inputArrayIndustry.length; j++) {
+                    //         for (let j = 0; j < inputArrayIndustry.length; j++) {
                                                 
-                                let completeIndustry2 = inputArrayIndustry[j];
+                    //             let completeIndustry2 = inputArrayIndustry[j];
     
-                                let newIndustry2 = onlyIndustry.find(industry => completeIndustry2.includes(industry));
+                    //             let newIndustry2 = onlyIndustry.find(industry => completeIndustry2.includes(industry));
     
-                                if (newIndustry2 == newIndustry) countIndustry++;
+                    //             if (newIndustry2 == newIndustry) countIndustry++;
     
-                            }
+                    //         }
     
-                            if (countIndustry == 1 || platform == "marketo") {
+                    //         if (countIndustry == 1 || platform == "marketo") {
     
-                                if (countIndustry == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countIndustry == 1 || platform == "marketo" && factory == "email") !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
+                    //             if (countIndustry == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countIndustry == 1 || platform == "marketo" && factory == "email") !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
                                 
-                                if (countIndustry == 1 && platform == "SQL") Object.values(industryObject[newIndustry]).forEach(vertical => !newVerticalArray.includes(vertical) && newVerticalArray.push(vertical));
+                    //             if (countIndustry == 1 && platform == "SQL") Object.values(industryObject[newIndustry]).forEach(vertical => !newVerticalArray.includes(vertical) && newVerticalArray.push(vertical));
                             
-                            }
+                    //         }
                         
-                        } else {
+                    //     } else {
     
-                            let newVertical = onlyVertical.find(vertical => completeIndustry.includes(vertical));
+                    //         let newVertical = onlyVertical.find(vertical => completeIndustry.includes(vertical));
                             
-                            ((!newIndustryArray.includes(newIndustry) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newIndustryArray.includes(newIndustry) && allVer[newIndustry]))
-                            && newIndustryArray.push(newIndustry);
+                    //         ((!newIndustryArray.includes(newIndustry) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newIndustryArray.includes(newIndustry) && allVer[newIndustry]))
+                    //         && newIndustryArray.push(newIndustry);
     
-                            ((!newVerticalArray.includes(newVertical) && newVertical != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newVerticalArray.includes(newVertical) && newVertical != undefined && !allVer[newIndustry]) || (platform == "marketo" && factory == "data" && !newVerticalArray.includes(newVertical) && newVertical != undefined))
-                            && newVerticalArray.push(newVertical);
-                        }
-                    }
+                    //         ((!newVerticalArray.includes(newVertical) && newVertical != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newVerticalArray.includes(newVertical) && newVertical != undefined && !allVer[newIndustry]) || (platform == "marketo" && factory == "data" && !newVerticalArray.includes(newVertical) && newVertical != undefined))
+                    //         && newVerticalArray.push(newVertical);
+                    //     }
+                    // }
+
+                    let newVertical = await mashToArray(onlyVertical, input);
+
+                    let newIndustry = await mashToArray(onlyIndustry, input);                    
     
-                    list.vertical = newVerticalArray || "";
-                    list.industry = newIndustryArray || "";
+                    list.vertical = newVertical || "";
+                    list.industry = newIndustry || "";
 
                     // PEER LOGIC
 
@@ -4518,92 +4529,97 @@
     
                     if (input == "") { list.segments = onlySegments; list.subSegments = onlySubSegments } else {
     
-                        
-                        let inputArray = input
-                        .split("), ")
-                        .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment);
+                        let newSegments = await mashToArray(onlySegments, input);
+
+                        let newSubSegments = await mashToArray(onlySubSegments, input);
+
+                        // FY25 
+
+                        // let inputArray = input
+                        // .split("), ")
+                        // .map((segment, i, array) => i < array.length - 1 ? segment = segment.concat(")") : segment);
     
     
         
-                        inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
+                        // inputArray = inputArray.map(segment => segment.includes("High Value Individual") ? segment.substring(23) : segment);
         
         
-                        if (input.includes("High Value Individual")) inputArray.push("High Value Individual");
+                        // if (input.includes("High Value Individual")) inputArray.push("High Value Individual");
         
-                        let newSegments = [];
-                        let newSubSegments = [];
-                        let newSegment;
-                        let newSubSegment;
-                        let allSubs = {};
+                        // let newSegments = [];
+                        // let newSubSegments = [];
+                        // let newSegment;
+                        // let newSubSegment;
+                        // let allSubs = {};
     
-                        for (let i = 0; i < inputArray.length; i++) {
+                        // for (let i = 0; i < inputArray.length; i++) {
     
-                            let completeSegment = inputArray[i];
+                        //     let completeSegment = inputArray[i];
     
-                            if (completeSegment.includes("(All SubSegments)") || completeSegment == "UnSegmented (UnSegmented)") {
+                        //     if (completeSegment.includes("(All SubSegments)") || completeSegment == "UnSegmented (UnSegmented)") {
                                 
-                                if (completeSegment.includes("(Deprecated)")) continue;
+                        //         if (completeSegment.includes("(Deprecated)")) continue;
     
-                                newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
+                        //         newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "UnSegmented";
     
-                                allSubs[newSegment] = newSegment;
-                            }
-                        }
+                        //         allSubs[newSegment] = newSegment;
+                        //     }
+                        // }
 
-                        let warningMessage = document.getElementById(`warning-${filter}-${platform}-build1`) || "";
+                        // let warningMessage = document.getElementById(`warning-${filter}-${platform}-build1`) || "";
 
-                        if (warningMessage) warningMessage.innerText = "";
+                        // if (warningMessage) warningMessage.innerText = "";
         
-                        for (let i = 0; i < inputArray.length; i++) {
+                        // for (let i = 0; i < inputArray.length; i++) {
         
-                            let completeSegment = inputArray[i];
+                        //     let completeSegment = inputArray[i];
                             
-                            if (completeSegment.includes("(Deprecated)")) continue;
+                        //     if (completeSegment.includes("(Deprecated)")) continue;
                             
-                            if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); platform == "SQL" && newSubSegments.push("High Value Individual"); continue };
+                        //     if (completeSegment.includes("High Value Individual") && !newSegments.includes("High Value Individual")) { newSegments.push("High Value Individual"); platform == "SQL" && newSubSegments.push("High Value Individual"); continue };
     
-                            newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "Undefined";                        
+                        //     newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "Undefined";                        
 
-                            if (warningMessage) warningMessage.innerText = newSegment == "Undefined" ? warningMessage.innerText + `\n- The text "${completeSegment}" is including some invalid information.` : "";
+                        //     if (warningMessage) warningMessage.innerText = newSegment == "Undefined" ? warningMessage.innerText + `\n- The text "${completeSegment}" is including some invalid information.` : "";
 
-                            newSegment == "Undefined" && warningMessage.classList.remove("disappear");
+                        //     newSegment == "Undefined" && warningMessage.classList.remove("disappear");
 
-                            if (newSegment == "Undefined") break;
+                        //     if (newSegment == "Undefined") break;
 
-                            if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
+                        //     if (completeSegment.includes("UnSegmented") && newSegment != "UnSegmented") continue;
         
-                            if (completeSegment.includes("(All SubSegments)" || completeSegment == "UnSegmented (UnSegmented)")) {
+                        //     if (completeSegment.includes("(All SubSegments)" || completeSegment == "UnSegmented (UnSegmented)")) {
         
-                                let countSegment = 0;
+                        //         let countSegment = 0;
     
-                                for (let j = 0; j < inputArray.length; j++) {
+                        //         for (let j = 0; j < inputArray.length; j++) {
                                     
-                                    let completeSegment2 = inputArray[j];
+                        //             let completeSegment2 = inputArray[j];
                                     
-                                    let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
+                        //             let newSegment2 = onlySegments.find(segment => completeSegment2.includes(segment))
                                     
-                                    if (newSegment2 == newSegment) countSegment++;
+                        //             if (newSegment2 == newSegment) countSegment++;
                                     
-                                }
+                        //         }
                                 
-                                if (countSegment == 1 || platform == "marketo") {
+                        //         if (countSegment == 1 || platform == "marketo") {
         
-                                    if (countSegment == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countSegment == 1 || platform == "marketo" && factory == "email") !newSegments.includes(newSegment) && newSegments.push(newSegment);
+                        //             if (countSegment == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countSegment == 1 || platform == "marketo" && factory == "email") !newSegments.includes(newSegment) && newSegments.push(newSegment);
     
-                                    if (countSegment == 1 && platform == "SQL") Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
-                                }
+                        //             if (countSegment == 1 && platform == "SQL") Object.values(segments[newSegment]).forEach(subSegment => !newSubSegments.includes(subSegment) && newSubSegments.push(subSegment));
+                        //         }
     
-                            } else {
+                        //     } else {
     
-                                newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment));
+                        //         newSubSegment = onlySubSegments.find(subSegment => completeSegment.includes(subSegment));
                                 
-                                ((!newSegments.includes(newSegment) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSegments.includes(newSegment) && allSubs[newSegment]))
-                                && newSegments.push(newSegment);
+                        //         ((!newSegments.includes(newSegment) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSegments.includes(newSegment) && allSubs[newSegment]))
+                        //         && newSegments.push(newSegment);
     
-                                ((!newSubSegments.includes(newSubSegment) && newSubSegment != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && !allSubs[newSegment]) || (platform == "marketo" && factory == "data" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined))
-                                && newSubSegments.push(newSubSegment);
-                            }
-                        }
+                        //         ((!newSubSegments.includes(newSubSegment) && newSubSegment != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined && !allSubs[newSegment]) || (platform == "marketo" && factory == "data" && !newSubSegments.includes(newSubSegment) && newSubSegment != undefined))
+                        //         && newSubSegments.push(newSubSegment);
+                        //     }
+                        // }
         
                         list.subSegments = newSubSegments || "";
                         list.segments = newSegments || "";
@@ -4632,85 +4648,79 @@
     
                 case "industry":
     
-                    let inputArrayIndustry = input
-                    .split("), ")
-                    .map((industry, i, array) => i < array.length - 1 ? industry = industry.concat(")") : industry)
+                    // let inputArrayIndustry = input
+                    // .split("), ")
+                    // .map((industry, i, array) => i < array.length - 1 ? industry = industry.concat(")") : industry)
     
-                    let newIndustryArray = [];
-                    let newVerticalArray = [];
-                    let allVer = {};
-                    let newIndustry;
-
-                    let warningMessage = document.getElementById(`warning-${filter}-${platform}-build1`);
-
-                    warningMessage.innerText = "";
+                    // let newIndustryArray = [];
+                    // let newVerticalArray = [];
+                    // let allVer = {};
+                    // let newIndustry;
     
-                    for (let i = 0; i < inputArrayIndustry.length; i++) {
+                    // for (let i = 0; i < inputArrayIndustry.length; i++) {
     
-                        let completeIndustry = inputArrayIndustry[i];
+                    //     let completeIndustry = inputArrayIndustry[i];
     
-                        if (completeIndustry.includes("(All Verticals)")) {
+                    //     if (completeIndustry.includes("(All Verticals)")) {
                                 
-                            if (completeIndustry.includes("(Deprecated)")) continue;
+                    //         if (completeIndustry.includes("(Deprecated)")) continue;
     
-                            newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry)) || "UnSegmented";
+                    //         newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry)) || "UnSegmented";
     
-                            allVer[newIndustry] = newIndustry;
-                        }
-                    }               
+                    //         allVer[newIndustry] = newIndustry;
+                    //     }
+                    // }               
     
-                    for (let i = 0; i < inputArrayIndustry.length; i++) {
+                    // for (let i = 0; i < inputArrayIndustry.length; i++) {
     
-                        let completeIndustry = inputArrayIndustry[i];
+                    //     let completeIndustry = inputArrayIndustry[i];
     
-                        if (completeIndustry.includes("(Deprecated)")) continue;
+                    //     if (completeIndustry.includes("(Deprecated)")) continue;
     
-                        newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry)) || "Undefined";
-
-                        warningMessage.innerText = newIndustry == "Undefined" ? warningMessage.innerText + `\n- The text "${completeIndustry}" is including some invalid information.` : "";
-
-                        newIndustry == "Undefined" && warningMessage.classList.remove("disappear");
-
-                        if (newIndustry == "Undefined") break;
+                    //     newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry));
     
-                        if (completeIndustry.includes("(All Verticals)")) {
+                    //     if (completeIndustry.includes("(All Verticals)")) {
     
-                            let countIndustry = 0;
+                    //         let countIndustry = 0;
     
-                            // allVer[newIndustry] = newIndustry;
+                    //         // allVer[newIndustry] = newIndustry;
     
-                            for (let j = 0; j < inputArrayIndustry.length; j++) {
+                    //         for (let j = 0; j < inputArrayIndustry.length; j++) {
                                                 
-                                let completeIndustry2 = inputArrayIndustry[j];
+                    //             let completeIndustry2 = inputArrayIndustry[j];
     
-                                let newIndustry2 = onlyIndustry.find(industry => completeIndustry2.includes(industry));
+                    //             let newIndustry2 = onlyIndustry.find(industry => completeIndustry2.includes(industry));
     
-                                if (newIndustry2 == newIndustry) countIndustry++;
+                    //             if (newIndustry2 == newIndustry) countIndustry++;
     
-                            }
+                    //         }
     
-                            if (countIndustry == 1 || platform == "marketo") {
+                    //         if (countIndustry == 1 || platform == "marketo") {
     
-                                if (countIndustry == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countIndustry == 1 || platform == "marketo" && factory == "email") !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
+                    //             if (countIndustry == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countIndustry == 1 || platform == "marketo" && factory == "email") !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
                                 
-                                if (countIndustry == 1 && platform == "SQL") Object.values(industryObject[newIndustry]).forEach(vertical => !newVerticalArray.includes(vertical) && newVerticalArray.push(vertical));
+                    //             if (countIndustry == 1 && platform == "SQL") Object.values(industryObject[newIndustry]).forEach(vertical => !newVerticalArray.includes(vertical) && newVerticalArray.push(vertical));
                             
-                            }
+                    //         }
                         
-                        } else {
+                    //     } else {
     
-                            let newVertical = onlyVertical.find(vertical => completeIndustry.includes(vertical));
+                    //         let newVertical = onlyVertical.find(vertical => completeIndustry.includes(vertical));
                             
-                            ((!newIndustryArray.includes(newIndustry) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newIndustryArray.includes(newIndustry) && allVer[newIndustry]))
-                            && newIndustryArray.push(newIndustry);
+                    //         ((!newIndustryArray.includes(newIndustry) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newIndustryArray.includes(newIndustry) && allVer[newIndustry]))
+                    //         && newIndustryArray.push(newIndustry);
     
-                            ((!newVerticalArray.includes(newVertical) && newVertical != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newVerticalArray.includes(newVertical) && newVertical != undefined && !allVer[newIndustry]) || (platform == "marketo" && factory == "data" && !newVerticalArray.includes(newVertical) && newVertical != undefined))
-                            && newVerticalArray.push(newVertical);
-                        }
-                    }
+                    //         ((!newVerticalArray.includes(newVertical) && newVertical != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newVerticalArray.includes(newVertical) && newVertical != undefined && !allVer[newIndustry]) || (platform == "marketo" && factory == "data" && !newVerticalArray.includes(newVertical) && newVertical != undefined))
+                    //         && newVerticalArray.push(newVertical);
+                    //     }
+                    // }
+
+                    let newVertical = await mashToArray(onlyVertical, input);
+
+                    let newIndustry = await mashToArray(onlyIndustry, input);                    
     
-                    list.vertical = newVerticalArray || "";
-                    list.industry = newIndustryArray || "";
+                    list.vertical = newVertical || "";
+                    list.industry = newIndustry || "";
     
     
     
