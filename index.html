@@ -4504,9 +4504,9 @@
                             }
                         }
 
-                        let warningMessage = document.getElementById(`warning-${filter}-${platform}-build1`);
+                        let warningMessage = document.getElementById(`warning-${filter}-${platform}-build1`) || "";
 
-                        warningMessage.innerText = "";
+                        if (warningMessage) warningMessage.innerText = "";
         
                         for (let i = 0; i < inputArray.length; i++) {
         
@@ -4518,7 +4518,7 @@
     
                             newSegment = onlySegments.find(segment => completeSegment.includes(segment)) || "Undefined";                        
 
-                            warningMessage.innerText = newSegment == "Undefined" ? warningMessage.innerText + `\n- The text "${completeSegment}" is including some invalid information.` : "";
+                            if (warningMessage) warningMessage.innerText = newSegment == "Undefined" ? warningMessage.innerText + `\n- The text "${completeSegment}" is including some invalid information.` : "";
 
                             newSegment == "Undefined" && warningMessage.classList.remove("disappear");
 
