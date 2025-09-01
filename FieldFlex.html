@@ -10,7 +10,6 @@
 </head>
 <body>
   <main>
-
     <!-- Menu Sections -->
 
     <section id="main-section" class="main-sec">
@@ -3060,23 +3059,31 @@
 
         let inputFilterArray = [];
 
+        DDBBArray = DDBBArray.sort((a, b) => b.length - a.length);
+
         for (let i = 0; i < DDBBArray.length; i++) {
             
             let DDBBFilter = DDBBArray[i];
 
-            let largerDDBBFilter = await DDBBArray.find(Filter => Filter != DDBBFilter && Filter.includes(DDBBFilter) && Filter.length >= DDBBFilter.length) || "";
-                        
-            if (largerDDBBFilter != "") {
+            let smallerFilterInput = filterInput;
 
-                let smallerFilterInput = filterInput.toLowerCase().replace(largerDDBBFilter.toLowerCase(), "")
-                
-                if (smallerFilterInput.includes(DDBBFilter.toLowerCase()) && !inputFilterArray.includes(DDBBFilter)) inputFilterArray.push(DDBBFilter);
-                        
-            } else if (filterInput.toLowerCase().includes(DDBBFilter.toLowerCase()) && !inputFilterArray.includes(DDBBFilter)) {
+            for (let j = 0; j < DDBBArray.length; j++) {
+
+                let largerDDBBFilter = DDBBArray[j];
+
+                if (largerDDBBFilter != DDBBFilter && largerDDBBFilter.includes(DDBBFilter) && largerDDBBFilter.length >= DDBBFilter.length) { 
+
+                    smallerFilterInput = smallerFilterInput.toLowerCase().replace(largerDDBBFilter.toLowerCase(), "")
+
+                };
+
+            }           
+             
+            if (smallerFilterInput.toLowerCase().includes(DDBBFilter.toLowerCase()) && !inputFilterArray.includes(DDBBFilter)) {
                             
                 inputFilterArray.push(DDBBFilter);
 
-            };
+            }
 
         };  
         
@@ -4771,7 +4778,7 @@
     
                     let MKInput = input;
                     let CGInput = input2.trim();
-                    let JBRInput = document.getElementById(`input-indClass3-SQL-MaSH-peer`).value.trim();
+                    let JBRInput = document.getElementById(`input-indClass-SQL3`).value.trim();
                     let inputMKArray = await mashToArray(marketingAudiences, MKInput);
                     let inputCGArray = await mashToArray(MarketingAudienceCategories, CGInput);
                     let inputJBRArray = await mashToArray(jobRoles, JBRInput);
