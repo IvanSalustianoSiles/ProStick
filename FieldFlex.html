@@ -3055,7 +3055,46 @@
 
     // Functions
 
-    const mashToArray = async (DDBBArray, filterInput) => {
+    const addingSubCategories = async (newSubCategories, newCategories, categoryObject, MaSHinput) => {
+
+        if (newSubCategories.length !== 0) {
+
+            for (let i = 0; i < newCategories.length; i++) {
+
+                let myCategory = newCategories[i];
+
+                let containsAllSubCategories = true;
+
+                if (!MaSHinput.includes(`${myCategory} (All`)) {
+                    
+                    for (let j = 0; j < Object.values(categoryObject[myCategory]).length; j++) {
+    
+                        let internalSubCategory = Object.values(categoryObject[myCategory])[j];
+    
+                        if (!newSubCategories.find(subCategory => subCategory == internalSubCategory)) containsAllSubCategories = false;
+    
+                    }
+
+                }
+
+                if (containsAllSubCategories == true) {
+
+                    for (let j = 0; j < Object.values(categoryObject[myCategory]).length; j++) {
+    
+                        let internalSubCategory = Object.values(categoryObject[myCategory])[j];
+    
+                        if (!newSubCategories.includes(internalSubCategory)) newSubCategories.push(internalSubCategory);
+                    }
+
+                }
+
+            }
+            
+        }
+        
+    }
+
+    const mashToArray = async (DDBBArray, filterInput, subCategory = false, greaterObject) => {
 
         let inputFilterArray = [];
 
@@ -3065,7 +3104,7 @@
             
             let DDBBFilter = DDBBArray[i];
 
-            let smallerFilterInput = filterInput;
+            let smallerFilterInput = filterInput || "";
 
             for (let j = 0; j < DDBBArray.length; j++) {
 
@@ -3073,7 +3112,7 @@
 
                 if (largerDDBBFilter != DDBBFilter && largerDDBBFilter.includes(DDBBFilter) && largerDDBBFilter.length >= DDBBFilter.length) { 
 
-                    smallerFilterInput = smallerFilterInput.toLowerCase().replace(largerDDBBFilter.toLowerCase(), "")
+                    smallerFilterInput = smallerFilterInput.toLowerCase().replace(largerDDBBFilter.toLowerCase(), "") || smallerFilterInput;
 
                 };
 
@@ -3081,7 +3120,19 @@
              
             if (smallerFilterInput.toLowerCase().includes(DDBBFilter.toLowerCase()) && !inputFilterArray.includes(DDBBFilter)) {
                             
-                inputFilterArray.push(DDBBFilter);
+                if (subCategory == true) {
+
+                    
+                    let greaterCategory = Object.keys(greaterObject).find(greaterFilter => greaterFilter.toLowerCase().includes(DDBBFilter.toLowerCase()));
+
+                    if (!filterInput.includes(`${greaterCategory} (All`)) inputFilterArray.push(DDBBFilter);
+                
+                } else {
+                    
+                    inputFilterArray.push(DDBBFilter);
+
+                }
+
 
             }
 
@@ -3566,77 +3617,12 @@
                 break;
     
                 case "industry":
-    
-                    // let inputArrayIndustry = input
-                    // .split("), ")
-                    // .map((industry, i, array) => i < array.length - 1 ? industry = industry.concat(")") : industry)
-    
-                    // let newIndustryArray = [];
-                    // let newVerticalArray = [];
-                    // let allVer = {};
-                    // let newIndustry;
-    
-                    // for (let i = 0; i < inputArrayIndustry.length; i++) {
-    
-                    //     let completeIndustry = inputArrayIndustry[i];
-    
-                    //     if (completeIndustry.includes("(All Verticals)")) {
-                                
-                    //         if (completeIndustry.includes("(Deprecated)")) continue;
-    
-                    //         newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry)) || "UnSegmented";
-    
-                    //         allVer[newIndustry] = newIndustry;
-                    //     }
-                    // }               
-    
-                    // for (let i = 0; i < inputArrayIndustry.length; i++) {
-    
-                    //     let completeIndustry = inputArrayIndustry[i];
-    
-                    //     if (completeIndustry.includes("(Deprecated)")) continue;
-    
-                    //     newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry));
-    
-                    //     if (completeIndustry.includes("(All Verticals)")) {
-    
-                    //         let countIndustry = 0;
-    
-                    //         // allVer[newIndustry] = newIndustry;
-    
-                    //         for (let j = 0; j < inputArrayIndustry.length; j++) {
-                                                
-                    //             let completeIndustry2 = inputArrayIndustry[j];
-    
-                    //             let newIndustry2 = onlyIndustry.find(industry => completeIndustry2.includes(industry));
-    
-                    //             if (newIndustry2 == newIndustry) countIndustry++;
-    
-                    //         }
-    
-                    //         if (countIndustry == 1 || platform == "marketo") {
-    
-                    //             if (countIndustry == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countIndustry == 1 || platform == "marketo" && factory == "email") !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
-                                
-                    //             if (countIndustry == 1 && platform == "SQL") Object.values(industryObject[newIndustry]).forEach(vertical => !newVerticalArray.includes(vertical) && newVerticalArray.push(vertical));
-                            
-                    //         }
-                        
-                    //     } else {
-    
-                    //         let newVertical = onlyVertical.find(vertical => completeIndustry.includes(vertical));
-                            
-                    //         ((!newIndustryArray.includes(newIndustry) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newIndustryArray.includes(newIndustry) && allVer[newIndustry]))
-                    //         && newIndustryArray.push(newIndustry);
-    
-                    //         ((!newVerticalArray.includes(newVertical) && newVertical != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newVerticalArray.includes(newVertical) && newVertical != undefined && !allVer[newIndustry]) || (platform == "marketo" && factory == "data" && !newVerticalArray.includes(newVertical) && newVertical != undefined))
-                    //         && newVerticalArray.push(newVertical);
-                    //     }
-                    // }
 
-                    let newVertical = await mashToArray(onlyVertical, input);
+                    let newVertical = await mashToArray(onlyVertical, input, true, industryObject);
 
-                    let newIndustry = await mashToArray(onlyIndustry, input);                    
+                    let newIndustry = await mashToArray(onlyIndustry, input);   
+
+                    await addingSubCategories(newVertical, newIndustry, industryObject, input);                
     
                     list.vertical = newVertical || "";
                     list.industry = newIndustry || "";
@@ -3701,41 +3687,6 @@
                     let builderIndustryArray = platform == "SQL" ? chargingBuildersArray(builderIndustryRawArray) : chargingBuildersArray(builderInputValueFix, "marketo");
 
                     let builderVerticalArray = platform == "SQL" ? chargingBuildersArray(builderVerticalRawArray) : chargingBuildersArray(builderInputValueFix2, "marketo");
-
-                    // Charging builder's arrays
-
-                    // for (let i = 0; i < onlyVertical.length; i++) {
-
-                    //     let vertical = onlyVertical[i];
-
-                    //     for (let j = 0; j < builderVerticalRawArray.length; j++) {
-
-                    //         let row = builderVerticalRawArray[j];
-
-                    //         if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.industryname") || row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname")) continue;
-
-                    //         if (row.includes(vertical) && !builderVerticalArray.includes(vertical)) builderVerticalArray.push(vertical);
-                    //     }
-
-                    // }
-
-                    
-                    // for (let i = 0; i < onlyIndustry.length; i++) {
-                    
-                    //     let industry = onlyIndustry[i];
-                    
-                    //     for (let j = 0; j < builderIndustryRawArray.length; j++) {
-                    
-                    //         let row = builderIndustryRawArray[j];
-                    
-                    //         if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.industryname") || row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname")) continue;
-                    
-                    //         if (row.includes(industry) && !builderIndustryArray.includes(industry)) builderIndustryArray.push(industry);
-                    
-                    //     }
-                    
-                    // }
-
                     
                     // Validation for missing things
                     
@@ -4723,13 +4674,14 @@
                     //     }
                     // }
 
-                    let newVertical = await mashToArray(onlyVertical, input);
+                    let newVertical = await mashToArray(onlyVertical, input, true, industryObject);
 
-                    let newIndustry = await mashToArray(onlyIndustry, input);                    
-    
+                    let newIndustry = await mashToArray(onlyIndustry, input);   
+
+                    await addingSubCategories(newVertical, newIndustry, industryObject, input);
+                    
                     list.vertical = newVertical || "";
                     list.industry = newIndustry || "";
-    
     
     
                     if (platform == "SQL") {
@@ -5037,13 +4989,15 @@
 
                             outputBox.value = "";
 
-
+                            
+                            
                             if (Object.keys(newIndustries).length != 0) {
 
                                 for (let i = 0; i < Object.values(newIndustries).length; i++) {
     
                                     let booleanValue = Object.values(newIndustries)[i];
-    
+
+                                    
                                     let newIndustry = Object.keys(newIndustries)[i];
     
                                     if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Industry "${newIndustry}" is missing.\n`);
@@ -5058,39 +5012,14 @@
                                     let booleanValue = Object.values(newVerticals)[i];
     
                                     let newVertical = Object.keys(newVerticals)[i];
-
-                                    if (booleanValue == 0 && newVertical == "Unknown" && Object.values(newVerticals).includes(1)) { 
-
-                                        let industriesWithUnknown = [];
-
-                                        Object.keys(industryObject).forEach((industry) => {
-                                            
-                                            Object.values(industryObject[industry]).forEach((vertical) => {
-                                                
-                                                if (vertical == newVertical) industriesWithUnknown.push(industry);
-                                            });
-
-                                        });
-
-                                        for (let r = 0; r < industriesWithUnknown.length; r++) {
-
-                                            for (let h = 0; h < Object.keys(newIndustries).length; h++) {
-
-                                                if (industriesWithUnknown[r] == Object.keys(newIndustries)[h]) {
-
-                                                    let newIndustry = Object.keys(newIndustries)[h];
-
-                                                    outputBox.value = outputBox.value.concat(`- NOTE: The Vertical "${newVertical}" is missing (Industry: "${newIndustry}"). This might not be an error, but note that some industries are able to contain unknown verticals if required. \n`); 
-
-                                                }
-                                            }
-
-                                        }
-                                        
-                                        continue;
-                                    };
     
-                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Vertical "${newVertical}" is missing.\n`);
+                                    if (booleanValue == 0) {
+                                            
+                                        newVertical == 'Unknown' ? outputBox.value = outputBox.value.concat(`- NOTE: The Vertical "${newVertical}" is missing. This might not be an error, but note that some industries are able to contain unknown verticals if required. \n`)
+                                        
+                                        : outputBox.value = outputBox.value.concat(`- The Vertical "${newVertical}" is missing.\n`);
+                                    
+                                    }
                                 }
 
                             }
@@ -5656,7 +5585,7 @@
 
                         if (warningMessage.classList[warningMessage.classList.length - 1] == "disappear") {
         
-                            outputBox.value = `AND OPV.IndustryName in (\n\t${newIndustryArray.join(`,\n\t`)}\n)\n\nAND OPV.VerticalName in (\n\t${newVerticalArray.join(`,\n\t`)}\n)`;
+                            outputBox.value = `AND OPV.IndustryName in (\n\t${newIndustryArray.join(`,\n\t`)}\n)\n\n${newVerticalArray.length !== 0 ? `AND OPV.VerticalName in (\n\t${newVerticalArray.join(`,\n\t`)}\n)` : ""}`;
                             outputBox.classList.add("resizeBox");
 
                         }
