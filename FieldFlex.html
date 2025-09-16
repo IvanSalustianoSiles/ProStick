@@ -3100,9 +3100,25 @@
 
         DDBBArray = DDBBArray.sort((a, b) => b.length - a.length);
 
+        let reapetedObject = {};
+
+        let alreadyFoundFilter = {}
+
         for (let i = 0; i < DDBBArray.length; i++) {
             
             let DDBBFilter = DDBBArray[i];
+
+            let countingFilter = 0;
+
+            alreadyFoundFilter[DDBBFilter] = alreadyFoundFilter[DDBBFilter] ? alreadyFoundFilter[DDBBFilter]++ : 1;
+
+            for (let j = 0; j < DDBBArray.length; j++) {
+
+                let OtherDDBBFilter = DDBBArray[j];
+
+                if (DDBBFilter == OtherDDBBFilter) reapetedObject[DDBBFilter] = countingFilter++;
+                
+            }        // Contamos cuántas veces se repite un filtro
 
             let smallerFilterInput = filterInput || "";
 
@@ -3122,8 +3138,35 @@
                             
                 if (subCategory == true) {
 
+                    let greaterCategory;
                     
-                    let greaterCategory = Object.keys(greaterObject).find(greaterFilter => greaterFilter.toLowerCase().includes(DDBBFilter.toLowerCase()));
+                    if (DDBBFilter != 'Unknown') {
+
+                        greaterCategory = Object.keys(greaterObject).find(greaterFilter => Object.values(greaterObject[greaterFilter]).find(Filter => Filter.toLowerCase().includes(DDBBFilter.toLowerCase())));                    
+                    
+                    } else {
+                        
+                    
+                        let forCheckingMaSHInput = filterInput;                        
+
+                        if (countingFilter > 1)  {
+
+                            for (let k = 0; k < countingFilter - alreadyFoundFilter[DDBBFilter]; k++) {
+
+                                forCheckingMaSHInput = filterInput.slice(filterInput.indexOf(DDBBFilter) + DDBBFilter.length, filterInput.length)
+
+                            }
+
+                        }
+
+                        let filterPosition = forCheckingMaSHInput.indexOf(DDBBFilter);
+
+                        for (let k = 0; k < Object.keys(greaterObject).length; k++) {
+
+                            if (forCheckingMaSHInput.includes(`${Object.keys(greaterObject)[k]} (${DDBBFilter})`)) greaterCategory = Object.keys(greaterObject)[k];                            
+                        }
+                        
+                    }
 
                     if (!filterInput.includes(`${greaterCategory} (All`)) inputFilterArray.push(DDBBFilter);
                 
@@ -4606,73 +4649,6 @@
                 break;
     
                 case "industry":
-    
-                    // let inputArrayIndustry = input
-                    // .split("), ")
-                    // .map((industry, i, array) => i < array.length - 1 ? industry = industry.concat(")") : industry)
-    
-                    // let newIndustryArray = [];
-                    // let newVerticalArray = [];
-                    // let allVer = {};
-                    // let newIndustry;
-    
-                    // for (let i = 0; i < inputArrayIndustry.length; i++) {
-    
-                    //     let completeIndustry = inputArrayIndustry[i];
-    
-                    //     if (completeIndustry.includes("(All Verticals)")) {
-                                
-                    //         if (completeIndustry.includes("(Deprecated)")) continue;
-    
-                    //         newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry)) || "UnSegmented";
-    
-                    //         allVer[newIndustry] = newIndustry;
-                    //     }
-                    // }               
-    
-                    // for (let i = 0; i < inputArrayIndustry.length; i++) {
-    
-                    //     let completeIndustry = inputArrayIndustry[i];
-    
-                    //     if (completeIndustry.includes("(Deprecated)")) continue;
-    
-                    //     newIndustry = onlyIndustry.find(industry => completeIndustry.includes(industry));
-    
-                    //     if (completeIndustry.includes("(All Verticals)")) {
-    
-                    //         let countIndustry = 0;
-    
-                    //         // allVer[newIndustry] = newIndustry;
-    
-                    //         for (let j = 0; j < inputArrayIndustry.length; j++) {
-                                                
-                    //             let completeIndustry2 = inputArrayIndustry[j];
-    
-                    //             let newIndustry2 = onlyIndustry.find(industry => completeIndustry2.includes(industry));
-    
-                    //             if (newIndustry2 == newIndustry) countIndustry++;
-    
-                    //         }
-    
-                    //         if (countIndustry == 1 || platform == "marketo") {
-    
-                    //             if (countIndustry == 1 && platform == "SQL" || platform == "marketo" && factory == "data" && countIndustry == 1 || platform == "marketo" && factory == "email") !newIndustryArray.includes(newIndustry) && newIndustryArray.push(newIndustry);
-                                
-                    //             if (countIndustry == 1 && platform == "SQL") Object.values(industryObject[newIndustry]).forEach(vertical => !newVerticalArray.includes(vertical) && newVerticalArray.push(vertical));
-                            
-                    //         }
-                        
-                    //     } else {
-    
-                    //         let newVertical = onlyVertical.find(vertical => completeIndustry.includes(vertical));
-                            
-                    //         ((!newIndustryArray.includes(newIndustry) && platform == "SQL") || (platform == "marketo" && factory == "email" && !newIndustryArray.includes(newIndustry) && allVer[newIndustry]))
-                    //         && newIndustryArray.push(newIndustry);
-    
-                    //         ((!newVerticalArray.includes(newVertical) && newVertical != undefined && platform == "SQL") || (platform == "marketo" && factory == "email" && !newVerticalArray.includes(newVertical) && newVertical != undefined && !allVer[newIndustry]) || (platform == "marketo" && factory == "data" && !newVerticalArray.includes(newVertical) && newVertical != undefined))
-                    //         && newVerticalArray.push(newVertical);
-                    //     }
-                    // }
 
                     let newVertical = await mashToArray(onlyVertical, input, true, industryObject);
 
@@ -4933,7 +4909,7 @@
     
                                     let notRequiredSegment = Object.keys(list.results.rest.segments)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Segment "${notRequiredSegment}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Segment "${notRequiredSegment}" was not required / should not be included.\n`);
                                 }
 
                             }
@@ -4946,7 +4922,7 @@
     
                                     let notRequiredSubSegment = Object.keys(list.results.rest.subSegments)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The SubSegment "${notRequiredSubSegment}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The SubSegment "${notRequiredSubSegment}" was not required / should not be included.\n`);
                                 }
 
                             }
@@ -5033,7 +5009,7 @@
     
                                     let notRequiredIndustry = Object.keys(list.results.rest.industry)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Industry "${notRequiredIndustry}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Industry "${notRequiredIndustry}" was not required / should not be included.\n`);
                                 }
 
                             }
@@ -5046,7 +5022,7 @@
     
                                     let notRequiredVertical = Object.keys(list.results.rest.vertical)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Vertical "${notRequiredVertical}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Vertical "${notRequiredVertical}" was not required / should not be included.\n`);
                                 }
 
                             }
@@ -5146,7 +5122,7 @@
     
                                     let notRequiredMarketingAudience = Object.keys(list.results.rest.marketingAudience)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Marketing Audience "${notRequiredMarketingAudience}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Marketing Audience "${notRequiredMarketingAudience}" was not required / should not be included.\n`);
                                 }
 
                             }
@@ -5159,7 +5135,7 @@
     
                                     let notRequiredMarketingAudienceCategory = Object.keys(list.results.rest.marketingAudienceCategory)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Marketing Audience Category "${notRequiredMarketingAudienceCategory}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Marketing Audience Category "${notRequiredMarketingAudienceCategory}" was not required / should not be included.\n`);
                                 }
 
                             }
@@ -5172,7 +5148,7 @@
     
                                     let notRequiredJobRole = Object.keys(list.results.rest.jobRole)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Job Role "${notRequiredJobRole}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Job Role "${notRequiredJobRole}" was not required / should not be included.\n`);
                                 }
 
                             }                
@@ -5256,7 +5232,7 @@
     
                                     let notRequiredSegment = Object.keys(list.results.rest.segments)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Segment "${notRequiredSegment}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Segment "${notRequiredSegment}" was not required / should not be included.\n`);
                                 }
 
                             }
@@ -5269,7 +5245,7 @@
     
                                     let notRequiredSubSegment = Object.keys(list.results.rest.subSegments)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The SubSegment "${notRequiredSubSegment}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The SubSegment "${notRequiredSubSegment}" was not required / should not be included.\n`);
                                 }
 
                             }
@@ -5379,7 +5355,7 @@
     
                                     let notRequiredIndustry = Object.keys(list.results.rest.industry)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Industry "${notRequiredIndustry}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Industry "${notRequiredIndustry}" was not required / should not be included.\n`);
                                 }
 
                             }
@@ -5392,7 +5368,7 @@
     
                                     let notRequiredVertical = Object.keys(list.results.rest.vertical)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Vertical "${notRequiredVertical}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Vertical "${notRequiredVertical}" was not required / should not be included.\n`);
                                 }
 
                             }
@@ -5454,7 +5430,7 @@
     
                                     let notRequiredMarketingAudience = Object.keys(list.results.rest.marketingAudience)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Marketing Audience "${notRequiredMarketingAudience}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Marketing Audience "${notRequiredMarketingAudience}" was not required / should not be included.\n`);
                                 }
 
                             }           
@@ -5514,7 +5490,7 @@
     
                                     let notRequiredJobRole = Object.keys(list.results.rest.jobRole)[i];
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Job Role "${notRequiredJobRole}" was not required.\n`);
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Job Role "${notRequiredJobRole}" was not required / should not be included.\n`);
                                 }
 
                             }           
