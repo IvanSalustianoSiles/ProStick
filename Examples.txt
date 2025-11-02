@@ -1,0 +1,93 @@
+Segments: Majors Growth Public Sector (Majors Growth - Public Sector), SME&C - Corporate Commercial (SME&C - Corporate Commercial), SME&C - Corporate Public Sector (SME&C - Corporate Education), SME&C - Corporate Public Sector (SME&C - Corporate Government), SME&C - SMB Commercial (SME&C - SMB Commercial), SME&C - SMB Public Sector (SME&C - SMB Education), SME&C - SMB Public Sector (SME&C - SMB Government), Strategic Commercial (Strategic - Commercial), Strategic Public Sector (Strategic - Federal Government), Strategic Public Sector (Strategic - Public Sector), Upper Majors Commercial (Upper Majors - Commercial), Upper Majors Public Sector (Upper Majors - Education), Upper Majors Public Sector (Upper Majors - Federal Government), Upper Majors Public Sector (Upper Majors - Government), UnSegmented (UnSegmented), SME&C - Corporate Commercial (SME&C - Corporate TSI), SME&C - Corporate Public Sector (SME&C - Corporate K14), SME&C - SMB Commercial (SME&C Commercial - SMB Default), Upper Majors Commercial (Major - Other)
+
+Industries: Automotive (All Verticals), Automotive (Mobility Services), Automotive (Vehicle OEM), Automotive (Vehicle Supplier), Consumer Goods (All Verticals), Insurance (All Verticals), Insurance (Insurance Direct), Insurance (Insurance Other), Public Safety & Justice (All Verticals), Public Safety & Justice (Justice), Public Safety & Justice (Public Safety), Public Safety & Justice (Security), Process Manufacturing (AgriBusiness), Transport & Travel (All Verticals), Transport & Travel (Transport & Logistics), Transport & Travel (Travel & Hospitality), Central, Federal and Regional Government (Central Government), Central, Federal and Regional Government (Government ICT Services), Central, Federal and Regional Government (Government ISVs), Central, Federal and Regional Government (Government Operations), Central, Federal and Regional Government (Regional Government), Cities, Transportation & Infrastructure (Energy & Resrc Infrastructure), Cities, Transportation & Infrastructure (Local Government), Cities, Transportation & Infrastructure (Transportation Infrastructure), Nonprofit & IGO (Foundations), Nonprofit & IGO (Nonprofit Health), Nonprofit & IGO (Nonprofit Housing), Nonprofit & IGO (Nonprofit Organizations), Central, Federal and Regional Government (All Verticals), Cities, Transportation & Infrastructure (All Verticals), Defense (National Security), Banking (All Verticals), Banking (Banking), Banking (Universal Banks), Consumer Goods (Consumer Goods), Consumer Goods (Food & Beverage), Consumer Goods (Wholesale Distribution), Defense (All Verticals), Defense (Defense), Discrete Manufacturing (All Verticals), Discrete Manufacturing (High Tech Electronics), Gaming (Gaming), Health Payor (Health Payor), Health Provider (Health Provider), Higher Education (Higher Education), Libraries & Museums (Libraries & Museums), Media & Entertainment (All Verticals), Media & Entertainment (Advertising), Media & Entertainment (Broadcasters), Media & Entertainment (Cable & Satellite), Media & Entertainment (Media&Entertmnt Equip Providrs), Media & Entertainment (Publishing), Nonprofit & IGO (All Verticals), Nonprofit & IGO (International Organizations), Nonprofit & IGO (Membership Organizations), Other - Unsegmented (Other - Unsegmented), Primary & Secondary Edu/K-12 (Primary & Secondary Edu/ K-12), Retailers (All Verticals), Retailers (Food Service), Retailers (General Merchandise), Retailers (Grocery), Retailers (Health & Personal Care), Retailers (Motor Vehicle & Parts Dealers), Retailers (Retail Convenience/Gas), Retailers (Specialty Retail), Telecommunications (All Verticals), Telecommunications (Comms&Ntwrk Equip Providers), Telecommunications (Comms&Ntwrk Service Providers), Telecommunications (Hosters & ISPs), Capital Markets (Capital Markets/Securities), Intelligence (Intelligence Agencies), Nonprofit & IGO (Faith Based Organizations), Automotive (Unknown), Nonprofit & IGO (Environmental & Animal Welfare), Real Estate (All Verticals), Real Estate (Construction), Real Estate (Real Estate), Banking (Unknown), Defense (Unknown), Discrete Manufacturing (Unknown), Health Provider (Unknown), Higher Education (Unknown), Insurance (Unknown), Media & Entertainment (Unknown), Nonprofit & IGO (Global Development & Aid), Nonprofit & IGO (Unknown), Other - Unsegmented (Unknown), Real Estate (Unknown), Telecommunications (Unknown), Discrete Manufacturing (Semiconductor), Health Provider (All Verticals), Hospitality (All Verticals), Hospitality (Accommodation), Hospitality (Unknown), Higher Education (All Verticals), Media & Entertainment (Sports & Live Experiences), Mining (Mining), Nonprofit & IGO (NonProfit Aged Care), Nonprofit & IGO (Research), Oil & Gas (Oil & Gas), Other Professional Services (Legal Services), Other Professional Services (Unknown), Other Professional Services (Other Services), Process Manufacturing (All Verticals), Power & Utilities (Power & Utilities), Process Manufacturing (Chemicals), Process Manufacturing (Unknown), Public Finance (All Verticals), Public Finance (Finance, Budget & Treasury), Public Finance (Tax & Revenue), Social Svcs & Public Health (All Verticals), Social Svcs & Public Health (Government Social Programs), Social Svcs & Public Health (Public & Community Health), Water & Sewage (Water & Sewage), At scale SW, data & platforms (At scale SW, data & platforms), Defense Industrial Base (Defense Industrial Base), Dig Native Startups & Unicorns (Dig Native Startups & Unicorns), Discrete Manufacturing (Aerospace), Discrete Manufacturing (Industrial Machinery), Health Pharma (All Verticals), Health Pharma (Biotech), Health Pharma (Pharma), IT Services & Business Advisory (All Verticals), IT Services & Business Advisory (Accounting & Tax Services), IT Services & Business Advisory (IT Services), IT Services & Business Advisory (Managed Outsourced Services), IT Services & Business Advisory (Management Consulting), Media & Entertainment (Film, Studio, Animation), MedTech (MedTech), Other Professional Services (Architecture & Engineering), Other Professional Services (Staffing Services), Other Services (Unknown), Social Svcs & Public Health (Unknown), Other Professional Services (All Verticals), Other (Unknown)
+
+JobRoles: Chief Academic Officer, Technical Architect, Chief Technology Officer, Information Technology Governance Manager, Associate Technical Architect, Chief Information Technology Architect, Chief Information Technology Officer, Chief Technology Architect, Corporate Trainer, Director Information Technology Architecture, Director Information Technology Security, Director Internet Technology, Director of Education, Director of Educational Technology, Director of Event Technology, Director of Information Technology, Educational Technology, Executive, Food Technologist, Information Technology Administrator, Information Technology Analyst, Information Technology Architect, Information Technology Architecture Manager, Information Technology Auditor, Information Technology Buyer, Information Technology Consultant, Information Technology Engineer, Information Technology Executive, Information Technology Generalist, Information Technology Help Desk, Information Technology Intern, Information Technology Manager, Information Technology Procurement, Information Technology Procurement Manager, Information Technology Purchasing Manager, Information Technology Risk Manager, Information Technology Security Manager, Information Technology Security Specialist, Information Technology Support Specialist, Information Technology System Administrator, Instructional Technology Specialist, Laboratory Technician, Technical Sales Professional, Technical Support Representative, Technical Writer, Technician, Technology Consultant, Technology Development Engineer, Technology Instructor, Technology Manager, Vice President Finance Information Technology, Vice President Information Technology, Vice President of Technology, Director of Instructional Technology
+
+All Devs: No
+
+Marketing Audience: Architect CXO, Business Development CXO, Accounting and Finance DM, Business Development DM, Community and Social Services DM, Compliance DM, Customer Service and Support DM, Healthcare Services DM, Human Resources DM, Legal DM, Marketing DM, Media and Communication DM, Operations DM, Program and Project Management DM, Purchasing DM, Research DM, Sales DM, Supply and Logistics DM, Accounting and Finance CXO, Community and Social Services CXO, Compliance CXO, Customer Service and Support CXO, Data Professional CXO, Engineering CXO, Healthcare Services CXO, Human Resources CXO, Information Technology CXO, Legal CXO, Marketing CXO, Media and Communication CXO, Operations CXO, Other CXO, Product Management CXO, Program and Project Management CXO, Purchasing CXO, Research CXO, Sales CXO, Security CXO, Architect DM, Data Professional DM, Engineering DM, Information Technology DM, Product Management DM, Security DM, Other DM, Supply and Logistics CXO
+
+Marketing Audience Category: Business Decision Maker, Other Decision Maker, Technical Decision Maker
+
+
+
+
+
+Issues del Feedback: 
+
+- Reemplazar Unknown por NULL, pero, hay un problema lógico: Si pones NULL entre los verticals, sería como todos los nulls, no solo nulls para un industry. Preguntarle a Jogi
+
+________________________________
+
+Problema con Industries:
+____________________________
+
+Input 1:
+
+Automotive (Mobility Services)
+
+Central, Federal and Regional Government (Central Government)
+
+Banking (Universal Banks)
+
+Output:
+
+AND OPV.IndustryName in (
+'Central, Federal and Regional Government',
+'Automotive',
+'Banking'
+)
+
+AND IPV.VerticalName in (
+'Regional Government',
+'Central Government',
+'Mobility Services',
+'Universal Banks',
+'Banking'
+)
+
+Dos problemas que veo a priori: Me está agregando más verticals, y me está agregando verticals porque está el industry con el mismo nombre (Banking)
+
+Primera Solución: Que en caso de subfiltro, solo guarde en el array si está dentro de paréntesis
+
+________________________________
+
+Input 2:
+
+Automotive (All Verticals)
+
+Banking (Universal Banks)
+
+Output:
+
+AND OPV.IndustryName in (
+	'Automotive',
+	'Banking'
+)
+
+AND IPV.VerticalName in (
+'Universal Banks',
+'Banking',
+'Vehicle Supplier',
+'Vehicle OEM',
+'Mobility Services'
+)
+
+
+
+Bank Director 
+Banker 
+
+
+
+
+
+-Dos MCC con TE - CHECK
+-Fix Industries (primer fix, los errores, Segundo fix, unknown)
+-View AsiaHQ Dropdown
+-Presentación
+-Comments
+
+
+

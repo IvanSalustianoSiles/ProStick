@@ -143,8 +143,8 @@
                     <div class="border"><textarea id="input-indClass2-SQL-MaSH-peer" class="initialinp input"></textarea></div>
                     <div id="MaSH-title3">MaSH Job Roles</div>
                     <div class="border"><textarea id="input-indClass3-SQL-MaSH-peer" class="initialinp input"></textarea></div>
-                    <div>NULLs as Unclassified in Marketing Audience ( Yes / No )</div>
-                    <div class="border"><textarea id="input-indClass4-SQL-MaSH-peer" class="initialinp input"></textarea></div>
+                    <div class="disappear">NULLs as Unclassified in Marketing Audience ( Yes / No )</div> <!-- Doesn't see to be necessary anymore in FY26, but saving this for a future update. -->
+                    <div class="border disappear"><textarea id="input-indClass4-SQL-MaSH-peer" class="initialinp input"></textarea></div>
                     <div>All Developer Job Roles ( Yes / No / Blank )</div>
                     <div class="border"><textarea id="allDevs-peer" class="initialinp input"></textarea></div>
                     <div>AND / OR Job Role Condition ( AND / OR )</div>
@@ -283,10 +283,10 @@
         'Strategic Commercial',
         'Strategic Public Sector',
         'High Value Individual',
-        'UnSegmented'
-
+        'UnSegmented',
+        'Majors Growth Commercial',
+        'Enterprise Digital Natives'
         /* FY25
-
         'Major Commercial',
         'Major Public Sector',
         'Small, Medium & Corporate Commercial',
@@ -318,7 +318,10 @@
         'Strategic - Federal Government',
         'Strategic - Public Sector',
         'High Value Individual',
-        'UnSegmented'
+        'UnSegmented',
+        'Majors Growth - Commercial',
+        'Digital Natives'
+
 
         /* FY25
 
@@ -389,6 +392,12 @@
         },
         'UnSegmented': {
             UNSGT:'UnSegmented'
+        },
+        'Majors Growth Commercial': {
+            MGRTHC: 'Majors Growth - Commercial'
+        },
+        'Enterprise Digital Natives': {
+            DGN: 'Digital Natives'
         }
         
         /* FY25
@@ -439,12 +448,10 @@
     'Automotive': {
         VS: 'Vehicle Supplier',
         VOEM: 'Vehicle OEM',
-        // UNK: 'Unknown',
         MS: 'Mobility Services' 
     },
     'Banking': {
         UB: 'Universal Banks',
-        // UNK: 'Unknown',
         BNK: 'Banking'
     },
     'Capital Markets': {
@@ -469,7 +476,6 @@
     },
     'Defense': {
         NS: 'National Security',
-        // UNK: 'Unknown',
         DEF: 'Defense'
 
     },
@@ -483,7 +489,6 @@
         SMC: 'Semiconductor',
         IM: 'Industrial Machinery',
         HTE: 'High Tech Electronics',
-        // UNK: 'Unknown',
         ARS: 'Aerospace'
     },
     'Gaming': {
@@ -497,23 +502,19 @@
         PH: 'Pharma'
     },
     'Health Provider': {
-        // UNK: 'Unknown',
         HP: 'Health Provider'
     },
     'Higher Education': {
-        // UNK: 'Unknown',
         HE: 'Higher Education'
     },
     'Hospitality': {
-        // UNK: 'Unknown',
         AC: 'Accommodation'
     },
     'Insurance': {
         ID: 'Insurance Direct',
-        // UNK: 'Unknown',
         IO: 'Insurance Other'
     },
-    'Intelligence': {
+    'Intelligence': { // recortar unknown del array del caso no (All Verticals) cuando son todos
         IA: 'Intelligence Agencies'
     },
     'IT Services & Business Advisory': {
@@ -532,7 +533,6 @@
         PUB: 'Publishing',
         FSA: 'Film, Studio, Animation',
         SLE: 'Sports & Live Experiences',
-        // UNK: 'Unknown',
         CS: 'Cable & Satellite'
     },
     'MedTech': {
@@ -550,7 +550,6 @@
         MO: 'Membership Organizations',
         NPFAC: 'Nonprofit Aged Care',
         NPFHEA: 'Nonprofit Health',
-        // UNK: 'Unknown',
         RSCH: 'Research',
         FUND: 'Foundations',
         NPFHOU: 'Nonprofit Housing'
@@ -559,7 +558,6 @@
         OG: 'Oil & Gas'
     },
     'Other - Unsegmented': {
-        UNK: 'Unknown',
         OU: 'Other - Unsegmented'
     },
     'Other': {
@@ -567,7 +565,6 @@
     },
     'Other Professional Services': {
         AE: 'Architecture & Engineering',
-        // UNK: 'Unknown',
         SS: 'Staffing Services',
         LS: 'Legal Services',
         OS: 'Other Services'
@@ -583,7 +580,6 @@
     },
     'Process Manufacturing': {
         CHMCLS: 'Chemicals',
-        // UNK: 'Unknown',
         AB: 'AgriBusiness'
     },
     'Public Finance': {
@@ -597,7 +593,6 @@
     },
     'Real Estate': {
         RE: 'Real Estate',
-        // UNK: 'Unknown',
         CONS: 'Construction'
     },
     'Retailers': {
@@ -611,13 +606,11 @@
     },
     'Social Svcs & Public Health': {
         GSP: 'Government Social Programs',
-        // UNK: 'Unknown',
         PCH: 'Public & Community Health'
     },
     'Telecommunications': {
         CNSP: 'Comms&Ntwrk Service Providers',
         CNEP: 'Comms&Ntwrk Equip Providers',
-        // UNK: 'Unknown',
         HISP: 'Hosters & ISPs'
     },
     'Transport & Travel': {
@@ -635,12 +628,10 @@
     'Automotive': {
         VS: 'Vehicle Supplier',
         VOEM: 'Vehicle OEM',
-        // UNK: 'Unknown',
         MS: 'Mobility Services' 
     },
     'Banking': {
         UB: 'Universal Banks',
-        // UNK: 'Unknown',
         BNK: 'Banking'
     },
     'Capital Markets': {
@@ -653,7 +644,6 @@
     },
     'Defense': {
         NS: 'National Security',
-        // UNK: 'Unknown',
         DEF: 'Defense'
 
     },
@@ -667,7 +657,6 @@
         SMC: 'Semiconductor',
         IM: 'Industrial Machinery',
         HTE: 'High Tech Electronics',
-        // UNK: 'Unknown',
         ARS: 'Aerospace'
     },
     'Gaming': {
@@ -689,19 +678,15 @@
         PH: 'Pharma'
     },
     'Health Provider': {
-        // UNK: 'Unknown',
         HP: 'Health Provider'
     },
     'Higher Education': {
-        // UNK: 'Unknown',
         HE: 'Higher Education'
     },
     'Hospitality': {
-        // UNK: 'Unknown',
         AC: 'Accommodation'
     },
     'Hosting': {
-        // UNK: 'Unknown',
         HOS: 'Hosting'
     },
     'Insurance': {
@@ -727,7 +712,6 @@
         PUB: 'Publishing',
         FSA: 'Film, Studio, Animation',
         SLE: 'Sports & Live Experiences',
-        // UNK: 'Unknown',
         CS: 'Cable & Satellite'
     },
     'MedTech': {
@@ -741,7 +725,6 @@
         NPHHS: 'NonProfit Health & Human Srvc',
         FBO: 'Faith Based Organizations',
         EAW: 'Environmental & Animal Welfare',
-        // UNK: 'Unknown',
         GDA: 'Global Development & Aid',
         IO: 'International Organizations',
         CP: 'Charities & Philanthropic',
@@ -749,11 +732,9 @@
         MO: 'Membership Organizations'
     },
     'Oil & Gas': {
-        // UNK: 'Unknown',
         OG: 'Oil & Gas'
     },
     'Other - Unsegmented': {
-        UNK: 'Unknown',
         OU: 'Other - Unsegmented'
     },
     'Other': {
@@ -761,7 +742,6 @@
     },
     'Other Professional Services': {
         AE: 'Architecture & Engineering',
-        // UNK: 'Unknown',
         SS: 'Staffing Services',
         LS: 'Legal Services',
         OS: 'Other Services'
@@ -777,7 +757,6 @@
     },
     'Process Manufacturing': {
         CHMCLS: 'Chemicals',
-        // UNK: 'Unknown',
         AB: 'AgriBusiness'
     },
     'Public Finance': {
@@ -791,7 +770,6 @@
     },
     'Real Estate': {
         RE: 'Real Estate',
-        // UNK: 'Unknown',
         CONS: 'Construction'
     },
     'Retailers': {
@@ -805,13 +783,11 @@
     },
     'Social Svcs & Public Health': {
         GSP: 'Government Social Programs',
-        // UNK: 'Unknown',
         PCH: 'Public & Community Health'
     },
     'Telecommunications': {
         CNSP: 'Comms&Ntwrk Service Providers',
         CNEP: 'Comms&Ntwrk Equip Providers',
-        // UNK: 'Unknown',
         HISP: 'Hosters & ISPs'
     },
     'Transport & Travel': {
@@ -3013,6 +2989,11 @@
         */
     ];
 
+    const subValuesNotInBrackets = [
+        'UnSegmented',
+        'High Value Individual'
+    ]
+    
     // Sections
 
     const mainSection = document.getElementById("main-section");    
@@ -3053,8 +3034,18 @@
 
     let prevFactory;
 
+    let forNULLArray = [];
+
+    let categoriesThatContainSomeNotNull = [];
+
     // Functions
 
+
+    const extractBrakets = (text) => {
+        const matching = text.match(/\([^)]*\)/g);
+        return matching ? matching.join('') : '';
+    };
+    
     const addingSubCategories = async (newSubCategories, newCategories, categoryObject, MaSHinput) => {
 
         if (newSubCategories.length !== 0) {
@@ -3102,7 +3093,22 @@
 
         let reapetedObject = {};
 
-        let alreadyFoundFilter = {}
+        let alreadyFoundFilter = {}    
+
+        let filterInputBKP = filterInput;
+
+        if (subCategory == true) {
+
+            
+            filterInput = extractBrakets(filterInput);
+
+            subValuesNotInBrackets.forEach((subValue) => {
+
+                if (filterInputBKP.includes(subValue)) filterInput = filterInput.concat(subValue);
+
+            })
+            
+        }
 
         for (let i = 0; i < DDBBArray.length; i++) {
             
@@ -3143,17 +3149,20 @@
                     if (DDBBFilter != 'Unknown') {
 
                         greaterCategory = Object.keys(greaterObject).find(greaterFilter => Object.values(greaterObject[greaterFilter]).find(Filter => Filter.toLowerCase().includes(DDBBFilter.toLowerCase())));                    
+
+                        !categoriesThatContainSomeNotNull.includes(greaterCategory) && categoriesThatContainSomeNotNull.push(greaterCategory);
                     
-                    } else {
-                        
+                        if (!filterInputBKP.includes(`${greaterCategory} (All`)) inputFilterArray.push(DDBBFilter);
+
+                    } else {                    
                     
-                        let forCheckingMaSHInput = filterInput;                        
+                        let forCheckingMaSHInput = filterInputBKP;                        
 
                         if (countingFilter > 1)  {
 
                             for (let k = 0; k < countingFilter - alreadyFoundFilter[DDBBFilter]; k++) {
 
-                                forCheckingMaSHInput = filterInput.slice(filterInput.indexOf(DDBBFilter) + DDBBFilter.length, filterInput.length)
+                                forCheckingMaSHInput = filterInputBKP.slice(filterInputBKP.indexOf(DDBBFilter) + DDBBFilter.length, filterInputBKP.length)
 
                             }
 
@@ -3163,16 +3172,21 @@
 
                         for (let k = 0; k < Object.keys(greaterObject).length; k++) {
 
-                            if (forCheckingMaSHInput.includes(`${Object.keys(greaterObject)[k]} (${DDBBFilter})`)) greaterCategory = Object.keys(greaterObject)[k];                            
+                            if (forCheckingMaSHInput.includes(`${Object.keys(greaterObject)[k]} (${DDBBFilter})`)) greaterCategory = Object.keys(greaterObject)[k];                                                        
+
+                            !forNULLArray.includes(greaterCategory) && greaterCategory && forNULLArray.push(greaterCategory);
+
                         }
+
+                        forNULLArray = forNULLArray.map(Industry => `'${Industry}'`);
                         
                     }
-
-                    if (!filterInput.includes(`${greaterCategory} (All`)) inputFilterArray.push(DDBBFilter);
                 
                 } else {
                     
-                    inputFilterArray.push(DDBBFilter);
+                    filterInputBKP.includes(`${DDBBFilter} (All`) && !categoriesThatContainSomeNotNull.includes(DDBBFilter) && categoriesThatContainSomeNotNull.push(DDBBFilter);                
+                    
+                    !inputFilterArray.includes(DDBBFilter) && inputFilterArray.push(DDBBFilter);
 
                 }
 
@@ -3480,7 +3494,7 @@
                         
                         let newSegments = await mashToArray(onlySegments, input);
 
-                        let newSubSegments = await mashToArray(onlySubSegments, input);
+                        let newSubSegments = await mashToArray(onlySubSegments, input);                        
         
                         list.subSegments = newSubSegments || "";
                         list.segments = newSegments || "";
@@ -3663,7 +3677,7 @@
 
                     let newVertical = await mashToArray(onlyVertical, input, true, industryObject);
 
-                    let newIndustry = await mashToArray(onlyIndustry, input);   
+                    let newIndustry = await mashToArray(onlyIndustry, input); 
 
                     await addingSubCategories(newVertical, newIndustry, industryObject, input);                
     
@@ -4533,7 +4547,7 @@
     
                         let newSegments = await mashToArray(onlySegments, input);
 
-                        let newSubSegments = await mashToArray(onlySubSegments, input);
+                        let newSubSegments = await mashToArray(onlySubSegments, input, true, segments);
 
                         // FY25 
 
@@ -4652,9 +4666,33 @@
 
                     let newVertical = await mashToArray(onlyVertical, input, true, industryObject);
 
-                    let newIndustry = await mashToArray(onlyIndustry, input);   
+                    let newIndustry = await mashToArray(onlyIndustry, input); 
+
+                    let newIndustryCopy = newIndustry; 
 
                     await addingSubCategories(newVertical, newIndustry, industryObject, input);
+
+                    
+                    newIndustry.forEach(industry => {
+                        
+                        let myVerticals = Object.values(industryObject[industry]);
+
+                        let isThereAnyVertical = false;
+                        
+                        for (let h = 0; h < myVerticals.length; h++) {
+
+                            if (newVertical.includes(myVerticals.length[h])) isThereAnyVertical = true;
+                        
+                        }
+                        
+                        if (!isThereAnyVertical && input.includes(`${industry} (Unknown)`)) newIndustryCopy = newIndustryCopy.filter(smallIndustry => smallIndustry != industry);
+                        
+                    })
+
+                    newIndustry = newVertical.length != 0 ? newIndustry.filter(industry => categoriesThatContainSomeNotNull.includes(industry)) : newIndustryCopy;                    
+                    // rajar de acá sólo es obligatorio si no hay verticals, digo para peer review
+
+                    categoriesThatContainSomeNotNull.length = 0;
                     
                     list.vertical = newVertical || "";
                     list.industry = newIndustry || "";
@@ -4662,7 +4700,7 @@
     
                     if (platform == "SQL") {
                         document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
-                        .innerText = "SQL Code".concat(` (${list.industry.length} ${list.industry.length == 1 ? "Industry" : "Industries"}, ${list.vertical.length} ${list.vertical.length == 1 ? "Vertical" : "Verticals"})`)
+                        .innerText = "SQL Code".concat(` (${list.industry.length} ${list.industry.length == 1 ? "Industry" : "Industries"}, ${list.vertical.length} ${list.vertical.length == 1 ? "Vertical" : "Verticals"} ${forNULLArray.length == 0 ? '' : forNULLArray.length+`, Industries for Vertical NULLs`})`)
                     } else {  
     
                         document.getElementById(`outputTitle1-${factory}-${platform}`)
@@ -5558,11 +5596,21 @@
                         newVerticalArray = newVerticalArray.map(vertical => `'${vertical}'`);
 
                         let warningMessage = document.getElementById(`warning-${filter}-${platform}-build1`);
-
+                        
                         if (warningMessage.classList[warningMessage.classList.length - 1] == "disappear") {
-        
-                            outputBox.value = `AND OPV.IndustryName in (\n\t${newIndustryArray.join(`,\n\t`)}\n)\n\n${newVerticalArray.length !== 0 ? `AND OPV.VerticalName in (\n\t${newVerticalArray.join(`,\n\t`)}\n)` : ""}`;
-                            outputBox.classList.add("resizeBox");
+
+                            if (forNULLArray.length == 0) {
+
+                                outputBox.value = `AND OPV.IndustryName in (\n\t${newIndustryArray.join(`,\n\t`)}\n)\n\n${newVerticalArray.length !== 0 ? `AND OPV.VerticalName in (\n\t${newVerticalArray.join(`,\n\t`)}\n)` : ""}`;
+                                outputBox.classList.add("resizeBox");
+
+                            } else {
+
+                                outputBox.value = `AND (\n\tAND OPV.IndustryName in (\n\t\t${newIndustryArray.join(`,\n\t\t`)}\n\t)\n\n\t${newVerticalArray.length !== 0 ? `AND OPV.VerticalName in (\n\t\t${newVerticalArray.join(`,\n\t\t`)}\n\t)` : ""}\n\tOR OPV.IndustryName in (${forNULLArray.join(`, `)}) AND OPV.VerticalName is NULL\n)`;
+                                outputBox.classList.add("resizeBox"); 
+                                forNULLArray.length = 0;
+
+                            }
 
                         }
         
@@ -5685,8 +5733,7 @@
                     let builderInputValue2 = builderInput2 ? builderInput2.value : "";
         
                     let list = await inputLogic(filter, input, inputBox, factory, input2, inputBox2, input3, inputBox3, platform, builderInputValue, builderInput, builderInputValue2, builderInput2);
-                    
-                    
+                                        
                     await outputLogic(filter, list, platform, outputBox, outputBox2);
                 
                 }
@@ -5979,9 +6026,12 @@
                     backFactMenu.classList.remove("disappear");
                     peerButton.classList.remove("disappear");
                     article2.className = "article2";
-                    nullUnsegmentedCheck.id = "NUcheckbox";
-                    nullUnsegmentedCheck.classList.add("border", "initialinp", "input");
+                    nullUnsegmentedCheck.id = "NUcheckbox"; 
+                    nullUnsegmentedCheck.classList.add(
+                        //"border", "initialinp", "input", 
+                    "disappear"); // Doesn't see to be necessary anymore in FY26, but saving this for a future update.
                     nullUnsegmentedText.innerText = "NULLs as Unclassified in Marketing Audience ( Yes / No )";
+                    nullUnsegmentedText.classList.add("disappear") // Doesn't see to be necessary anymore in FY26, but saving this for a future update.
                     titleInput1.innerText = "Marketing Audience";
                     titleInput2.innerText = "Marketing Audience Category";
                     titleInput3.innerText = "Job Roles";
