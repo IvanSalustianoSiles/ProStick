@@ -1,54 +1,72 @@
-Chief Academic Officer
-Technical Architect
-Chief Technology Officer
-Information Technology Governance Manager
-Associate Technical Architect
-Chief Information Technology Architect
-Chief Information Technology Officer
-Chief Technology Architect
-Corporate Trainer
-Director Information Technology Architecture
-Director Information Technology Security
-Director Internet Technology
-Director of Education
-Director of Educational Technology
-Director of Event Technology
-Director of Information Technology
-Educational Technology
-Executive
-Food Technologist
-Information Technology Administrator
-Information Technology Analyst
-Information Technology Architect
-Information Technology Architecture Manager
-Information Technology Auditor
-Information Technology Buyer
-Information Technology Consultant
-Information Technology Engineer
-Information Technology Executive
-Information Technology Generalist
-Information Technology Help Desk
-Information Technology Intern
-Information Technology Manager
-Information Technology Procurement
-Information Technology Procurement Manager
-Information Technology Purchasing Manager
-Information Technology Risk Manager
-Information Technology Security Manager
-Information Technology Security Specialist
-Information Technology Support Specialist
-Information Technology System Administrator
-Instructional Technology Specialist
-Laboratory Technician
-Technical Sales Professional
-Technical Support Representative
-Technical Writer
-Technician
-Technology Consultant
-Technology Development Engineer
-Technology Instructor
-Technology Manager
-Vice President Finance Information Technology
-Vice President Information Technology
-Vice President of Technology
-Director of Instructional Technology
+Automotive (All Verticals)
+Consumer Goods (All Verticals)
+Insurance (All Verticals)
+Public Safety & Justice (All Verticals)
+Transport & Travel (All Verticals)
+Media & Entertainment (Film Studio Animation)
+MedTech (MedTech)
+Other Services (Unknown)
+Social Svcs & Public Health (Unknown)
+Other Professional Services (All Verticals)
+Other (Unknown)
+
+
+AND (
+
+AND OPV.IndustryName IN ('Automotive', 'Consumer Goods', 'Insurance', 'Public Safety & Justice', 'Transport & Travel', 'Media & Entertainment', 'MedTech', 'Other Professional Services', 'Other Professional Services')
+
+AND OPV.VerticalName IN ('Film Studio Animation', 'MedTech', 'Justice', 'Transport & Logistics', 'Vehicle Supplier', 'Food & Beverage', 'Staffing Services', 'Vehicle OEM', 'Wholesale Distribution', 'Travel & Hospitality', 'Insurance Other', 'Insurance Direct', 'Consumer Goods', 'Mobility Services', 'Public Safety', 'Architecture & Engineering', 'Other Services', 'Legal Services', 'Security')
+
+OR OPV.IndustryName IN ('Other Services', 'Social Svcs & Public Health', 'Other') AND OPV.VerticalName is NULL
+
+)
+
+
+
+'Film Studio Animation'
+'MedTech'
+'Justice'
+'Transport & Logistics'
+'Vehicle Supplier'
+'Food & Beverage'
+'Staffing Services'
+'Vehicle OEM'
+'Wholesale Distribution'
+'Travel & Hospitality'
+'Insurance Other'
+'Insurance Direct'
+'Consumer Goods'
+'Mobility Services'
+'Public Safety'
+'Architecture & Engineering'
+'Other Services'
+'Legal Services'
+'Security'
+
+
+
+
+
+
+
+
+'Film, Studio, Animation'
+'AgriBusiness'
+'Security'
+'MedTech'
+'Architecture & Engineering'
+'Staffing Services'
+'Legal Services'
+'Other Services'
+'Public Safety'
+'Justice'
+'Travel & Hospitality'
+'Transport & Logistics'
+'Food & Beverage'
+'Wholesale Distribution'
+'Consumer Goods'
+'Vehicle Supplier'
+'Vehicle OEM'
+'Mobility Services'
+'Insurance Direct'
+'Insurance Other'

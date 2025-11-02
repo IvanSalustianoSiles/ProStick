@@ -3678,11 +3678,35 @@
                     let newVertical = await mashToArray(onlyVertical, input, true, industryObject);
 
                     let newIndustry = await mashToArray(onlyIndustry, input); 
+                    
+                    let newIndustryCopy = newIndustry; 
 
                     await addingSubCategories(newVertical, newIndustry, industryObject, input);                
     
                     list.vertical = newVertical || "";
-                    list.industry = newIndustry || "";
+                    list.industry = newIndustry || "";                    
+                    
+                    newIndustry.forEach(industry => {
+                        
+                        let myVerticals = Object.values(industryObject[industry]);
+
+                        let isThereAnyVertical = false;
+                        
+                        for (let h = 0; h < myVerticals.length; h++) {
+
+                            if (newVertical.includes(myVerticals.length[h])) isThereAnyVertical = true;
+                        
+                        }
+                        
+                        if (!isThereAnyVertical && input.includes(`${industry} (Unknown)`) && !(input.includes(`${industry} (All`) && newVertical.length == 0)) newIndustryCopy = newIndustryCopy.filter(smallIndustry => smallIndustry != industry);
+                        
+                    })
+
+                    newIndustry = newVertical.length != 0 ? newIndustry.filter(industry => categoriesThatContainSomeNotNull.includes(industry)) : newIndustryCopy;                    
+                    // rajar de acá sólo es obligatorio si no hay verticals, digo para peer review
+
+                    categoriesThatContainSomeNotNull.length = 0;  
+                    
 
                     // PEER LOGIC
 
@@ -3702,9 +3726,13 @@
 
                     let builderVerticalRawArray = [];
 
+                    let builderIndustryNULLRawArray = [];
+
                     let startPushingIndustry = 0;
 
                     let startPushingVertical = 0;
+
+                    let startPushingIndustryForNULL = 0;
 
                     for (let i = 0; i < builderSQLArray.length; i++) {
 
@@ -3712,13 +3740,18 @@
 
                         let nextRow = builderSQLArray[i+1] ? builderSQLArray[i+1] : "";
 
-                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.industryname")) startPushingIndustry = 1;
+                        // Start pushing Industries
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("andopv.industryname")) startPushingIndustry = 1;
 
-                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname")) startPushingVertical = 1;
+                        // Start pushing Verticals
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("andopv.verticalname")) startPushingVertical = 1;
+
+                        // Start pushing Industries with NULL verticals
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("oropv.industryname")) startPushingIndustryForNULL = 1;
 
                         if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
 
-                        if (row[row.length - 1] == ")" && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oropv")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
+                        if (row[row.length - 1] == ")" && nextRow.includes("OR") && !nextRow.toLowerCase().includes("null") || (row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oropv")) && !row.toLowerCase().includes("null")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
 
                         if (startPushingIndustry == 1) {
                                 
@@ -3735,7 +3768,19 @@
                             if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingVertical = 0;
 
                         }
+
+                        if (startPushingIndustryForNULL == 1) {
+                                
+                            builderIndustryNULLRawArray.push(row);
+                                
+                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingIndustryForNULL = 0;
+
+                        }                        
                     };
+
+                    console.log(`Array de rows para Verticals:`+builderVerticalRawArray)
+
+                    console.log(`Array de rows para Industries NULLs:`+builderIndustryNULLRawArray)
 
                     let builderInputValueFix = document.getElementById(`input-${filter}-${platform}-peer`).value;
 
@@ -3744,6 +3789,14 @@
                     let builderIndustryArray = platform == "SQL" ? chargingBuildersArray(builderIndustryRawArray) : chargingBuildersArray(builderInputValueFix, "marketo");
 
                     let builderVerticalArray = platform == "SQL" ? chargingBuildersArray(builderVerticalRawArray) : chargingBuildersArray(builderInputValueFix2, "marketo");
+
+                    let builderIndustryNULLArray = platform == "SQL" ? chargingBuildersArray(builderIndustryNULLRawArray) : [];
+
+                    // console.log(`Industries para AND:`+builderIndustryArray);
+
+                    // console.log(`Verticals para AND:`+builderVerticalArray);
+
+                    // console.log(`Industries para NULL:`+builderIndustryNULLArray);
                     
                     // Validation for missing things
                     
@@ -4685,7 +4738,7 @@
                         
                         }
                         
-                        if (!isThereAnyVertical && input.includes(`${industry} (Unknown)`)) newIndustryCopy = newIndustryCopy.filter(smallIndustry => smallIndustry != industry);
+                        if (!isThereAnyVertical && input.includes(`${industry} (Unknown)`) && !(input.includes(`${industry} (All`) && newVertical.length == 0)) newIndustryCopy = newIndustryCopy.filter(smallIndustry => smallIndustry != industry);
                         
                     })
 

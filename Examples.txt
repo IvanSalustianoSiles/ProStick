@@ -90,4 +90,71 @@ Banker
 -Comments
 
 
+Peer review tiene que:
 
+-Revisar que estén todos los industries y todos los verticals, que no sobre ninguno
+
+-Si los verticals están perfectos, pueden sobrar industries, pero tiene que ser AND
+
+-Si hay un solo industry, y es All Verticals, puede no haber verticals, pero, si hubiera otro industry, tienen que estar todos sus verticals
+
+Lógica Unknown:
+
+-Si pidieron Unknown, tiene que estar el industry en el filtro NULL, y no pueden sobrar
+
+- El OR de Unknown tiene que estar dentro del paréntesis con el AND
+
+- Puede no haber Unknown si hay un sólo industry all verticals
+
+- Si es All verticals, puede tanto estar en el filtro de NULL como no
+
+
+
+Para evitar problemas con \n replace por ""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let builderIndustryArray = platform == "SQL" ? chargingBuildersArray(builderIndustryRawArray) : chargingBuildersArray(builderInputValueFix, "marketo");
+
+
+Banking (All Verticals), Automotive (Vehicle OEM), Automotive (Unknown)
+
+
+AND (
+	AND OPV.IndustryName in (
+		'Automotive',
+		'Banking'
+	)
+
+	AND OPV.VerticalName in (
+		'Vehicle OEM',
+		'Universal Banks',
+		'Banking'
+	)
+	OR OPV.IndustryName in ('Automotive') AND OPV.VerticalName is NULL
+)
+
+
+problema con builderverticalrowarray, no termina de tomar rows en )
