@@ -3177,8 +3177,6 @@
                             !forNULLArray.includes(greaterCategory) && greaterCategory && forNULLArray.push(greaterCategory);
 
                         }
-
-                        forNULLArray = forNULLArray.map(Industry => `'${Industry}'`);
                         
                     }
                 
@@ -3684,8 +3682,9 @@
                     await addingSubCategories(newVertical, newIndustry, industryObject, input);                
     
                     list.vertical = newVertical || "";
-                    list.industry = newIndustry || "";                    
-                    
+                    list.industry = newIndustry || ""; 
+                    list.industryNULLs = forNULLArray || "";                                   
+
                     newIndustry.forEach(industry => {
                         
                         let myVerticals = Object.values(industryObject[industry]);
@@ -3741,13 +3740,55 @@
                         let nextRow = builderSQLArray[i+1] ? builderSQLArray[i+1] : "";
 
                         // Start pushing Industries
-                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("andopv.industryname")) startPushingIndustry = 1;
+                        if (
+                            row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.industryname") 
+                            && !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("oropv.industryname")
+                            && !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname")
+                            && !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")
+                        ) startPushingIndustry = 1;
 
                         // Start pushing Verticals
-                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("andopv.verticalname")) startPushingVertical = 1;
+                        if (
+                            row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname") 
+                            && !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")
+                        ) startPushingVertical = 1;
 
                         // Start pushing Industries with NULL verticals
-                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("oropv.industryname")) startPushingIndustryForNULL = 1;
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.industryname") && row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")) startPushingIndustryForNULL = 1;
+
+                        // Vertical NULL Logic is up case
+                        if (
+                            row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.industryname") 
+                            && !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("oropv.industryname")
+                            && !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname")
+                            && !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")
+
+                            && builderSQLArray[i-1] && builderSQLArray[i-1].replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")
+                            && builderSQLArray[i-1] && !builderSQLArray[i-1].replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("or")
+                            && !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("oropv.industryname")
+                        ) results.rest.extra["USEOR"] = `- Please use OR clause to unite regular Industry logic with NULL Vertical logic.\n`;                      
+                        
+                        // Vertical NULL Logic should not be included
+                        if (
+                            (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.industryname") 
+                            && row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")
+                            || row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.industryname") 
+                            && nextRow.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")
+                            ) && forNULLArray.length == 0
+                        ) results.rest.extra["NULLNOTNEEDED"] = `- Please do not include NULL Vertical logic.\n`;                                              
+
+                        if (
+                            row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname") 
+                            && !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")
+
+                            && builderSQLArray[i-1] && builderSQLArray[i-1].replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")
+                            && builderSQLArray[i-1] && !builderSQLArray[i-1].replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("or")
+                            && !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("oropv.verticalname")
+                        ) results.rest.extra["USEOR"] = `- Please use OR clause to unite regular Vertical logic with NULL Vertical logic.\n`;                                              
+                        
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("andopv.industryname") && row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")) results.rest.extra["ANDERRORNULLS"] = `- Please change the AND to an OR for Industries containing NULL verticals.\n`;
+
+                        if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("oropv.verticalname") && row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")) results.rest.extra["ORERRORNULLS"] = `- Please change the OR to an AND for the NULL verticals.\n`;
 
                         if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
 
@@ -3778,10 +3819,6 @@
                         }                        
                     };
 
-                    console.log(`Array de rows para Verticals:`+builderVerticalRawArray)
-
-                    console.log(`Array de rows para Industries NULLs:`+builderIndustryNULLRawArray)
-
                     let builderInputValueFix = document.getElementById(`input-${filter}-${platform}-peer`).value;
 
                     let builderInputValueFix2 = platform == "marketo" ? document.getElementById(`input-${filter}2-${platform}-peer`).value : "";
@@ -3790,40 +3827,52 @@
 
                     let builderVerticalArray = platform == "SQL" ? chargingBuildersArray(builderVerticalRawArray) : chargingBuildersArray(builderInputValueFix2, "marketo");
 
-                    let builderIndustryNULLArray = platform == "SQL" ? chargingBuildersArray(builderIndustryNULLRawArray) : [];
+                    let builderIndustryNULLArray = platform == "SQL" ? await mashToArray(onlyIndustry, builderIndustryNULLRawArray.join(" ")) ? await mashToArray(onlyIndustry, builderIndustryNULLRawArray.join(" ")) : [] : [];
 
-                    // console.log(`Industries para AND:`+builderIndustryArray);
+                    let perfectVerticals = false;
 
-                    // console.log(`Verticals para AND:`+builderVerticalArray);
-
-                    // console.log(`Industries para NULL:`+builderIndustryNULLArray);
+                    console.log(builderIndustryArray)
+                    
+                    if (JSON.stringify([...builderVerticalArray].sort()) == JSON.stringify([...list.vertical].sort()) && JSON.stringify([...builderIndustryNULLArray].sort()) == JSON.stringify([...list.industryNULLs].sort())) perfectVerticals = true;
                     
                     // Validation for missing things
                     
                     // Industries
-                    
-                    for (let i = 0; i < list.industry.length; i++) {
-                    
-                        let industry = list.industry[i];
-                    
-                        results.industry[industry] = 0;
-                    
-                        if (builderIndustryArray.includes(industry)) results.industry[industry] = 1;
-                    
+
+                    if (perfectVerticals && builderIndustryArray.length == 0) {
+                        
+                        for (let i = 0; i < list.industry.length; i++) results.industry[industry] = 1;
+
+                    } else {
+
+                        for (let i = 0; i < list.industry.length; i++) {
+                        
+                            let industry = list.industry[i];
+                        
+                            results.industry[industry] = 0;
+                        
+                            if (builderIndustryArray.includes(industry)) results.industry[industry] = 1;
+                        
+                        }
                     }
+                    
+
+                    // Industries with Unknown
+
+                    results.industryNULLs = {};
+
+                    for (let i = 0; i < list.industryNULLs.length; i++) {
+                    
+                        let industryNULL = list.industryNULLs[i];                        
+                        
+                        results.industryNULLs[industryNULL] = 0;
+                    
+                        if (builderIndustryNULLArray.includes(industryNULL)) results.industryNULLs[industryNULL] = 1;
+                    
+                    }                    
 
                     
                     // Verticals
-
-                    let unknownIndustries = [];
-
-                    for (let i = 0; i < Object.values(industryObject).length; i++) {
-
-                        let forIndustry = Object.values(industryObject)[i];
-
-                        if (Object.values(forIndustry).includes("Unknown")) unknownIndustries.push(Object.keys(industryObject)[i]);
-
-                    }
                     
                     for (let i = 0; i < list.vertical.length; i++) {                                            
                     
@@ -3878,10 +3927,6 @@
 
                         let builderIndustriesHasUnknown = false;
 
-                        builderIndustryArray.forEach(builderIndustry => {
-                            builderIndustriesHasUnknown = unknownIndustries.some(unknownIndustry => unknownIndustry == builderIndustry);
-                        })
-
                         if (
                             (vertical != "Unknown"                        
                             && !builderVerticalArray.includes(vertical) 
@@ -3913,13 +3958,32 @@
 
                     // Validation for extra things
 
-                    for (let i = 0; i < builderIndustryArray.length; i++) {
+                    // Industries
 
-                        let industry = builderIndustryArray[i];
+                    if (perfectVerticals && builderVerticalArray.length != 0) {
+                       
+                        for (let i = 0; i < builderIndustryArray.length; i++) {
+                            
+                            let industry = builderIndustryArray[i];    
 
-                        if (!list.industry.includes(industry)) results.rest.industry[industry] = 1;
+                            if (!list.industry.includes(industry)) {
+                                results.rest.extra['EXTRAINDUSTRYNOTERROR'] = `The Industry "${industry}" was not required, however due to perfect SubCategory criteria this should not affect the outcome.`;                                            
+                            }                                                    
+                        }    
+                    } else {
 
-                    }
+                        for (let i = 0; i < builderIndustryArray.length; i++) {
+    
+                            let industry = builderIndustryArray[i];
+    
+                            if (!list.industry.includes(industry)) results.rest.industry[industry] = 1;
+    
+                        }
+
+                    }    
+
+
+                    // Verticals
 
                     for (let i = 0; i < builderVerticalArray.length; i++) {
 
@@ -3927,6 +3991,17 @@
 
                         if (!list.vertical.includes(vertical)) results.rest.vertical[vertical] = 1;
                     }
+
+                    // Industries for NULL
+                    results.rest.industryNULLs = {};
+
+                    for (let i = 0; i < builderIndustryNULLArray.length; i++) {
+
+                        let industryForNULL = builderIndustryNULLArray[i];
+
+                        if (!list.industryNULLs.includes(industryForNULL)) results.rest.industryNULLs[industryForNULL] = 1;
+
+                    }                                               
                         
                     list.results = results;
                 
@@ -5040,11 +5115,15 @@
 
                         let newIndustries = list.results.industry;
 
+                        let newIndustriesForNULL = list.results.industryNULLs;
+
                         if (
                             !Object.values(newIndustries).includes(0)
                             && !Object.values(newVerticals).includes(0)
+                            && !Object.values(newIndustriesForNULL).includes(0)
                             && Object.keys(list.results.rest.industry).length == 0
                             && Object.keys(list.results.rest.vertical).length == 0
+                            && Object.keys(list.results.rest.industryNULLs).length == 0
                             && Object.keys(list.results.rest.extra).length == 0
                         ) {
 
@@ -5055,9 +5134,7 @@
                         } else {
 
                             outputBox.value = "";
-
-                            
-                            
+                                                        
                             if (Object.keys(newIndustries).length != 0) {
 
                                 for (let i = 0; i < Object.values(newIndustries).length; i++) {
@@ -5071,6 +5148,25 @@
                                 };
 
                             }
+
+                            if (Object.keys(newIndustriesForNULL).length != 0) {
+
+                                for (let i = 0; i < Object.values(newIndustriesForNULL).length; i++) {
+    
+                                    let booleanValue = Object.values(newIndustriesForNULL)[i];
+
+                                    
+                                    let newIndustryForNULL = Object.keys(newIndustriesForNULL)[i];
+    
+                                    if (booleanValue == 0 && Object.keys(newIndustries).length > 1) { 
+                                        outputBox.value = outputBox.value.concat(`- Please apply NULL Vertical logic for the Industry "${newIndustryForNULL}".\n`)
+                                    } else if (Object.keys(newIndustries).length == 1) {
+                                        outputBox.value = outputBox.value.concat(`- NULL Vertical logic for the Industry "${newIndustryForNULL}".\n`)
+                                    }
+                                
+                                };
+
+                            }                            
 
                             if (Object.keys(newVerticals).length != 0) {
 
@@ -5104,6 +5200,19 @@
                                 }
 
                             }
+
+                            if (Object.keys(list.results.rest.industryNULLs).length != 0) {
+                                
+                                for (let i = 0; i < Object.values(list.results.rest.industryNULLs).length; i++) {
+    
+                                    let booleanValue = Object.values(list.results.rest.industryNULLs)[i];
+    
+                                    let notRequiredIndustryForNULL = Object.keys(list.results.rest.industryNULLs)[i];
+    
+                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Industry "${notRequiredIndustryForNULL}" was not required / should not be included in NULL Vertical logic.\n`);
+                                }
+
+                            }                            
 
                             if (Object.keys(list.results.rest.vertical).length != 0) {
 
@@ -5646,7 +5755,7 @@
         
                         newIndustryArray = newIndustryArray.map(industry => `'${industry}'`);
         
-                        newVerticalArray = newVerticalArray.map(vertical => `'${vertical}'`);
+                        newVerticalArray = newVerticalArray.map(vertical => `'${vertical}'`);                                                
 
                         let warningMessage = document.getElementById(`warning-${filter}-${platform}-build1`);
                         
@@ -5654,12 +5763,14 @@
 
                             if (forNULLArray.length == 0) {
 
-                                outputBox.value = `AND OPV.IndustryName in (\n\t${newIndustryArray.join(`,\n\t`)}\n)\n\n${newVerticalArray.length !== 0 ? `AND OPV.VerticalName in (\n\t${newVerticalArray.join(`,\n\t`)}\n)` : ""}`;
+                                outputBox.value = `${newIndustryArray.length !== 0 ? `AND OPV.IndustryName in (\n\t${newIndustryArray.join(`,\n\t`)}\n)\n\n` : ""}${newVerticalArray.length !== 0 ? `AND OPV.VerticalName in (\n\t${newVerticalArray.join(`,\n\t`)}\n)` : ""}`;
                                 outputBox.classList.add("resizeBox");
 
                             } else {
 
-                                outputBox.value = `AND (\n\tAND OPV.IndustryName in (\n\t\t${newIndustryArray.join(`,\n\t\t`)}\n\t)\n\n\t${newVerticalArray.length !== 0 ? `AND OPV.VerticalName in (\n\t\t${newVerticalArray.join(`,\n\t\t`)}\n\t)` : ""}\n\tOR OPV.IndustryName in (${forNULLArray.join(`, `)}) AND OPV.VerticalName is NULL\n)`;
+                                forNULLArray = forNULLArray.map(Industry => `'${Industry}'`);
+
+                                outputBox.value = `AND (\n\t${newIndustryArray.length !== 0 ? `OPV.IndustryName in (\n\t\t${newIndustryArray.join(`,\n\t\t`)}\n\t)\n\n` : ""}\t${newVerticalArray.length !== 0 ? `AND OPV.VerticalName in (\n\t\t${newVerticalArray.join(`,\n\t\t`)}\n\t)` : ""}\n\tOR OPV.IndustryName in (${forNULLArray.join(`, `)}) AND OPV.VerticalName is NULL\n)`;
                                 outputBox.classList.add("resizeBox"); 
                                 forNULLArray.length = 0;
 
