@@ -119,214 +119,34 @@ Para evitar problemas con \n replace por ""
 
 
 
+SDSs usually must analyze meticulously the information received through MaSH filters in Service Requests. This often involves converting the data into the required format for the specific task and platform, like SQL Code Scripts for the UCMP database or values for Marketo programs.
 
+This leads to human errors, that vary depending on the builder of the task, adds unnecessary time dedicated to analyze the request, and harms the quality of the process.
 
+Here in the right image we have an example of a typical service request filter and as you can see...the text bubble isn't happy either.
 
+Checking some numbers, since the beginning of the FY26 
 
+forty seven percent of the tasks included segments or industries, 
 
+seventy two percent included audience filters and - this is the most important number - forty six percent of the tasks included both categories, which implies duplicating the manual analysis of the request.
 
 
+So the idea here...is called FieldFlex.
 
 
+With the FieldFlex tool, this analysis process is eliminated. The text extracted directly from the MaSH filters is automatically converted into the required format, based on the filter, and task involved, saving two-to-fourteen minutes from the time effort.
 
+This ensures:
 
+Standardization & Quality of the process across centers
 
+Less margin error or rejection percentage for the data team, globally
 
+and Less time per MaSH stage, avoiding task delays
 
+So we are moving from...
 
+So now moving to the best part I'm going to show you the magic trick.
 
 
-let builderIndustryArray = platform == "SQL" ? chargingBuildersArray(builderIndustryRawArray) : chargingBuildersArray(builderInputValueFix, "marketo");
-
-
-Banking (All Verticals), Automotive (Vehicle OEM), Automotive (Unknown)
-
-
-AND (
-	AND OPV.IndustryName in (
-		'Automotive',
-		'Banking'
-	)
-
-	AND OPV.VerticalName in (
-		'Vehicle OEM',
-		'Universal Banks',
-		'Banking'
-	)
-	OR OPV.IndustryName in ('Automotive') AND OPV.VerticalName is NULL
-)
-
-
-
-Banking (All Verticals), Automotive (Unknown)
-
-
-
-
-AND (
-	AND OPV.IndustryName in (
-		'Banking'
-	)
-
-)
-
-
-
-
-
-
-Banking (All Verticals), Automotive (Vehicle OEM)
-
-
-AND (
-	AND OPV.IndustryName in (
-		'Automotive',
-		'Banking'
-	)
-
-	AND OPV.VerticalName in (
-		'Vehicle OEM',
-		'Universal Banks',
-		'Banking'
-	)
-	OR OPV.IndustryName in ('Automotive') AND OPV.VerticalName is NULL
-)
-
-
-
-AND (
-	AND OPV.IndustryName in (
-		'Automotive',
-		'Banking'
-	)
-
-	AND OPV.VerticalName in (
-		'Vehicle OEM',
-		'Universal Banks',
-		'Banking'
-	)
-)
-
-
-
-Banking (All Verticals), Automotive (Unknown)
-
-
-AND (
-	AND OPV.IndustryName in (
-		'Banking'
-	)
-OR OPV.IndustryName in ('Automotive') AND OPV.VerticalName is NULL
-
-)
-
-
-
-
-
-
-
-
-
-Automotive (All Verticals)
-
-Banking (Unknown)
-
-
-
-
-OPV.IndustryName in (
-		'Automotive'
-)
-	
-OR OPV.IndustryName in ('Banking') AND OPV.VerticalName is NULL
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Pass 2
-
-'Strategic - Commercial', 
-'Major - Other', 
-'Upper Majors - Education',
-'Upper Majors - Government', 
-'SME&C - Corporate Commercial',
-'SME&C - Corporate Education',
-'SME&C - Corporate Government'			
-
-Pass3
-				
-'SME&C - SMB Commercial',
-'SME&C Commercial - SMB Default',
-'SME&C - SMB Education',
-'SME&C - SMB Government',
-'High Value Individual',
-'UnSegmented'
-
-
-
-                        if ()
-                        list.subSegments = newSubSegments || "";
-                        list.segments = newSegments || "";
-
-
-
-
-
-
-
-
-Pass2
-
-
-
-/**Filters on specific list pulls - these filters vary based on request, so are in WHERE clause for easier editing**/
-/**ORG CLASSIFCATION**/
-				AND
-				LL.[sub segment] in 
-				(
-				--EC
-				'Strategic - Commercial',	'Major - Other',
-				--PS
-				'Upper Majors - Education','Upper Majors - Government',
-				--SMC
-				'SME&C - Corporate Commercial','SME&C - Corporate Education','SME&C - Corporate Government'
-				)
-
-
-
-
-Pass 3
-
-/**Filters on specific list pulls - these filters vary based on request, so are in WHERE clause for easier editing**/
-/**ORG CLASSIFCATION**/
-AND  
-(
-				
---For SMB/HVI and N/A Selection only
-				
-				IsNull(IPV.[SubSegmentName],'UnSegmented') in /*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSubSegment)*/
-				(
-				--Small, Medium & Corporate Commercial - SMB
-     			'SME&C - SMB Commercial',
-				'SME&C Commercial - SMB Default',
-				'SME&C - SMB Education',
-				'SME&C - SMB Government',
-				
-				/*High Value Individual*/ 
-				'High Value Individual',
-				
-				/*'UnSegmented'*/ 
-				'UnSegmented'
-				)
-				)

@@ -6328,7 +6328,9 @@
                     title.append(imgLogo);
                     currentSection.append(article1, article2);
                     article1.append(title, subtitle, formInputs);
-                    formInputs.append(formTitle1, containerInputMash, selectorPassTitle, selectorPass, formTitle2, containerOutput);
+                    filter == "segments" ? formInputs.append(formTitle1, containerInputMash, selectorPassTitle, selectorPass, formTitle2, containerOutput)
+                    : formInputs.append(formTitle1, containerInputMash, formTitle2, containerOutput);
+
                     containerInputMash.append(containerInputMash2, warningMessage, convertButton);
                     containerInputMash2.append(inputMaSH);
                     containerOutput.append(output);
