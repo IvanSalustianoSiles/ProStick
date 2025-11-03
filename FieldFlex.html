@@ -3130,7 +3130,6 @@
 
         if (subCategory == true) {
 
-            
             filterInput = extractBrakets(filterInput);
 
             subValuesNotInBrackets.forEach((subValue) => {
@@ -3523,7 +3522,7 @@
                         
                         let newSegments = await mashToArray(onlySegments, input);
 
-                        let newSubSegments = await mashToArray(onlySubSegments, input);                        
+                        let newSubSegments = await mashToArray(onlySubSegments, input, true, segments);                        
         
                         list.subSegments = newSubSegments || "";
                         list.segments = newSegments || "";
@@ -3539,164 +3538,280 @@
                                 extra: {}
                             }
                         }
-
-                        builderSQLArray = extractActiveSqlLines(builderInputValue);
-
-                        let builderSegmentsRawArray = [];
-
-                        let builderSubSegmentsRawArray = [];
-
-                        let startPushingSegments = 0;
-
-                        let startPushingSubSegments = 0;
-
-                        for (let i = 0; i < builderSQLArray.length; i++) {
-
-                            let row = builderSQLArray[i];
-
-                            let nextRow = builderSQLArray[i+1] ? builderSQLArray[i+1] : "";
-
-                            if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.segmentname")) startPushingSegments = 1;
-
-                            if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.subsegmentname")) startPushingSubSegments = 1;
-
-                            if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
-
-                            if (row[row.length - 1] == ")" && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oripv")) results.rest.extra["ORERROR"] = `- Please change the between filters for an AND.\n`;
-                    
-                            if (startPushingSegments == 1) {
-                                
-                                builderSegmentsRawArray.push(row);
-
-                                if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingSegments = 0;
-                                
-                            }
-
-                            if (startPushingSubSegments == 1) {
-                                
-                                builderSubSegmentsRawArray.push(row);
-                                
-                                if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingSubSegments = 0;
-
-                            }
-                        };
-
-                        let builderInputValueFix = document.getElementById(`input-${filter}-${platform}-peer`).value;
-
-                        let builderInputValueFix2 = platform == "marketo" ? document.getElementById(`input-${filter}2-${platform}-peer`).value : "";
-
-                        let builderSegmentsArray = platform == "SQL" ? chargingBuildersArray(builderSegmentsRawArray) : chargingBuildersArray(builderInputValueFix, "marketo");
-
-                        let builderSubSegmentsArray = platform == "SQL" ? chargingBuildersArray(builderSubSegmentsRawArray) : chargingBuildersArray(builderInputValueFix2, "marketo");
-
-                        // Validation for missing things
-
-
-                        // Segments
-
-                        for (let i = 0; i < list.segments.length; i++) {
                         
-                            let segment = list.segments[i];
+                        let selectorPass = document.getElementById("selectorPass-peer");
 
-                            results.segments[segment] = 0;
+                        if (selectorPass.value.toLowerCase().includes("pass 1")) {
 
-                            if (builderSegmentsArray.includes(segment)) results.segments[segment] = 1;
-
-                        }
-
-                        // SubSegments
-
-                        for (let i = 0; i < list.subSegments.length; i++) {
-                            
-                            let subSegment = list.subSegments[i];
-
-                            let segment;
-                            
-                            let otherSubSegmentsBoolean = false;
-
-                            results.subSegments[subSegment] = 0;
-
-                            if (builderSubSegmentsArray.includes(subSegment)) { results.subSegments[subSegment] = 1; continue };
-
-                            for (let k = 0; k < Object.values(segments).length; k++) {
-
-                                let forSegment = Object.values(segments)[k];
-
-                                for (let j = 0; j < Object.values(forSegment).length; j++) {
-
-                                    let forSubSegment = Object.values(forSegment)[j];
-
-                                    if (subSegment == forSubSegment) {
-
-                                        segment = Object.keys(segments)[k];
-
-                                    }
-
+                            builderSQLArray = extractActiveSqlLines(builderInputValue);
+    
+                            let builderSegmentsRawArray = [];
+    
+                            let builderSubSegmentsRawArray = [];
+    
+                            let startPushingSegments = 0;
+    
+                            let startPushingSubSegments = 0;
+    
+                            for (let i = 0; i < builderSQLArray.length; i++) {
+    
+                                let row = builderSQLArray[i];
+    
+                                let nextRow = builderSQLArray[i+1] ? builderSQLArray[i+1] : "";
+    
+                                if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.segmentname")) startPushingSegments = 1;
+    
+                                if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.subsegmentname")) startPushingSubSegments = 1;
+    
+                                if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
+    
+                                if (row[row.length - 1] == ")" && nextRow.includes("OR") || row.replace(/ /g, "").includes("OR(") || row.replace(/ /g, "").toLowerCase().includes("oripv")) results.rest.extra["ORERROR"] = `- Please change the between filters for an AND.\n`;
+                        
+                                if (startPushingSegments == 1) {
+                                    
+                                    builderSegmentsRawArray.push(row);
+    
+                                    if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingSegments = 0;
+                                    
+                                }
+    
+                                if (startPushingSubSegments == 1) {
+                                    
+                                    builderSubSegmentsRawArray.push(row);
+                                    
+                                    if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingSubSegments = 0;
+    
                                 }
                             };
-
-                            let noSubSegmentsInBuild = true;
-
-                            let allSubSegmentsInMaSH = true;
-
-                            for (let l = 0; l < Object.values(segments[segment]).length; l++) {
+    
+                            let builderInputValueFix = document.getElementById(`input-${filter}-${platform}-peer`).value;
+    
+                            let builderInputValueFix2 = platform == "marketo" ? document.getElementById(`input-${filter}2-${platform}-peer`).value : "";
+    
+                            let builderSegmentsArray = platform == "SQL" ? chargingBuildersArray(builderSegmentsRawArray) : chargingBuildersArray(builderInputValueFix, "marketo");
+    
+                            let builderSubSegmentsArray = platform == "SQL" ? chargingBuildersArray(builderSubSegmentsRawArray) : chargingBuildersArray(builderInputValueFix2, "marketo");
+    
+                            // Validation for missing things
+    
+    
+                            // Segments
+    
+                            for (let i = 0; i < list.segments.length; i++) {
+                            
+                                let segment = list.segments[i];
+    
+                                results.segments[segment] = 0;
+    
+                                if (builderSegmentsArray.includes(segment)) results.segments[segment] = 1;
+    
+                            }
+    
+                            // SubSegments
+    
+                            for (let i = 0; i < list.subSegments.length; i++) {
                                 
-                                let DBSubSegment = Object.values(segments[segment])[l];
-
-                                if (builderSubSegmentsArray.includes(DBSubSegment)) noSubSegmentsInBuild = false;
-
-                                if (!list.subSegments.includes(DBSubSegment)) allSubSegmentsInMaSH = false;
-                    
-                            }
-
-                            for (let r = 0; r < builderSubSegmentsArray.length; r++) {
-
-                                let builderSubSegment = builderSubSegmentsArray[r];
-
-                                if (!segment.includes(builderSubSegment)) otherSubSegmentsBoolean = true;
-                            }
-
-                            if (
-                                !builderSubSegmentsArray.includes(subSegment) && builderSegmentsArray.includes(segment)
-                                && noSubSegmentsInBuild && allSubSegmentsInMaSH && !otherSubSegmentsBoolean
-                            ) {
-
-                                results.subSegments[subSegment] = 1;
-
-                                continue;
-                            
-                            } 
-
-                            if (
-                                builderSubSegmentsArray.includes(subSegment) && !builderSegmentsArray.includes(segment)
-                            ) {
-
-                                results.rest.extra[subSegment] = `The SubSegment "${subSegment}" is included but its Segment ("${segment}") is not.`;
-                            
-                                continue;
-
-                            }
-
-                        }
-
-                        // Validation for extra things
-
-                        for (let i = 0; i < builderSegmentsArray.length; i++) {
-
-                            let segment = builderSegmentsArray[i];
-
-                            if (!list.segments.includes(segment)) results.rest.segments[segment] = 1;
-
-                        }
-
-                        for (let i = 0; i < builderSubSegmentsArray.length; i++) {
-
-                            let subSegment = builderSubSegmentsArray[i];
-
-                            if (!list.subSegments.includes(subSegment)) results.rest.subSegments[subSegment] = 1;
-                        }                                                
+                                let subSegment = list.subSegments[i];
+    
+                                let segment;
+                                
+                                let otherSubSegmentsBoolean = false;
+    
+                                results.subSegments[subSegment] = 0;
+    
+                                if (builderSubSegmentsArray.includes(subSegment)) { results.subSegments[subSegment] = 1; continue };
+    
+                                for (let k = 0; k < Object.values(segments).length; k++) {
+    
+                                    let forSegment = Object.values(segments)[k];
+    
+                                    for (let j = 0; j < Object.values(forSegment).length; j++) {
+    
+                                        let forSubSegment = Object.values(forSegment)[j];
+    
+                                        if (subSegment == forSubSegment) {
+    
+                                            segment = Object.keys(segments)[k];
+    
+                                        }
+    
+                                    }
+                                };
+    
+                                let noSubSegmentsInBuild = true;
+    
+                                let allSubSegmentsInMaSH = true;
+    
+                                for (let l = 0; l < Object.values(segments[segment]).length; l++) {
+                                    
+                                    let DBSubSegment = Object.values(segments[segment])[l];
+    
+                                    if (builderSubSegmentsArray.includes(DBSubSegment)) noSubSegmentsInBuild = false;
+    
+                                    if (!list.subSegments.includes(DBSubSegment)) allSubSegmentsInMaSH = false;
                         
-                        list.results = results;
+                                }
+    
+                                for (let r = 0; r < builderSubSegmentsArray.length; r++) {
+    
+                                    let builderSubSegment = builderSubSegmentsArray[r];
+    
+                                    if (!segment.includes(builderSubSegment)) otherSubSegmentsBoolean = true;
+                                }
+    
+                                if (
+                                    !builderSubSegmentsArray.includes(subSegment) && builderSegmentsArray.includes(segment)
+                                    && noSubSegmentsInBuild && allSubSegmentsInMaSH && !otherSubSegmentsBoolean
+                                ) {
+    
+                                    results.subSegments[subSegment] = 1;
+    
+                                    continue;
+                                
+                                } 
+    
+                                if (
+                                    builderSubSegmentsArray.includes(subSegment) && !builderSegmentsArray.includes(segment)
+                                ) {
+    
+                                    results.rest.extra[subSegment] = `The SubSegment "${subSegment}" is included but its Segment ("${segment}") is not.`;
+                                
+                                    continue;
+    
+                                }
+    
+                            }
+    
+                            // Validation for extra things
+    
+                            for (let i = 0; i < builderSegmentsArray.length; i++) {
+    
+                                let segment = builderSegmentsArray[i];
+    
+                                if (!list.segments.includes(segment)) results.rest.segments[segment] = 1;
+    
+                            }
+    
+                            for (let i = 0; i < builderSubSegmentsArray.length; i++) {
+    
+                                let subSegment = builderSubSegmentsArray[i];
+    
+                                if (!list.subSegments.includes(subSegment)) results.rest.subSegments[subSegment] = 1;
+                            }                                                
+                            
+                            list.results = results;
+                        
+                        } else if (selectorPass.value.toLowerCase().includes("pass 2") || selectorPass.value.toLowerCase().includes("pass 3")) {
+
+                            // MaSH
+                            if (selectorPass.value.toLowerCase().includes('pass 2')) {
+                                
+                                let newSubSegmentsPass2 = [];
+
+                                newSubSegments.forEach(newSubSegment => {
+
+                                    if (subSegmentsPass2.includes(newSubSegment)) newSubSegmentsPass2.push(newSubSegment);
+                                
+                                })
+                                
+                                list.subSegments = newSubSegmentsPass2 || "";
+                                list.segments = newSegments || "";
+
+                                newSubSegments = newSubSegmentsPass2;
+
+                            } else if (selectorPass.value.toLowerCase().includes('pass 3')) {
+                                
+                                let newSubSegmentsPass3 = [];
+
+                                newSubSegments.forEach(newSubSegment => {
+
+                                    if (subSegmentsPass3.includes(newSubSegment)) newSubSegmentsPass3.push(newSubSegment);
+                                
+                                })
+
+                                list.subSegments = newSubSegmentsPass3 || "";
+                                list.segments = newSegments || "";
+
+                                newSubSegments = newSubSegmentsPass3;
+
+                            }    
+
+                            // Builder
+
+                            builderSQLArray = extractActiveSqlLines(builderInputValue);
+    
+                            let builderSegmentsRawArray = [];
+    
+                            let builderSubSegmentsRawArray = [];
+    
+                            let startPushingSegments = 0;
+    
+                            let startPushingSubSegments = 0;
+    
+                            for (let i = 0; i < builderSQLArray.length; i++) {
+    
+                                let row = builderSQLArray[i];
+    
+                                let nextRow = builderSQLArray[i+1] ? builderSQLArray[i+1] : "";
+    
+                                if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.segmentname")) startPushingSegments = 1;
+    
+                                if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.subsegmentname") || row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ll.subsegment")) startPushingSubSegments = 1;
+    
+                                if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ipv.") && selectorPass.value.toLowerCase().includes("pass 2")) results.rest.extra["notLLTable"] = 'Please use LL Table for Pass 2 and not IPV.'
+
+                                if (row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("ll.") && selectorPass.value.toLowerCase().includes("pass 3")) results.rest.extra["notIPVTable"] = 'Please use IPV Table for Pass 3 and not LL.'
+                                
+                                if (row.replace(/ /g, "").includes("()") || row.replace(/ /g, "").includes(`""`) || row.replace(/ /g, "").includes(`''`)) results.rest.extra["parenthesis"] = "- Parenthesis shouldn't be empty.\n";
+    
+                                if (row[row.length - 1] == ")" && nextRow.toLowerCase().includes("or") || row.replace(/ /g, "").toLowerCase().includes("or(") || row.replace(/ /g, "").replace(/\n/g, "").replace(/\t/g, "").toLowerCase() == "or" || row.replace(/ /g, "").toLowerCase().includes("oripv") || row.replace(/ /g, "").toLowerCase().includes("orll")) results.rest.extra["ORERROR"] = `- Please change the OR between filters for an AND.\n`;
+                        
+                                if (startPushingSegments == 1) {
+                                    
+                                    builderSegmentsRawArray.push(row);
+    
+                                    if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingSegments = 0;
+                                    
+                                }
+    
+                                if (startPushingSubSegments == 1) {
+                                    
+                                    builderSubSegmentsRawArray.push(row);
+                                    
+                                    if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingSubSegments = 0;
+    
+                                }
+                            };
+    
+                            let builderSegmentsArray = chargingBuildersArray(builderSegmentsRawArray);
+    
+                            let builderSubSegmentsArray =  selectorPass.value.toLowerCase().includes("pass 2") ? await mashToArray(subSegmentsPass2, builderSubSegmentsRawArray.join(" ")) : await mashToArray(subSegmentsPass3, builderSubSegmentsRawArray.join(" "));
+    
+                            // Validation for missing things
+
+                            // SubSegments
+    
+                            for (let i = 0; i < list.subSegments.length; i++) {
+                            
+                                let subSegment = list.subSegments[i];
+    
+                                results.subSegments[subSegment] = 0;
+    
+                                if (builderSubSegmentsArray.includes(subSegment)) results.subSegments[subSegment] = 1;
+    
+                            }                            
+    
+                            // Validation for extra things
+    
+                            for (let i = 0; i < builderSubSegmentsArray.length; i++) {
+    
+                                let subSegment = builderSubSegmentsArray[i];
+    
+                                if (!list.subSegments.includes(subSegment)) results.rest.subSegments[subSegment] = 1;
+                            }                                                
+                            
+                            list.results = results;                            
+                        }
                         
                     }
     
@@ -5116,12 +5231,23 @@
 
                         let newSegments = list.results.segments;
 
+                        let selectorPass = document.getElementById("selectorPass-peer");
+
                         if (
-                            !Object.values(newSegments).includes(0)
-                            && !Object.values(newSubSegments).includes(0)
-                            && Object.keys(list.results.rest.segments).length == 0
-                            && Object.keys(list.results.rest.subSegments).length == 0
-                            && Object.keys(list.results.rest.extra).length == 0
+                            selectorPass.value.toLowerCase().includes("pass 1") &&
+                            (
+                                !Object.values(newSegments).includes(0)
+                                && !Object.values(newSubSegments).includes(0)
+                                && Object.keys(list.results.rest.segments).length == 0
+                                && Object.keys(list.results.rest.subSegments).length == 0
+                                && Object.keys(list.results.rest.extra).length == 0
+                            )
+                            || (selectorPass.value.toLowerCase().includes("pass 2") || selectorPass.value.toLowerCase().includes("pass 3")) &&
+                            (
+                                !Object.values(newSubSegments).includes(0)
+                                && Object.keys(list.results.rest.subSegments).length == 0
+                                && Object.keys(list.results.rest.extra).length == 0
+                            )
                         ) {
 
                             outputBox.value = "";
@@ -5132,71 +5258,109 @@
 
                             outputBox.value = "";
 
+                            if (selectorPass.value.toLowerCase().includes("pass 1")) {
 
-                            if (Object.keys(newSegments).length != 0) {
-
-                                for (let i = 0; i < Object.values(newSegments).length; i++) {
+                                if (Object.keys(newSegments).length != 0) {
     
-                                    let booleanValue = Object.values(newSegments)[i];
+                                    for (let i = 0; i < Object.values(newSegments).length; i++) {
+        
+                                        let booleanValue = Object.values(newSegments)[i];
+        
+                                        let newSegment = Object.keys(newSegments)[i];
+        
+                                        if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Segment "${newSegment}" is missing.\n`);
+                                    };
     
-                                    let newSegment = Object.keys(newSegments)[i];
-    
-                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The Segment "${newSegment}" is missing.\n`);
-                                };
-
-                            }
-
-
-                            if (Object.keys(newSubSegments).length != 0) {
-
-                                for (let i = 0; i < Object.values(newSubSegments).length; i++) {
-    
-                                    let booleanValue = Object.values(newSubSegments)[i];
-    
-                                    let newSubSegment = Object.keys(newSubSegments)[i];
-    
-                                    if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The SubSegment "${newSubSegment}" is missing.\n`);
                                 }
-
-                            }
-
-
-                            if (Object.keys(list.results.rest.segments).length != 0) {
-                                
-                                for (let i = 0; i < Object.values(list.results.rest.segments).length; i++) {
     
-                                    let booleanValue = Object.values(list.results.rest.segments)[i];
     
-                                    let notRequiredSegment = Object.keys(list.results.rest.segments)[i];
+                                if (Object.keys(newSubSegments).length != 0) {
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Segment "${notRequiredSegment}" was not required / should not be included.\n`);
+                                    for (let i = 0; i < Object.values(newSubSegments).length; i++) {
+        
+                                        let booleanValue = Object.values(newSubSegments)[i];
+        
+                                        let newSubSegment = Object.keys(newSubSegments)[i];
+        
+                                        if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The SubSegment "${newSubSegment}" is missing.\n`);
+                                    }
+    
                                 }
-
-                            }
-
-                            if (Object.keys(list.results.rest.subSegments).length != 0) {
-
-                                for (let i = 0; i < Object.values(list.results.rest.subSegments).length; i++) {
     
-                                    let booleanValue = Object.values(list.results.rest.subSegments)[i];
     
-                                    let notRequiredSubSegment = Object.keys(list.results.rest.subSegments)[i];
+                                if (Object.keys(list.results.rest.segments).length != 0) {
+                                    
+                                    for (let i = 0; i < Object.values(list.results.rest.segments).length; i++) {
+        
+                                        let booleanValue = Object.values(list.results.rest.segments)[i];
+        
+                                        let notRequiredSegment = Object.keys(list.results.rest.segments)[i];
+        
+                                        if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The Segment "${notRequiredSegment}" was not required / should not be included.\n`);
+                                    }
     
-                                    if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The SubSegment "${notRequiredSubSegment}" was not required / should not be included.\n`);
                                 }
-
-                            }
-
-                            if (Object.keys(list.results.rest.extra).length != 0) {
-
-                                for (let i = 0; i < Object.values(list.results.rest.extra).length; i++) {
     
-                                    outputBox.value = outputBox.value.concat(Object.values(list.results.rest.extra)[i]);
-
+                                if (Object.keys(list.results.rest.subSegments).length != 0) {
+    
+                                    for (let i = 0; i < Object.values(list.results.rest.subSegments).length; i++) {
+        
+                                        let booleanValue = Object.values(list.results.rest.subSegments)[i];
+        
+                                        let notRequiredSubSegment = Object.keys(list.results.rest.subSegments)[i];
+        
+                                        if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The SubSegment "${notRequiredSubSegment}" was not required / should not be included.\n`);
+                                    }
+    
                                 }
-
+    
+                                if (Object.keys(list.results.rest.extra).length != 0) {
+    
+                                    for (let i = 0; i < Object.values(list.results.rest.extra).length; i++) {
+        
+                                        outputBox.value = outputBox.value.concat(Object.values(list.results.rest.extra)[i]);
+    
+                                    }
+    
+                                }
+                            } else if (selectorPass.value.toLowerCase().includes("pass 2") || selectorPass.value.toLowerCase().includes("pass 3")) {    
+    
+                                if (Object.keys(newSubSegments).length != 0) {
+    
+                                    for (let i = 0; i < Object.values(newSubSegments).length; i++) {
+        
+                                        let booleanValue = Object.values(newSubSegments)[i];
+        
+                                        let newSubSegment = Object.keys(newSubSegments)[i];
+        
+                                        if (booleanValue == 0) outputBox.value = outputBox.value.concat(`- The SubSegment "${newSubSegment}" is missing.\n`);
+                                    }
+    
+                                }
+    
+                                if (Object.keys(list.results.rest.subSegments).length != 0) {
+    
+                                    for (let i = 0; i < Object.values(list.results.rest.subSegments).length; i++) {
+        
+                                        let booleanValue = Object.values(list.results.rest.subSegments)[i];
+        
+                                        let notRequiredSubSegment = Object.keys(list.results.rest.subSegments)[i];
+        
+                                        if (booleanValue == 1) outputBox.value = outputBox.value.concat(`- The SubSegment "${notRequiredSubSegment}" was not required / should not be included.\n`);
+                                    }
+    
+                                }
+    
+                                if (Object.keys(list.results.rest.extra).length != 0) {
+    
+                                    for (let i = 0; i < Object.values(list.results.rest.extra).length; i++) {
+        
+                                        outputBox.value = outputBox.value.concat(Object.values(list.results.rest.extra)[i]);
+    
+                                    }
+    
+                                }                                
                             }
-
                         }
 
                         outputBox.classList.add("resizeBox");
@@ -5250,9 +5414,7 @@
                                     let booleanValue = Object.values(newIndustriesForNULL)[i];
 
                                     
-                                    let newIndustryForNULL = Object.keys(newIndustriesForNULL)[i];
-                                    
-                                    console.log(newIndustries)
+                                    let newIndustryForNULL = Object.keys(newIndustriesForNULL)[i];                                    
 
                                     if (booleanValue == 0 && 
                                     !(Object.keys(newIndustries).length == 1 && Object.keys(newIndustriesForNULL).length == 1 && Object.keys(newIndustriesForNULL)[0] == Object.keys(newIndustries)[0])
