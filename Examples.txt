@@ -94,9 +94,9 @@ Peer review tiene que:
 
 -Revisar que estén todos los industries y todos los verticals, que no sobre ninguno - CHECK
 
--Si los verticals están perfectos, pueden sobrar industries o que no haya ninguno, pero tiene que ser AND
+-Si los verticals están perfectos, pueden sobrar industries o que no haya ninguno, pero tiene que ser AND - check
 
--Si hay un solo industry, y es All Verticals, puede no haber verticals, pero, si hubiera otro industry, tienen que estar todos sus verticals
+-Si hay un solo industry, y es All Verticals, puede no haber verticals, pero, si hubiera otro industry, tienen que estar todos sus verticals - check
 
 Lógica Unknown:
 
@@ -104,9 +104,9 @@ Lógica Unknown:
 
 - El OR de Unknown tiene que estar dentro del paréntesis con el AND
 
-- Puede no haber Unknown si hay un sólo industry all verticals
+- Puede no haber Unknown si hay un sólo industry all verticals - check
 
-- Si es All verticals, puede tanto estar en el filtro de NULL como no
+- Si es All verticals, puede tanto estar en el filtro de NULL como no - CHECK
 
 
 
@@ -157,15 +157,18 @@ AND (
 )
 
 
-problema con builderverticalrowarray, no termina de tomar rows en )
+
+Banking (All Verticals), Automotive (Unknown)
 
 
 
 
+AND (
+	AND OPV.IndustryName in (
+		'Banking'
+	)
 
-
-
-
+)
 
 
 
@@ -206,19 +209,13 @@ AND (
 
 
 
+Banking (All Verticals), Automotive (Unknown)
 
 
-
-
-
+AND (
 	AND OPV.IndustryName in (
-		'Automotive',
 		'Banking'
 	)
+OR OPV.IndustryName in ('Automotive') AND OPV.VerticalName is NULL
 
-	AND OPV.VerticalName in (
-		'Vehicle OEM',
-		'Universal Banks',
-		'Banking'
-	)
-
+)

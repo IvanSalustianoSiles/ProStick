@@ -3675,7 +3675,7 @@
 
                     let newVertical = await mashToArray(onlyVertical, input, true, industryObject);
 
-                    let newIndustry = await mashToArray(onlyIndustry, input); 
+                    let newIndustry = await mashToArray(onlyIndustry, input);                    
                     
                     let newIndustryCopy = newIndustry; 
 
@@ -3683,6 +3683,7 @@
     
                     list.vertical = newVertical || "";
                     list.industry = newIndustry || ""; 
+
                     list.industryNULLs = forNULLArray || "";                                   
 
                     newIndustry.forEach(industry => {
@@ -3696,15 +3697,20 @@
                             if (newVertical.includes(myVerticals.length[h])) isThereAnyVertical = true;
                         
                         }
-                        
-                        if (!isThereAnyVertical && input.includes(`${industry} (Unknown)`) && !(input.includes(`${industry} (All`) && newVertical.length == 0)) newIndustryCopy = newIndustryCopy.filter(smallIndustry => smallIndustry != industry);
+
+                        if (
+                            (!isThereAnyVertical && input.includes(`${industry} (Unknown)`) && !(input.includes(`${industry} (All`) && newVertical.length == 0))
+                            
+                        ) newIndustryCopy = newIndustryCopy.filter(smallIndustry => smallIndustry != industry);
                         
                     })
 
                     newIndustry = newVertical.length != 0 ? newIndustry.filter(industry => categoriesThatContainSomeNotNull.includes(industry)) : newIndustryCopy;                    
                     // rajar de acá sólo es obligatorio si no hay verticals, digo para peer review
 
-                    categoriesThatContainSomeNotNull.length = 0;  
+                    categoriesThatContainSomeNotNull.length = 0; 
+                    
+                    list.industry = newIndustry;
                     
 
                     // PEER LOGIC
@@ -3777,6 +3783,35 @@
                             ) && forNULLArray.length == 0
                         ) results.rest.extra["NULLNOTNEEDED"] = `- Please do not include NULL Vertical logic.\n`;                                              
 
+                        // If there is Vertical NULL Logic, all the code must be inside AND ()
+                        if (
+                            // Contains Vertical NULL Logic
+                            row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.industryname")                             
+                            && (
+                                row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname")
+                                || nextRow.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname")
+                            )
+                            && (
+                                row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")
+                                || nextRow.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")
+                            )
+                            
+                            && !(
+                                // And starts with AND (
+                                (
+                                    builderSQLArray[0].replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes('and(')
+                                    || builderSQLArray[0].replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes('and')
+                                    && builderSQLArray[1].replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes('(')    
+                                )
+                                // And ends with at least ) )
+                                && (
+                                    builderSQLArray[builderSQLArray.length - 1].replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes('))')
+                                    || builderSQLArray[builderSQLArray.length - 1].replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(')')
+                                    && builderSQLArray[builderSQLArray.length - 2].replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes(')')    
+                                )  
+                            )                          
+                        ) results.rest.extra["NOTOUTSIDEAND"] = `- Please make sure to put all the logic inside an AND before using Vertical NULL logic. Otherwise you will get:\n"All the filters of the main query OR Vertical NULL logic".\nAnd you need to get:\n"All the filters of the main query AND (Your Industries AND Your Verticals OR Your Vertical Unknowns for the specific Industries)".\n`;                                              
+
                         if (
                             row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("opv.verticalname") 
                             && !row.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "").toLowerCase().includes("null")
@@ -3798,7 +3833,7 @@
                                 
                             builderIndustryRawArray.push(row);
 
-                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingIndustry = 0;
+                            if (builderSQLArray[i+1] && builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingIndustry = 0;
                                 
                         }
 
@@ -3806,7 +3841,7 @@
                                 
                             builderVerticalRawArray.push(row);
                                 
-                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingVertical = 0;
+                            if (builderSQLArray[i+1] && builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingVertical = 0;
 
                         }
 
@@ -3814,7 +3849,7 @@
                                 
                             builderIndustryNULLRawArray.push(row);
                                 
-                            if (builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingIndustryForNULL = 0;
+                            if (builderSQLArray[i+1] && builderSQLArray[i+1].includes(")") || /in\s*\(.*\)/i.test(row)) startPushingIndustryForNULL = 0;
 
                         }                        
                     };
@@ -3830,8 +3865,6 @@
                     let builderIndustryNULLArray = platform == "SQL" ? await mashToArray(onlyIndustry, builderIndustryNULLRawArray.join(" ")) ? await mashToArray(onlyIndustry, builderIndustryNULLRawArray.join(" ")) : [] : [];
 
                     let perfectVerticals = false;
-
-                    console.log(builderIndustryArray)
                     
                     if (JSON.stringify([...builderVerticalArray].sort()) == JSON.stringify([...list.vertical].sort()) && JSON.stringify([...builderIndustryNULLArray].sort()) == JSON.stringify([...list.industryNULLs].sort())) perfectVerticals = true;
                     
@@ -3869,7 +3902,7 @@
                     
                         if (builderIndustryNULLArray.includes(industryNULL)) results.industryNULLs[industryNULL] = 1;
                     
-                    }                    
+                    }                            
 
                     
                     // Verticals
@@ -5157,11 +5190,13 @@
 
                                     
                                     let newIndustryForNULL = Object.keys(newIndustriesForNULL)[i];
-    
-                                    if (booleanValue == 0 && Object.keys(newIndustries).length > 1) { 
+                                    
+                                    console.log(newIndustries)
+
+                                    if (booleanValue == 0 && 
+                                    !(Object.keys(newIndustries).length == 1 && Object.keys(newIndustriesForNULL).length == 1 && Object.keys(newIndustriesForNULL)[0] == Object.keys(newIndustries)[0])
+                                    ) { 
                                         outputBox.value = outputBox.value.concat(`- Please apply NULL Vertical logic for the Industry "${newIndustryForNULL}".\n`)
-                                    } else if (Object.keys(newIndustries).length == 1) {
-                                        outputBox.value = outputBox.value.concat(`- NULL Vertical logic for the Industry "${newIndustryForNULL}".\n`)
                                     }
                                 
                                 };
@@ -5236,6 +5271,8 @@
                                 }
 
                             }
+
+                            if (outputBox.value === "") outputBox.value = "Correct.";
 
                         }
 
