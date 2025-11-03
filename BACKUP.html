@@ -39,12 +39,6 @@
     <!-- Build Sections -->
 
     <section id="segments-SQL-section" class="disappear">
-        <div id="selectorPass-title">Pass (Main query you are working with)</div>
-        <select id="selectorPass" class="border initialinp input">
-            <option value="Pass 1" selected>Pass 1 (General)</option>
-            <option value="Pass 2">Pass 2 (India SC LL Table)</option>
-            <option value="Pass 3">Pass 3 (India SC)</option>
-        </select>                            
         <button id="back-segmentsSQL-data" class="disappear"></button>
         <button id="back-segmentsSQL-mainmenu"></button>
         <button id="peer-segmentsSQL-data" class="disappear"></button>
@@ -99,12 +93,6 @@
                 <div>
                     <div id="MaSH-title">MaSH Filter</div>
                     <div class="border"><textarea id="input-segments-SQL-MaSH-peer" class="initialinp input"></textarea></div>
-                    <div id="selectorPass-title-peer">Pass (Main query you are working with)</div>
-                    <select id="selectorPass-peer" class="border initialinp input">
-                        <option value="Pass 1" selected>Pass 1 (General)</option>
-                        <option value="Pass 2">Pass 2 (India SC LL Table)</option>
-                        <option value="Pass 3">Pass 3 (India SC)</option>
-                    </select>                    
                     <div id="builder-title">Builder Segments & SubSegments</div>
                     <div class="border"><textarea id="input-segments-SQL-peer" class="initialinp input"></textarea></div>
                     <button id="compare-segments-SQL-peer">Compare</button>
@@ -3006,25 +2994,6 @@
         'High Value Individual'
     ]
     
-    const subSegmentsPass2 = [
-        'Strategic - Commercial', 
-        'Major - Other', 
-        'Upper Majors - Education',
-        'Upper Majors - Government', 
-        'SME&C - Corporate Commercial',
-        'SME&C - Corporate Education',
-        'SME&C - Corporate Government'
-    ];
-    
-    const subSegmentsPass3 = [
-        'SME&C - SMB Commercial',
-        'SME&C Commercial - SMB Default',
-        'SME&C - SMB Education',
-        'SME&C - SMB Government',
-        'High Value Individual',
-        'UnSegmented'        
-    ];
-
     // Sections
 
     const mainSection = document.getElementById("main-section");    
@@ -3737,6 +3706,7 @@
                     })
 
                     newIndustry = newVertical.length != 0 ? newIndustry.filter(industry => categoriesThatContainSomeNotNull.includes(industry)) : newIndustryCopy;                    
+                    // rajar de acá sólo es obligatorio si no hay verticals, digo para peer review
 
                     categoriesThatContainSomeNotNull.length = 0; 
                     
@@ -4827,40 +4797,9 @@
                         //         && newSubSegments.push(newSubSegment);
                         //     }
                         // }
-                        
-                        let selectorPass = document.getElementById("selectorPass");
-
-                        if (selectorPass.value.toLowerCase().includes('pass 1')) {
-                            list.subSegments = newSubSegments || "";
-                            list.segments = newSegments || "";
-
-                        } else if (selectorPass.value.toLowerCase().includes('pass 2')) {
-                            
-                            let newSubSegmentsPass2 = [];
-
-                            newSubSegments.forEach(newSubSegment => {
-
-                                if (subSegmentsPass2.includes(newSubSegment)) newSubSegmentsPass2.push(newSubSegment);
-                            
-                            })
-
-                            list.subSegments = newSubSegmentsPass2 || "";
-                            list.segments = newSegments || "";
-
-                        } else if (selectorPass.value.toLowerCase().includes('pass 3')) {
-                            
-                            let newSubSegmentsPass3 = [];
-
-                            newSubSegments.forEach(newSubSegment => {
-
-                                if (subSegmentsPass3.includes(newSubSegment)) newSubSegmentsPass3.push(newSubSegment);
-                            
-                            })
-
-                            list.subSegments = newSubSegmentsPass3 || "";
-                            list.segments = newSegments || "";
-
-                        }
+        
+                        list.subSegments = newSubSegments || "";
+                        list.segments = newSegments || "";
                         
                         document.getElementById(`formTitle2-${filter}-${platform}-${factory}`)
                         && document.getElementById(`formTitle2-${filter}-${platform}-${factory}`).innerText == "";
@@ -5823,33 +5762,22 @@
                 
                         let newSubSegments = list.subSegments;
     
-                        let newSegments = list.segments;
-
-                        let selectorPass = document.getElementById("selectorPass");
-
-                        if (selectorPass.value.toLowerCase().includes("pass 1")) {
-                            newSubSegments = listWithCommentedFields(onlySubSegments, newSubSegments, "start")
-                        } else if (selectorPass.value.toLowerCase().includes("pass 2")) {
-                            newSubSegments = listWithCommentedFields(subSegmentsPass2, newSubSegments, "start")
-                        } else if (selectorPass.value.toLowerCase().includes("pass 3")) {
-                            newSubSegments = listWithCommentedFields(subSegmentsPass3, newSubSegments, "start")
-                        }
-                        
+                        let newSegments = list.segments
+                        newSubSegments = listWithCommentedFields(onlySubSegments, newSubSegments, "start")
                         newSegments = listWithCommentedFields(onlySegments, newSegments, "start");
     
                         newSubSegments = newSubSegments.map(newSubSegment => !newSubSegment.includes("--") ? `'${newSubSegment}'` : newSubSegment);
                         newSegments = newSegments.map(newSegment => !newSegment.includes("--") ? `'${newSegment}'` : newSegment);
-
-                        let segmentCode;
-
-                        if (selectorPass.value.toLowerCase().includes("pass 1")) {
-                            segmentCode = `
-                            /**Filters on specific list pulls - these filters vary based on request, so are in WHERE clause for easier editing**/\n\t\t\t\t/**ORG CLASSIFCATION**/\n\t\tAND  (\n\t\t\tIsNull(IPV.[SegmentName],'UnSegmented')/*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSegment)*/ in (\n\t\t\t\t\t\t${newSegments.join(",\n\t\t\t\t\t\t")}\n\t\t\t\t)\n\t\t\t\tAND  IsNull(IPV.[SubSegmentName],'UnSegmented') in /*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSubSegment)*/ (\n\t\t\t\t\t\t\t${newSubSegments.join(", \n\t\t\t\t\t\t\t")}\n\t\t\t\t )\n\t\t)`;
-                        } else if (selectorPass.value.toLowerCase().includes("pass 2")) {
-                            segmentCode = `/**Filters on specific list pulls - these filters vary based on request, so are in WHERE clause for easier editing**/\n/**ORG CLASSIFCATION**/\n\t\t\t\tAND\n\t\t\t\tLL.[sub segment] in\n\t\t\t\t(\n\t\t\t\t${newSubSegments.join(", \n\t\t\t\t")}\n\t\t\t\t)`;                            
-                        } else if (selectorPass.value.toLowerCase().includes("pass 3")) {
-                            segmentCode = `/**Filters on specific list pulls - these filters vary based on request, so are in WHERE clause for easier editing**/\n/**ORG CLASSIFCATION**/\nAND\n(\n\n--For SMB/HVI and N/A Selection only\n\n\t\t\t\tIsNull(IPV.[SubSegmentName],'UnSegmented') in /*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSubSegment)*/\n\t\t\t\t(\n\t\t\t\t${newSubSegments.join(", \n\t\t\t\t")}\n\t\t\t\t)\n\t\t\t\t)`
-                        }
+            
+                        let segmentCode = `
+                        /**Filters on specific list pulls - these filters vary based on request, so are in WHERE clause for easier editing**/\n
+                        \t\t\t\t/**ORG CLASSIFCATION**/\n
+                        \t\tAND  (\n
+                        \t\t\tIsNull(IPV.[SegmentName],'UnSegmented')/*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSegment)*/ in (\n\t\t\t\t\t\t${newSegments.join(",\n\t\t\t\t\t\t")}\n
+                        \t\t\t\t)\n
+                        \t\t\t\tAND  IsNull(IPV.[SubSegmentName],'UnSegmented') in /*UCMP_V1.2_UPDATE REPLACED(IPV.InferredSubSegment)*/ (\n\t\t\t\t\t\t\t${newSubSegments.join(", \n\t\t\t\t\t\t\t")}\n
+                        \t\t\t\t )\n
+                        \t\t)`;
             
                         outputBox.value = segmentCode;
                         outputBox.classList.add("resizeBox");
@@ -6131,8 +6059,6 @@
                     let output = document.createElement("textarea");
                     let imgLogo = document.createElement("img");
                     let warningMessage = document.createElement("div");
-                    let selectorPassTitle = document.getElementById("selectorPass-title")
-                    let selectorPass = document.getElementById("selectorPass");
             
                     // Att
                     title.innerText = "FieldFlex"
@@ -6160,13 +6086,13 @@
                     imgLogo.alt = "";
                     peerButton.innerText = "Peer Review";
                     warningMessage.id = `warning-${filter}-${platform}-build1`;
-                    warningMessage.classList.add("disappear");                                          
+                    warningMessage.classList.add("disappear");
 
                     // App
                     title.append(imgLogo);
                     currentSection.append(article1, article2);
                     article1.append(title, subtitle, formInputs);
-                    formInputs.append(formTitle1, containerInputMash, selectorPassTitle, selectorPass, formTitle2, containerOutput);
+                    formInputs.append(formTitle1, containerInputMash, formTitle2, containerOutput);
                     containerInputMash.append(containerInputMash2, warningMessage, convertButton);
                     containerInputMash2.append(inputMaSH);
                     containerOutput.append(output);
