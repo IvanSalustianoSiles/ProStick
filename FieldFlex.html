@@ -526,7 +526,7 @@
         ID: 'Insurance Direct',
         IO: 'Insurance Other'
     },
-    'Intelligence': { // recortar unknown del array del caso no (All Verticals) cuando son todos
+    'Intelligence': { 
         IA: 'Intelligence Agencies'
     },
     'IT Services & Business Advisory': {
@@ -3154,21 +3154,27 @@
 
                 if (DDBBFilter == OtherDDBBFilter) reapetedObject[DDBBFilter] = countingFilter++;
                 
-            }        // Contamos cuántas veces se repite un filtro
+            }      
 
             let smallerFilterInput = filterInput || "";
+
+            // Checking if there is no larger value 
 
             for (let j = 0; j < DDBBArray.length; j++) {
 
                 let largerDDBBFilter = DDBBArray[j];
 
                 if (largerDDBBFilter != DDBBFilter && largerDDBBFilter.includes(DDBBFilter) && largerDDBBFilter.length >= DDBBFilter.length) { 
+                    if (!subCategory) {
+                        while(smallerFilterInput.toLowerCase().includes(largerDDBBFilter.toLowerCase())) {
+                            smallerFilterInput = smallerFilterInput.toLowerCase().replace(largerDDBBFilter.toLowerCase(), "") || smallerFilterInput;
+                        }
 
-                    smallerFilterInput = smallerFilterInput.toLowerCase().replace(largerDDBBFilter.toLowerCase(), "") || smallerFilterInput;
-
+                    }
                 };
 
-            }           
+            }         
+            
              
             if (smallerFilterInput.toLowerCase().includes(DDBBFilter.toLowerCase()) && !inputFilterArray.includes(DDBBFilter)) {
                             
@@ -5026,8 +5032,7 @@
                         
                     })
 
-                    newIndustry = newVertical.length != 0 ? newIndustry.filter(industry => categoriesThatContainSomeNotNull.includes(industry)) : newIndustryCopy;                    
-                    // rajar de acá sólo es obligatorio si no hay verticals, digo para peer review
+                    newIndustry = newVertical.length != 0 ? newIndustry.filter(industry => categoriesThatContainSomeNotNull.includes(industry)) : newIndustryCopy;                                        
 
                     categoriesThatContainSomeNotNull.length = 0;
                     

@@ -1,3 +1,7 @@
+SRTLP72675
+ST1663596
+
+
 Segments: Majors Growth Public Sector (Majors Growth - Public Sector), SME&C - Corporate Commercial (SME&C - Corporate Commercial), SME&C - Corporate Public Sector (SME&C - Corporate Education), SME&C - Corporate Public Sector (SME&C - Corporate Government), SME&C - SMB Commercial (SME&C - SMB Commercial), SME&C - SMB Public Sector (SME&C - SMB Education), SME&C - SMB Public Sector (SME&C - SMB Government), Strategic Commercial (Strategic - Commercial), Strategic Public Sector (Strategic - Federal Government), Strategic Public Sector (Strategic - Public Sector), Upper Majors Commercial (Upper Majors - Commercial), Upper Majors Public Sector (Upper Majors - Education), Upper Majors Public Sector (Upper Majors - Federal Government), Upper Majors Public Sector (Upper Majors - Government), UnSegmented (UnSegmented), SME&C - Corporate Commercial (SME&C - Corporate TSI), SME&C - Corporate Public Sector (SME&C - Corporate K14), SME&C - SMB Commercial (SME&C Commercial - SMB Default), Upper Majors Commercial (Major - Other)
 
 Industries: Automotive (All Verticals), Automotive (Mobility Services), Automotive (Vehicle OEM), Automotive (Vehicle Supplier), Consumer Goods (All Verticals), Insurance (All Verticals), Insurance (Insurance Direct), Insurance (Insurance Other), Public Safety & Justice (All Verticals), Public Safety & Justice (Justice), Public Safety & Justice (Public Safety), Public Safety & Justice (Security), Process Manufacturing (AgriBusiness), Transport & Travel (All Verticals), Transport & Travel (Transport & Logistics), Transport & Travel (Travel & Hospitality), Central, Federal and Regional Government (Central Government), Central, Federal and Regional Government (Government ICT Services), Central, Federal and Regional Government (Government ISVs), Central, Federal and Regional Government (Government Operations), Central, Federal and Regional Government (Regional Government), Cities, Transportation & Infrastructure (Energy & Resrc Infrastructure), Cities, Transportation & Infrastructure (Local Government), Cities, Transportation & Infrastructure (Transportation Infrastructure), Nonprofit & IGO (Foundations), Nonprofit & IGO (Nonprofit Health), Nonprofit & IGO (Nonprofit Housing), Nonprofit & IGO (Nonprofit Organizations), Central, Federal and Regional Government (All Verticals), Cities, Transportation & Infrastructure (All Verticals), Defense (National Security), Banking (All Verticals), Banking (Banking), Banking (Universal Banks), Consumer Goods (Consumer Goods), Consumer Goods (Food & Beverage), Consumer Goods (Wholesale Distribution), Defense (All Verticals), Defense (Defense), Discrete Manufacturing (All Verticals), Discrete Manufacturing (High Tech Electronics), Gaming (Gaming), Health Payor (Health Payor), Health Provider (Health Provider), Higher Education (Higher Education), Libraries & Museums (Libraries & Museums), Media & Entertainment (All Verticals), Media & Entertainment (Advertising), Media & Entertainment (Broadcasters), Media & Entertainment (Cable & Satellite), Media & Entertainment (Media&Entertmnt Equip Providrs), Media & Entertainment (Publishing), Nonprofit & IGO (All Verticals), Nonprofit & IGO (International Organizations), Nonprofit & IGO (Membership Organizations), Other - Unsegmented (Other - Unsegmented), Primary & Secondary Edu/K-12 (Primary & Secondary Edu/ K-12), Retailers (All Verticals), Retailers (Food Service), Retailers (General Merchandise), Retailers (Grocery), Retailers (Health & Personal Care), Retailers (Motor Vehicle & Parts Dealers), Retailers (Retail Convenience/Gas), Retailers (Specialty Retail), Telecommunications (All Verticals), Telecommunications (Comms&Ntwrk Equip Providers), Telecommunications (Comms&Ntwrk Service Providers), Telecommunications (Hosters & ISPs), Capital Markets (Capital Markets/Securities), Intelligence (Intelligence Agencies), Nonprofit & IGO (Faith Based Organizations), Automotive (Unknown), Nonprofit & IGO (Environmental & Animal Welfare), Real Estate (All Verticals), Real Estate (Construction), Real Estate (Real Estate), Banking (Unknown), Defense (Unknown), Discrete Manufacturing (Unknown), Health Provider (Unknown), Higher Education (Unknown), Insurance (Unknown), Media & Entertainment (Unknown), Nonprofit & IGO (Global Development & Aid), Nonprofit & IGO (Unknown), Other - Unsegmented (Unknown), Real Estate (Unknown), Telecommunications (Unknown), Discrete Manufacturing (Semiconductor), Health Provider (All Verticals), Hospitality (All Verticals), Hospitality (Accommodation), Hospitality (Unknown), Higher Education (All Verticals), Media & Entertainment (Sports & Live Experiences), Mining (Mining), Nonprofit & IGO (NonProfit Aged Care), Nonprofit & IGO (Research), Oil & Gas (Oil & Gas), Other Professional Services (Legal Services), Other Professional Services (Unknown), Other Professional Services (Other Services), Process Manufacturing (All Verticals), Power & Utilities (Power & Utilities), Process Manufacturing (Chemicals), Process Manufacturing (Unknown), Public Finance (All Verticals), Public Finance (Finance, Budget & Treasury), Public Finance (Tax & Revenue), Social Svcs & Public Health (All Verticals), Social Svcs & Public Health (Government Social Programs), Social Svcs & Public Health (Public & Community Health), Water & Sewage (Water & Sewage), At scale SW, data & platforms (At scale SW, data & platforms), Defense Industrial Base (Defense Industrial Base), Dig Native Startups & Unicorns (Dig Native Startups & Unicorns), Discrete Manufacturing (Aerospace), Discrete Manufacturing (Industrial Machinery), Health Pharma (All Verticals), Health Pharma (Biotech), Health Pharma (Pharma), IT Services & Business Advisory (All Verticals), IT Services & Business Advisory (Accounting & Tax Services), IT Services & Business Advisory (IT Services), IT Services & Business Advisory (Managed Outsourced Services), IT Services & Business Advisory (Management Consulting), Media & Entertainment (Film, Studio, Animation), MedTech (MedTech), Other Professional Services (Architecture & Engineering), Other Professional Services (Staffing Services), Other Services (Unknown), Social Svcs & Public Health (Unknown), Other Professional Services (All Verticals), Other (Unknown)
@@ -148,5 +152,36 @@ and Less time per MaSH stage, avoiding task delays
 So we are moving from...
 
 So now moving to the best part I'm going to show you the magic trick.
+
+
+
+______________________________
+
+Respuesta a "el porcentaje de los filtros es bajo".
+
+The presence of the filters on the service requests is increasing this FY as I explained before, not just for the filters individually but for the combinations of them, implying more time dedicated to manual analysis.
+
+
+
+Respuesta a "no hay rejections de eso": 
+
+
+- New joiners are more likely to have rare errors.  
+
+- No matter how many filter errors there are in the current season, we are avoiding and anticipating fatal errors.  
+
+- We standardize a part of the process that many SDS do in different ways.
+
+- Even new joiners can see their errors by themselves using the peer section, improving the learning curve.
+
+
+
+
+Respuesta a "Ya usan la función de Excel CONCATENATE u otros métodos":
+
+- Then here we have a standardized solution for a process that many SDS do in different ways, which even new joiners can use to see their errors by themselves using the peer section, improving the learning curve.
+
+
+
 
 
