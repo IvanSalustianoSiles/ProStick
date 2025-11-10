@@ -6084,8 +6084,21 @@
                         let allDevsBox = document.getElementById('allDevs-build');
     
                         let andOrBox = document.getElementById('andOr-build');
+
+                        let dontContainAnyMAC = true;
+
+                        
+                        for (let o = 0; o < marketingAudienceCategory.length; o++) {                        
+
+                            console.log(marketingAudienceCategory[o].includes('--'))
+
+                            if (!marketingAudienceCategory[o].includes('--')) dontContainAnyMAC = false;
+
+                        }
+
+
     
-                        outputBox.value = `/**IND CLASSIFCATION**/\n\n/**Audience Classification, Please adjust the criteria based on MaSH filters**/\n\nAND (\n\t/*Customer Group*/\n\t\t(\n\t\t\tIPV.MarketingAudienceCategory in (${marketingAudienceCategory.length == 0 ? `\n\t\t\t\t'Academic Decision Maker',\n\t\t\t\t'Academic Practitioner',\n\t\t\t\t'Business Decision Maker',\n\t\t\t\t'Business Practitioner',\n\t\t\t\t'Other Decision Maker',\n\t\t\t\t'Other Practitioner',\n\t\t\t\t'Unclassified',\n\t\t\t\t'Technical Decision Maker',\n\t\t\t\t'Technical Practitioner'` : `\n\t\t\t\t`+marketingAudienceCategory.join(`,\n\t\t\t\t`)+`\n\t\t\t`})\n/*Use below code if you have specific Marketing Audience need to be included, Be ensure Developer code is adjusted (Include/Exclude) based on the requirements*/\n\t\t${marketingAudience.length == 0 ? "--" : ""}${checkbox.value.toLowerCase() == "yes" ? `AND IsNull(IPV.MarketingAudience,'Unclassified')` : `AND IPV.MarketingAudience`} in (${marketingAudience.length == 0 ? "''" : `\n\t\t\t`+marketingAudience.join(`,\n\t\t\t`)+`\n\t\t`})\n\n\t\t/*Use Below code to include Developer Job Roles*/\n\t\t${allDevsBox.value.toLowerCase() == "yes" ? "" : `--`}OR IPV.DeveloperFlag = 'Developer'\n\n\t\t/*Use Below code to Exclude Developer Job Roles*/\n\t\t${allDevsBox.value.toLowerCase() == "no" ? "" : `--`}AND IPV.DeveloperFlag = 'Non-Developer'\n\n\t\t/*Use AND/OR condition as per the requirement*/\n\t\t${jobRole.length == 0 ? "--" : ""}${andOrBox.value.toLowerCase() == "or" ? "OR" : `AND`} IPV.JobRole in (${jobRole.length == 0 ? "''" : `\n\t\t`+jobRole.join(`,\n\t\t`)+`\n\t\t`})\n\t)\n)`;
+                        outputBox.value = `/**IND CLASSIFCATION**/\n\n/**Audience Classification, Please adjust the criteria based on MaSH filters**/\n\nAND (\n\t/*Customer Group*/\n\t\t(\n\t\t\tIPV.MarketingAudienceCategory in (${dontContainAnyMAC ? `\n\t\t\t\t'Academic Decision Maker',\n\t\t\t\t'Academic Practitioner',\n\t\t\t\t'Business Decision Maker',\n\t\t\t\t'Business Practitioner',\n\t\t\t\t'Other Decision Maker',\n\t\t\t\t'Other Practitioner',\n\t\t\t\t'Unclassified',\n\t\t\t\t'Technical Decision Maker',\n\t\t\t\t'Technical Practitioner'` : `\n\t\t\t\t`+marketingAudienceCategory.join(`,\n\t\t\t\t`)+`\n\t\t\t`})\n/*Use below code if you have specific Marketing Audience need to be included, Be ensure Developer code is adjusted (Include/Exclude) based on the requirements*/\n\t\t${marketingAudience.length == 0 ? "--" : ""}${checkbox.value.toLowerCase() == "yes" ? `AND IsNull(IPV.MarketingAudience,'Unclassified')` : `AND IPV.MarketingAudience`} in (${marketingAudience.length == 0 ? "''" : `\n\t\t\t`+marketingAudience.join(`,\n\t\t\t`)+`\n\t\t`})\n\n\t\t/*Use Below code to include Developer Job Roles*/\n\t\t${allDevsBox.value.toLowerCase() == "yes" ? "" : `--`}OR IPV.DeveloperFlag = 'Developer'\n\n\t\t/*Use Below code to Exclude Developer Job Roles*/\n\t\t${allDevsBox.value.toLowerCase() == "no" ? "" : `--`}AND IPV.DeveloperFlag = 'Non-Developer'\n\n\t\t/*Use AND/OR condition as per the requirement*/\n\t\t${jobRole.length == 0 ? "--" : ""}${andOrBox.value.toLowerCase() == "or" ? "OR" : `AND`} IPV.JobRole in (${jobRole.length == 0 ? "''" : `\n\t\t`+jobRole.join(`,\n\t\t`)+`\n\t\t`})\n\t)\n)`;
                         
                         outputBox.classList.add("resizeBox");
                     }
